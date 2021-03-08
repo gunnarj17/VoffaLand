@@ -1,37 +1,21 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, Image } from 'react-native';
-import logo from './CorrectDoggo.png';
+// hjálpar með að fara til baka á seinasta skjá
+import { NavigationContainer } from '@react-navigation/native';
+// hjálpar til með að stacka screens ofaná hvort annað þegar verið er að navigate-a á milli skjáa
+import { createStackNavigator } from '@react-navigation/stack';
 
+import Home from './src/screens/Home';
 
 export default function App() {
+  const Stack = createStackNavigator();
+
   return (
-    <View style={styles.container}>
-      <Image source={logo} style={styles.logo}/>
-      <Text style={styles.VFtext}>VoffaLand </Text>
-      <StatusBar style="auto"/>
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={Home}/>
+      </Stack.Navigator>
+    </NavigationContainer>
   );
-};
+}
 
 
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 200
-  },
-  logo: {
-    width: 300,
-    height: 300,
-  },
-  VFtext: {
-    color: '#26A280',
-    fontSize: 50,
-    fontWeight: "bold",
-    
-  }
-});
