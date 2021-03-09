@@ -1,16 +1,18 @@
-import React, { FC } from 'react';
+import React from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
-// import logo from '../../assets/CorrectDoggo.png';
+import logo from '../../assets/CorrectDoggo.png';
 import { StatusBar } from 'expo-status-bar';
 
 
-const Home: FC = () => (
-    <View style={styles.container}>
-        {/* <Image source={logo} style={styles.logo}/> */}
-        <Text style={styles.VFtext}>VoffaLand </Text>
-        <StatusBar style="auto" />
-    </View>
-);
+const Home = props => {
+    return (
+        <View style={styles.container}>
+            <Image source={logo} style={styles.logo} />
+            <Text style={styles.VFtext}>VoffaLand </Text>
+            <StatusBar style="auto" />
+        </View>
+    );
+};
 
 
 const styles = StyleSheet.create({
