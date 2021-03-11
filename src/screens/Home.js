@@ -1,14 +1,17 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image } from 'react-native';
+import { StyleSheet, Text, View, Image, Button } from 'react-native';
 import logo from '../../assets/CorrectDoggo.png';
 import { StatusBar } from 'expo-status-bar';
 
 
-const Home = props => {
+const Home = ({ navigation }) => {
     return (
         <View style={styles.container}>
             <Image source={logo} style={styles.logo} />
             <Text style={styles.VFtext}>VoffaLand </Text>
+            <Button
+                title="Skoða HundaLand án innskráningu"
+                onPress={() => navigation.navigate("Hundasvæði")} />
             <StatusBar style="auto" />
         </View>
     );
