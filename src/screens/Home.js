@@ -17,7 +17,7 @@ const firebaseConfig = {
 };
 
 // run the firebase initialize app with the firebase config then we can run the firebase functions that are
-// available in the SDK (SEEMS LIKE IT IS UNESESARY)
+// available in the SDK
 // firebase.initializeApp(firebaseConfig);
 
 const Home = ({ navigation }) => {
@@ -25,14 +25,14 @@ const Home = ({ navigation }) => {
         <View style={styles.container}>
             <Image source={logo} style={styles.logo} />
             <Text style={styles.VFtext}>VoffaLand </Text>
+            <StatusBar style="auto" />
             <Button
                 full
                 success
                 onPress={() => navigation.navigate("Hundasvæði")}>
                 <Text>Skoða VoffaLand án innskráningu</Text>
             </Button>
-            <StatusBar style="auto" />
-            <Container style={styles.container}>
+            <Container>
                 <Form>
                     <Item floatingLabel>
                         <Label>Email</Label>
@@ -49,7 +49,7 @@ const Home = ({ navigation }) => {
                             autoCapitalize="none"
                         />
                     </Item>
-                    <Button
+                    <Button style={styles.login}
                         full
                         rounded
                         success>
@@ -65,19 +65,25 @@ const Home = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        padding: 10,
         backgroundColor: '#fff',
-        // alignItems: 'center',
         justifyContent: 'center',
-        // marginBottom: 200
     },
     logo: {
-        width: 300,
-        height: 300,
+        width: 200,
+        height: 200,
+        // justifyContent: 'center',
+        // alignItems: 'center',
     },
     VFtext: {
         color: '#26A280',
-        fontSize: 50,
+        fontSize: 40,
         fontWeight: "bold",
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    login: {
+        marginTop: 10,
     }
 });
 
