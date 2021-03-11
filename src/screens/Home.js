@@ -18,10 +18,11 @@ const firebaseConfig = {
 
 // run the firebase initialize app with the firebase config then we can run the firebase functions that are
 // available in the SDK
-firebase.initializeApp(firebaseConfig);
+// firebase.initializeApp(firebaseConfig);
 
 export default class Home extends React.Component {
-
+    
+    // constructor sem tekur inn email og password
     constructor(props) {
         super(props)
 
@@ -31,6 +32,7 @@ export default class Home extends React.Component {
         })
     }
 
+    // Þegar nýr notandi ætlar að skrá sig inn þá þarf að athuga fyrst hvort notandi noti amk 6 stafa lykilorð og hvort netfang sé á réttu formatti
     signUpUser = (email, password) => {
 
         try {
@@ -47,11 +49,12 @@ export default class Home extends React.Component {
         }
     }
 
+    // Þegar notandi ætlar að skrá sig inn aftur þá þarf að athuga fyrst hvort notandi sé til
     loginUser = (email, password) => {
 
         try {
 
-            firebase.auth().signInWithEmailAndPassword(email, password).then(function(user){
+            firebase.auth().signInWithEmailAndPassword(email, password).then(function (user) {
                 console.log(user)
             })
         }
@@ -59,7 +62,9 @@ export default class Home extends React.Component {
             console.log(error.toString())
         }
     }
+
     render() {
+        const { navigation } = this.props;
         return (
             <View style={styles.container}>
                 <Image source={logo} style={styles.logo} />
@@ -78,7 +83,7 @@ export default class Home extends React.Component {
                             <Input
                                 autoCorrect={false}
                                 autoCapitalize="none"
-                                onChangeText={(email) => this.setState({ email })}
+                                onChangeText={(email) => this.setState({ email })} // setur þennan input sem email
                             />
                         </Item>
                         <Item floatingLabel>
@@ -87,14 +92,14 @@ export default class Home extends React.Component {
                                 secureTextEntry={true}
                                 autoCorrect={false}
                                 autoCapitalize="none"
-                                onChangeText={(password) => this.setState({ password })}
+                                onChangeText={(password) => this.setState({ password })} // setur þennan input sem password
                             />
                         </Item>
                         <Button style={styles.login}
                             full
                             rounded
                             success
-                            onPress={() => this.loginUser(this.state.email, this.state.password)}
+                            onPress={() => this.loginUser(this.state.email, this.state.password)} // þegar ýtt er á Innskráning (login) þá fer hann í loginUser fallið og ath með email og password 
                         >
                             <Text style={styles.text}>Innskráning</Text>
                         </Button>
@@ -102,7 +107,7 @@ export default class Home extends React.Component {
                             full
                             rounded
                             Primary
-                            onPress={() => this.signUpUser(this.state.email, this.state.password)}
+                            onPress={() => this.signUpUser(this.state.email, this.state.password)} // þegar ýtt er á Nýskráning (Sign up) þá fer hann í signUpUser fallið og ath með email og password 
                         >
                             <Text style={styles.text}>Nýskráning</Text>
                         </Button>
