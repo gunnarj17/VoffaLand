@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image } from 'react-native';
+import { StyleSheet, Text, View, Image, Alert } from 'react-native';
 import logo from '../../assets/CorrectDoggo.png';
 import { StatusBar } from 'expo-status-bar';
 import { Container, Content, Header, From, Input, Item, Label, Form, Button, Icon } from 'native-base';
@@ -18,48 +18,101 @@ const firebaseConfig = {
 
 // run the firebase initialize app with the firebase config then we can run the firebase functions that are
 // available in the SDK
-// firebase.initializeApp(firebaseConfig);
+firebase.initializeApp(firebaseConfig);
 
-const Home = ({ navigation }) => {
-    return (
-        <View style={styles.container}>
-            <Image source={logo} style={styles.logo} />
-            <Text style={styles.VFtext}>VoffaLand </Text>
-            <StatusBar style="auto" />
-            <Button
-                full
-                success
-                onPress={() => navigation.navigate("Hundasvæði")}>
-                <Text>Skoða VoffaLand án innskráningu</Text>
-            </Button>
-            <Container>
-                <Form>
-                    <Item floatingLabel>
-                        <Label>Email</Label>
-                        <Input
-                            autoCorrect={false}
-                            autoCapitalize="none"
-                        />
-                    </Item>
-                    <Item floatingLabel>
-                        <Label>Password</Label>
-                        <Input
-                            secureTextEntry={true}
-                            autoCorrect={false}
-                            autoCapitalize="none"
-                        />
-                    </Item>
-                    <Button style={styles.login}
-                        full
-                        rounded
-                        success>
-                        <Text>Login</Text>
-                    </Button>
-                </Form>
-            </Container>
-        </View>
-    );
-};
+export default class Home extends React.Component {
+
+    constructor(props) {
+        super(props)
+
+        this.state = ({
+            email: '',
+            password: ''
+        })
+    }
+
+    signUpUser = (email, password) => {
+
+        try {
+
+            if (this.state.password.length < 6) {
+                alert("Vinsamlegast veldu að minnsta kosti 6 stafa lykilorð.")
+                return;
+            }
+
+            firebase.auth().createUserWithEmailAndPassword(email, password)
+        }
+        catch (error) {
+            console.log(error.toString())
+        }
+    }
+
+    loginUser = (email, password) => {
+
+        try {
+
+            firebase.auth().signInWithEmailAndPassword(email, password).then(function(user){
+                console.log(user)
+            })
+        }
+        catch (error) {
+            console.log(error.toString())
+        }
+    }
+    render() {
+        return (
+            <View style={styles.container}>
+                <Image source={logo} style={styles.logo} />
+                <Text style={styles.VFtext}>VoffaLand </Text>
+                <StatusBar style="auto" />
+                <Button
+                    full
+                    success
+                    onPress={() => navigation.navigate("Hundasvæði")}>
+                    <Text style={styles.text}>Skoða VoffaLand án innskráningu</Text>
+                </Button>
+                <Container>
+                    <Form>
+                        <Item floatingLabel>
+                            <Label>Tölvupóstur</Label>
+                            <Input
+                                autoCorrect={false}
+                                autoCapitalize="none"
+                                onChangeText={(email) => this.setState({ email })}
+                            />
+                        </Item>
+                        <Item floatingLabel>
+                            <Label>Lykilorð</Label>
+                            <Input
+                                secureTextEntry={true}
+                                autoCorrect={false}
+                                autoCapitalize="none"
+                                onChangeText={(password) => this.setState({ password })}
+                            />
+                        </Item>
+                        <Button style={styles.login}
+                            full
+                            rounded
+                            success
+                            onPress={() => this.loginUser(this.state.email, this.state.password)}
+                        >
+                            <Text style={styles.text}>Innskráning</Text>
+                        </Button>
+                        <Button style={styles.login}
+                            full
+                            rounded
+                            Primary
+                            onPress={() => this.signUpUser(this.state.email, this.state.password)}
+                        >
+                            <Text style={styles.text}>Nýskráning</Text>
+                        </Button>
+                    </Form>
+                </Container>
+            </View>
+        );
+    };
+}
+
 
 
 const styles = StyleSheet.create({
@@ -84,7 +137,8 @@ const styles = StyleSheet.create({
     },
     login: {
         marginTop: 10,
+    },
+    text: {
+        color: 'white',
     }
 });
-
-export default Home;
