@@ -19,6 +19,7 @@ export default function App() {
           name="Hundasvæði" component={Parks} />
       </Stack.Navigator>
     </NavigationContainer>
+
   );
 }
 
