@@ -1,21 +1,13 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+// hjálpar með að fara til baka á seinasta skjá
+import { NavigationContainer } from '@react-navigation/native';
+// hjálpar til með að stacka screens ofaná hvort annað þegar verið er að navigate-a á milli skjáa
+import { createStackNavigator } from '@react-navigation/stack';
+
+import Home from './src/screens/Home';
+import Parks from './src/screens/Parks';
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app! testing blabla </Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+  const Stack = createStackNavigator();
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+  return (
