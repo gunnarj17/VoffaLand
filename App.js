@@ -11,16 +11,3 @@ export default function App() {
   const Stack = createStackNavigator();
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Innskráning" component={Home} />
-        <Stack.Screen
-          options={{ headerLargeTitle: true }}
-          name="Hundasvæði" component={Parks} />
-      </Stack.Navigator>
-    </NavigationContainer>
-
-  );
-}
-
-
