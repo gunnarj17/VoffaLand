@@ -8,7 +8,8 @@ export default function App() {
   return (
     <View style={styles.container}>
       <Image source={logo} style={styles.logo}/>
-      <Text style={styles.VFtext}>VoffaLand </Text>
+      <Text style={styles.VFtext}>VoffaLand</Text>
+      <Text style={styles.VFtext}>Coming Soon...</Text>
       <StatusBar style="auto"/>
     </View>
   );
