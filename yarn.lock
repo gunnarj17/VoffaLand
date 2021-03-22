@@ -3772,6 +3772,11 @@
   dependencies:
     "fbjs" "1.0.0"
 
+"expo-facebook@~9.1.0":
+  "integrity" "sha512-DoqzqAQkEYVViAShV122Cll2WWubEKLyOxRO8yDYFMbst4EH7Ep8NPCKcHKgXFYh8Oi+JYSdhsdpMraahmcX8A=="
+  "resolved" "https://registry.npmjs.org/expo-facebook/-/expo-facebook-9.1.0.tgz"
+  "version" "9.1.0"
+
 "expo-file-system@~9.3.0":
   "integrity" "sha512-x83IVep6PVfzGLpzR5fhWgKGlDaF95vfRzvmLyOMnbSuM8gY9a8C92taxZxfitryy9+D46lbRcnxPvBqFkXMNg=="
   "resolved" "https://registry.npmjs.org/expo-file-system/-/expo-file-system-9.3.0.tgz"

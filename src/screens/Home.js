@@ -3,9 +3,12 @@ import { StyleSheet, Text, View, Image, Alert } from 'react-native';
 import logo from '../../assets/CorrectDoggo.png';
 import { StatusBar } from 'expo-status-bar';
 import { Container, Content, Header, From, Input, Item, Label, Form, Button, Icon } from 'native-base';
+import Expo from 'expo';
+import ExpoStatusBar from 'expo-status-bar/build/ExpoStatusBar';
 
 // this gives us the capability of using all the firebase methods in our application
 import * as firebase from 'firebase';
+
 
 //initialize firebase storing all the information regarding our firebase application
 const firebaseConfig = {
@@ -21,7 +24,6 @@ const firebaseConfig = {
 // firebase.initializeApp(firebaseConfig);
 
 export default class Home extends React.Component {
-    
     // constructor sem tekur inn email og password
     constructor(props) {
         super(props)
@@ -42,7 +44,7 @@ export default class Home extends React.Component {
                 return;
             }
 
-            firebase.auth().createUserWithEmailAndPassword(email, password)
+            firebase.auth().createUserWithEmailAndPassword(email, password) // ef allt er rétt eru viðeigandi gögn send og vistuð í firebase authentication
         }
         catch (error) {
             console.log(error.toString())
@@ -53,7 +55,7 @@ export default class Home extends React.Component {
     loginUser = (email, password) => {
 
         try {
-
+            // ef allt er rétt fær user að skrá sig inn aftur
             firebase.auth().signInWithEmailAndPassword(email, password).then(function (user) {
                 console.log(user)
             })
@@ -74,7 +76,7 @@ export default class Home extends React.Component {
                     full
                     success
                     onPress={() => navigation.navigate("Hundasvæði")}>
-                    <Text style={styles.text}>Skoða VoffaLand án innskráningu</Text>
+                    <Text style={styles.text}>Skoða VoffaLand án innskráningar</Text>
                 </Button>
                 <Container>
                     <Form>
@@ -135,7 +137,7 @@ const styles = StyleSheet.create({
     },
     VFtext: {
         color: '#26A280',
-        fontSize: 40,
+        fontSize: 30,
         fontWeight: "bold",
         justifyContent: 'center',
         alignItems: 'center',
