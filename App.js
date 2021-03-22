@@ -16,7 +16,6 @@ export default function App() {
   const Stack = createStackNavigator();
 
   return (
-
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="Forsíða" component={Home} />
@@ -50,4 +49,5 @@ function MyTabs() {
     </Tab.Navigator>
   );
 }
+
 
