@@ -4,8 +4,6 @@ import logo from '../../assets/VLlogo.png';
 // import latoFont from '../../assets/Fonts/Lato-Regular.ttf';
 import { StatusBar } from 'expo-status-bar';
 import { Container, Content, Header, From, Input, Item, Label, Form, Button, Icon } from 'native-base';
-import Expo from 'expo';
-import ExpoStatusBar from 'expo-status-bar/build/ExpoStatusBar';
 
 
 export default class Home extends React.Component {
@@ -65,7 +63,7 @@ const styles = StyleSheet.create({
     },
     HeaderText: {
         color: '#26A280',
-        fontSize: 30,
+        fontSize: 40,
         fontWeight: "bold",
         justifyContent: 'center',
         alignItems: 'center',
