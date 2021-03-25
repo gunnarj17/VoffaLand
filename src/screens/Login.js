@@ -17,10 +17,11 @@ const firebaseConfig = {
     projectId: "voffaland-2db0c",
     storageBucket: "voffaland-2db0c.appspot.com",
 };
-
 // run the firebase initialize app with the firebase config then we can run the firebase functions that are
-// available in the SDK
-// firebase.initializeApp(firebaseConfig);
+// available in the SDK. Will only run if it isn't already running.
+if (firebase.apps.length === 0) {
+    firebase.initializeApp(firebaseConfig);
+}
 
 export default class Home extends React.Component {
     
@@ -32,23 +33,6 @@ export default class Home extends React.Component {
             email: '',
             password: ''
         })
-    }
-    
-    // Þegar nýr notandi ætlar að skrá sig inn þá þarf að athuga fyrst hvort notandi noti amk 6 stafa lykilorð og hvort netfang sé á réttu formatti
-    signUpUser = (email, password) => {
-
-        try {
-
-            if (this.state.password.length < 6) {
-                alert("Vinsamlegast veldu að minnsta kosti 6 stafa lykilorð.")
-                return;
-            }
-
-            firebase.auth().createUserWithEmailAndPassword(email, password)
-        }
-        catch (error) {
-            console.log(error.toString())
-        }
     }
 
     // Þegar notandi ætlar að skrá sig inn aftur þá þarf að athuga fyrst hvort notandi sé til
@@ -67,7 +51,6 @@ export default class Home extends React.Component {
 
     render() {
         const { navigation } = this.props;
-        // const [toggleCheckBox, setToggleCheckBox] = useState(false);
         return (
             <View style={styles.container}>
                 
@@ -120,7 +103,7 @@ export default class Home extends React.Component {
                     </Form>
                 </Container>
                 <View style={styles.BottomContainer}>
-                    <Text style={styles.ContinueText}>Ertu ekki með aðgang? </Text>
+                    <Text style={styles.ContinueText}>Ekki með aðgang? </Text>
                     <Button
                         style={styles.ContinueButton}
                         full

@@ -29,6 +29,7 @@ export default class Home extends React.Component {
         super(props)
 
         this.state = ({
+            displayName: '',
             email: '',
             password: '',
             confirmpassword: '',
@@ -36,10 +37,13 @@ export default class Home extends React.Component {
     }
 
     // Þegar nýr notandi ætlar að skrá sig inn þá þarf að athuga fyrst hvort notandi noti amk 6 stafa lykilorð og hvort netfang sé á réttu formatti
-    signUpUser = (email, password, confirmpassword) => {
+    signUpUser = (displayName, email, password, confirmpassword) => {
 
         try {
-
+            if (this.state.displayName < 3) {
+                alert("Nafn verður að vera að minnsta kosti þriggja stafa langt.")
+                return;
+            }
             if (this.state.password.length < 6) {
                 alert("Vinsamlegast veldu að minnsta kosti 6 stafa lykilorð.")
                 return;
@@ -49,20 +53,11 @@ export default class Home extends React.Component {
                 return;
             }
 
-            firebase.auth().createUserWithEmailAndPassword(email, password)
-        }
-        catch (error) {
-            console.log(error.toString())
-        }
-    }
-
-    // Þegar notandi ætlar að skrá sig inn aftur þá þarf að athuga fyrst hvort notandi sé til
-    loginUser = (email, password) => {
-
-        try {
-
-            firebase.auth().signInWithEmailAndPassword(email, password).then(function (user) {
-                console.log(user)
+            firebase.auth().createUserWithEmailAndPassword(email, password).then((res) => {
+                const user = firebase.auth().currentUser;
+                return user.updateProfile({
+                    displayName: displayName
+                })
             })
         }
         catch (error) {
@@ -81,10 +76,10 @@ export default class Home extends React.Component {
 
                 <Container style={styles.LoginContainer}>
                     <Form>
-                        {/* <View style={styles.EmailForm}>
+                        <View style={styles.EmailForm}>
                             <Icon style={styles.Icons}
                                 name='person-outline'
-                                type='ionicon' />
+                            />
                             <Item floatingLabel>
                                 <Label style={styles.LabelText}>Nafn</Label>
                                 <Input
@@ -92,14 +87,14 @@ export default class Home extends React.Component {
                                     style={styles.InputBox}
                                     autoCorrect={false}
                                     autoCapitalize="none"
-                                    onChangeText={(email) => this.setState({ email })} // setur þennan input sem email
+                                    onChangeText={(displayName) => this.setState({ displayName })} // setur þennan input sem name
                                 />
                             </Item>
-                        </View> */}
+                        </View>
                         <View style={styles.EmailForm}>
                             <Icon style={styles.Icons}
                                 name='mail-outline'
-                                 />
+                            />
                             <Item floatingLabel>
                                 <Label style={styles.LabelText}>Netfang</Label>
                                 <Input
@@ -115,7 +110,7 @@ export default class Home extends React.Component {
                         <View style={styles.EmailForm}>
                             <Icon style={styles.Icons}
                                 name='lock-closed-outline'
-                                />
+                            />
                             <Item floatingLabel>
                                 <Label style={styles.LabelText}>Lykilorð</Label>
                                 <Input
@@ -137,7 +132,7 @@ export default class Home extends React.Component {
                                     secureTextEntry={true}
                                     autoCorrect={false}
                                     autoCapitalize="none"
-                                    onChangeText={(confirmpassword) => this.setState({ confirmpassword })} // setur þennan input sem password
+                                    onChangeText={(confirmpassword) => this.setState({ confirmpassword })} // setur þennan input sem confirm password
                                 />
                             </Item>
                         </View>
@@ -145,7 +140,7 @@ export default class Home extends React.Component {
                         <View style={styles.LoginButtons}>
                             <Button style={styles.RegisterButton}
                                 full
-                                onPress={() => this.signUpUser(this.state.email, this.state.password, this.state.confirmpassword)}>
+                                onPress={() => this.signUpUser(this.state.displayName, this.state.email, this.state.password, this.state.confirmpassword)}>
                                 {/* þegar ýtt er á Nýskráning (Sign up) þá fer hann í signUpUser fallið og ath með email og password  */}
                                 <Text style={styles.text}>Nýskráning</Text>
                             </Button>
