@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, Image, Alert } from 'react-native';
 import logo from '../../assets/VLlogo.png';
+
 // import latoFont from '../../assets/Fonts/Lato-Regular.ttf';
 import { StatusBar } from 'expo-status-bar';
 import { Container, Content, Header, From, Input, Item, Label, Form, Button, Icon } from 'native-base';
@@ -22,7 +23,7 @@ const firebaseConfig = {
 // firebase.initializeApp(firebaseConfig);
 
 export default class Home extends React.Component {
-
+    
     // constructor sem tekur inn email og password
     constructor(props) {
         super(props)
@@ -32,7 +33,7 @@ export default class Home extends React.Component {
             password: ''
         })
     }
-
+    
     // Þegar nýr notandi ætlar að skrá sig inn þá þarf að athuga fyrst hvort notandi noti amk 6 stafa lykilorð og hvort netfang sé á réttu formatti
     signUpUser = (email, password) => {
 
@@ -69,51 +70,50 @@ export default class Home extends React.Component {
         // const [toggleCheckBox, setToggleCheckBox] = useState(false);
         return (
             <View style={styles.container}>
-
+                
                 <Text style={styles.HeaderText}>Innskráning</Text>
                 <StatusBar style="auto" />
-
-
+                
+                
                 <Container style={styles.LoginContainer}>
                     <Form>
-                        <View style={styles.EmailForm}>
-                            <Icon style={styles.Icons}
-                                name='mail' />
-                            <Item floatingLabel>
-                                <Label style={styles.LabelText}>Netfang</Label>
-                                <Input
-                                    style={styles.InputBox}
-                                    autoCorrect={false}
-                                    autoCapitalize="none"
-                                    onChangeText={(email) => this.setState({ email })} // setur þennan input sem email
-                                />
-                            </Item>
-                        </View>
-
-                        <View style={styles.EmailForm}>
-                            <Icon style={styles.Icons}
-                                name='lock-closed-outline'
-                                type='ionicon'
+                    <View style={styles.EmailForm}>
+                        <Icon style={styles.Icons}
+                            name='mail-outline'/>
+                        <Item floatingLabel>
+                            <Label style={styles.LabelText}>Netfang</Label> 
+                            <Input
+                                style={styles.InputBox}
+                                autoCorrect={false}
+                                autoCapitalize="none"
+                                onChangeText={(email) => this.setState({ email })} // setur þennan input sem email
                             />
-                            <Item floatingLabel>
-                                <Label style={styles.LabelText}>Lykilorð</Label>
-                                <Input
-                                    style={styles.InputBox}
-                                    secureTextEntry={true}
-                                    autoCorrect={false}
-                                    autoCapitalize="none"
-                                    onChangeText={(password) => this.setState({ password })} // setur þennan input sem password
-                                />
-                            </Item>
-                        </View>
-                        <View style={styles.ExtraOptions}>
-                            <Text style={styles.ForgotPassword}>Gleymt lykilorð?</Text>
-                        </View>
+                        </Item>
+                    </View>
+
+                    <View style={styles.EmailForm}>
+                        <Icon style={styles.Icons}
+                            name='lock-closed-outline'
+                        />
+                        <Item floatingLabel>
+                            <Label style={styles.LabelText}>Lykilorð</Label>
+                            <Input
+                                style={styles.InputBox}
+                                secureTextEntry={true}
+                                autoCorrect={false}
+                                autoCapitalize="none"
+                                onChangeText={(password) => this.setState({ password })} // setur þennan input sem password
+                            />
+                        </Item>
+                    </View>
+                    <View style={styles.ExtraOptions}>
+                        <Text style={styles.ForgotPassword}>Gleymt lykilorð?</Text>
+                    </View>
                         <View style={styles.LoginButtons}>
                             <Button style={styles.LoginButton}
                                 full
-                                onPress={() => this.loginUser(this.state.email, this.state.password)}>
-                                {/* // þegar ýtt er á Innskráning (login) þá fer hann í loginUser fallið og ath með email og password  */}
+                                onPress={() => this.loginUser(this.state.email, this.state.password)}> 
+                                {/* // þegar ýtt er á Innskráning (login) þá fer hann í loginUser fallið og ath með email og password  */} 
                                 <Text style={styles.text}>Skrá inn</Text>
                             </Button>
                         </View>
@@ -128,7 +128,7 @@ export default class Home extends React.Component {
                         onPress={() => navigation.navigate("Nýskráning")}>
                         <Text style={styles.ContinueTextBold}> Nýskrá</Text>
                     </Button>
-
+                   
                 </View>
             </View>
         );
@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         justifyContent: 'center',
         alignItems: 'center',
-
+       
     },
     text: {
         color: '#fff',
@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#56B980',
         borderRadius: 20,
     },
-    BottomContainer: {
+    BottomContainer:{
         flex: 1,
         alignItems: 'center',
         alignContent: 'space-around',

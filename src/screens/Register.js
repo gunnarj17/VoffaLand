@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image, Alert, KeyboardAvoidingView } from 'react-native';
+import { StyleSheet, Text, View, Image, Alert } from 'react-native';
 import logo from '../../assets/VLlogo.png';
 // import latoFont from '../../assets/Fonts/Lato-Regular.ttf';
 import { StatusBar } from 'expo-status-bar';
@@ -16,12 +16,11 @@ const firebaseConfig = {
     projectId: "voffaland-2db0c",
     storageBucket: "voffaland-2db0c.appspot.com",
 };
-
-
-
 // run the firebase initialize app with the firebase config then we can run the firebase functions that are
-// available in the SDK
-// firebase.initializeApp(firebaseConfig);
+// available in the SDK. Will only run if it isn't already running.
+if (firebase.apps.length === 0) {
+    firebase.initializeApp(firebaseConfig);
+}
 
 export default class Home extends React.Component {
 
@@ -31,17 +30,22 @@ export default class Home extends React.Component {
 
         this.state = ({
             email: '',
-            password: ''
+            password: '',
+            confirmpassword: '',
         })
     }
 
     // Þegar nýr notandi ætlar að skrá sig inn þá þarf að athuga fyrst hvort notandi noti amk 6 stafa lykilorð og hvort netfang sé á réttu formatti
-    signUpUser = (email, password) => {
+    signUpUser = (email, password, confirmpassword) => {
 
         try {
 
             if (this.state.password.length < 6) {
                 alert("Vinsamlegast veldu að minnsta kosti 6 stafa lykilorð.")
+                return;
+            }
+            if (this.state.password != this.state.confirmpassword) {
+                alert("Lykilorðin eru ekki eins")
                 return;
             }
 
@@ -70,98 +74,95 @@ export default class Home extends React.Component {
         const { navigation } = this.props;
         return (
             <View style={styles.container}>
-                <KeyboardAvoidingView>
-                    <Text style={styles.HeaderText}>Nýr notandi</Text>
-                    <StatusBar style="auto" />
+
+                <Text style={styles.HeaderText}>Nýr notandi</Text>
+                <StatusBar style="auto" />
 
 
-                    <Container style={styles.LoginContainer}>
-                        <Form>
-                            <View style={styles.EmailForm}>
-                                <Icon style={styles.Icons}
-                                    name='person-outline'
-                                    type='ionicon' />
-                                <Item floatingLabel>
-                                    <Label style={styles.LabelText}>Nafn</Label>
-                                    <Input
+                <Container style={styles.LoginContainer}>
+                    <Form>
+                        {/* <View style={styles.EmailForm}>
+                            <Icon style={styles.Icons}
+                                name='person-outline'
+                                type='ionicon' />
+                            <Item floatingLabel>
+                                <Label style={styles.LabelText}>Nafn</Label>
+                                <Input
 
-                                        style={styles.InputBox}
-                                        autoCorrect={false}
-                                        autoCapitalize="none"
-                                        onChangeText={(email) => this.setState({ email })} // setur þennan input sem email
-                                    />
-                                </Item>
-                            </View>
-                            <View style={styles.EmailForm}>
-                                <Icon style={styles.Icons}
-                                    name='mail-outline'
-                                    type='ionicon' />
-                                <Item floatingLabel>
-                                    <Label style={styles.LabelText}>Netfang</Label>
-                                    <Input
-
-                                        style={styles.InputBox}
-                                        autoCorrect={false}
-                                        autoCapitalize="none"
-                                        onChangeText={(email) => this.setState({ email })} // setur þennan input sem email
-                                    />
-                                </Item>
-                            </View>
-
-                            <View style={styles.EmailForm}>
-                                <Icon style={styles.Icons}
-                                    name='lock-closed-outline'
-                                    type='ionicon'
+                                    style={styles.InputBox}
+                                    autoCorrect={false}
+                                    autoCapitalize="none"
+                                    onChangeText={(email) => this.setState({ email })} // setur þennan input sem email
                                 />
-                                <Item floatingLabel>
-                                    <Label style={styles.LabelText}>Lykilorð</Label>
-                                    <Input
-                                        secureTextEntry={true}
-                                        autoCorrect={false}
-                                        autoCapitalize="none"
-                                        onChangeText={(password) => this.setState({ password })} // setur þennan input sem password
-                                    />
-                                </Item>
-                            </View>
-                            <View style={styles.EmailForm}>
-                                <Icon style={styles.Icons}
-                                    name='lock-closed-outline'
-                                    type='ionicon'
+                            </Item>
+                        </View> */}
+                        <View style={styles.EmailForm}>
+                            <Icon style={styles.Icons}
+                                name='mail-outline'
+                                 />
+                            <Item floatingLabel>
+                                <Label style={styles.LabelText}>Netfang</Label>
+                                <Input
+
+                                    style={styles.InputBox}
+                                    autoCorrect={false}
+                                    autoCapitalize="none"
+                                    onChangeText={(email) => this.setState({ email })} // setur þennan input sem email
                                 />
-                                <Item floatingLabel>
-                                    <Label style={styles.LabelText}>Staðfesta lykilorð</Label>
-                                    <Input
-                                        secureTextEntry={true}
-                                        autoCorrect={false}
-                                        autoCapitalize="none"
-                                        onChangeText={(password) => this.setState({ password })} // setur þennan input sem password
-                                    />
-                                </Item>
-                            </View>
+                            </Item>
+                        </View>
 
-                            <View style={styles.LoginButtons}>
-                                <Button style={styles.RegisterButton}
-                                    full
-                                    onPress={() => this.signUpUser(this.state.email, this.state.password)}>
-                                    {/* þegar ýtt er á Nýskráning (Sign up) þá fer hann í signUpUser fallið og ath með email og password  */}
-                                    <Text style={styles.text}>Nýskráning</Text>
-                                </Button>
-                            </View>
-                        </Form>
-                    </Container>
-                    <View style={styles.BottomContainer}>
-                        <Text style={styles.ContinueText}>Ertu nú þegar með með aðgang? </Text>
-                        <Button
-                            style={styles.ContinueButton}
-                            full
-                            success
-                            onPress={() => navigation.navigate("Innskráning")}>
-                            <Text style={styles.ContinueTextBold}>Innskráning</Text>
-                        </Button>
+                        <View style={styles.EmailForm}>
+                            <Icon style={styles.Icons}
+                                name='lock-closed-outline'
+                                />
+                            <Item floatingLabel>
+                                <Label style={styles.LabelText}>Lykilorð</Label>
+                                <Input
+                                    secureTextEntry={true}
+                                    autoCorrect={false}
+                                    autoCapitalize="none"
+                                    onChangeText={(password) => this.setState({ password })} // setur þennan input sem password
+                                />
+                            </Item>
+                        </View>
+                        <View style={styles.EmailForm}>
+                            <Icon style={styles.Icons}
+                                name='lock-closed-outline'
 
-                    </View>
-                </KeyboardAvoidingView>
+                            />
+                            <Item floatingLabel>
+                                <Label style={styles.LabelText}>Staðfesta lykilorð</Label>
+                                <Input
+                                    secureTextEntry={true}
+                                    autoCorrect={false}
+                                    autoCapitalize="none"
+                                    onChangeText={(confirmpassword) => this.setState({ confirmpassword })} // setur þennan input sem password
+                                />
+                            </Item>
+                        </View>
 
+                        <View style={styles.LoginButtons}>
+                            <Button style={styles.RegisterButton}
+                                full
+                                onPress={() => this.signUpUser(this.state.email, this.state.password, this.state.confirmpassword)}>
+                                {/* þegar ýtt er á Nýskráning (Sign up) þá fer hann í signUpUser fallið og ath með email og password  */}
+                                <Text style={styles.text}>Nýskráning</Text>
+                            </Button>
+                        </View>
+                    </Form>
+                </Container>
+                <View style={styles.BottomContainer}>
+                    <Text style={styles.ContinueText}>Ertu nú þegar með með aðgang? </Text>
+                    <Button
+                        style={styles.ContinueButton}
+                        full
+                        success
+                        onPress={() => navigation.navigate("Innskráning")}>
+                        <Text style={styles.ContinueTextBold}>Innskráning</Text>
+                    </Button>
+
+                </View>
             </View>
         );
     };
