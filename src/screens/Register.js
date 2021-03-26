@@ -1,21 +1,13 @@
 import React from 'react';
 import { StyleSheet, Text, View, Image, Alert } from 'react-native';
-import logo from '../../assets/VLlogo.png';
-// import latoFont from '../../assets/Fonts/Lato-Regular.ttf';
+
 import { StatusBar } from 'expo-status-bar';
 import { Container, Content, Header, From, Input, Item, Label, Form, Button, Icon } from 'native-base';
 
 // this gives us the capability of using all the firebase methods in our application
 import * as firebase from 'firebase';
+import { firebaseConfig } from '../firebase/config';
 
-//initialize firebase storing all the information regarding our firebase application
-const firebaseConfig = {
-    apiKey: "AIzaSyDtvmX8T-1N5OBBXVij228d0QtWkuORYpg",
-    authDomain: "voffaland-2db0c.firebaseapp.com",
-    databaseURL: "https://voffaland-2db0c-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "voffaland-2db0c",
-    storageBucket: "voffaland-2db0c.appspot.com",
-};
 // run the firebase initialize app with the firebase config then we can run the firebase functions that are
 // available in the SDK. Will only run if it isn't already running.
 if (firebase.apps.length === 0) {

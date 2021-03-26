@@ -9,6 +9,9 @@ import Parks from './src/screens/Parks';
 import Login from './src/screens/Login';
 import Register from './src/screens/Register';
 
+import * as firebase from 'firebase';
+import {firebaseConfig} from './src/firebase/config';
+
 export default function App() {
   const Stack = createStackNavigator();
 
@@ -24,12 +27,6 @@ export default function App() {
         <Stack.Screen name="Nýskráning" component={Register} /> 
       </Stack.Navigator>
     </NavigationContainer>
-//     <NavigationContainer>
-// <Tab.Navigator>
-//   <Tab.Screen name="Home" component={HomeScreen} />
-//   <Tab.Screen name="Settings" component={SettingsScreen} />
-// </Tab.Navigator>
-// </NavigationContainer>
 
   );
 }

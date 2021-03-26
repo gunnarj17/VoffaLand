@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, Image, Alert } from 'react-native';
-import logo from '../../assets/VLlogo.png';
 
 // import latoFont from '../../assets/Fonts/Lato-Regular.ttf';
 import { StatusBar } from 'expo-status-bar';
