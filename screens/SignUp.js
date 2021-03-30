@@ -1,41 +1,41 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Alert, ScrollView, Keyboard ,StyleSheet, SafeAreaView} from 'react-native';
+import { View, Text, TextInput, Alert, ScrollView, Keyboard, StyleSheet } from 'react-native';
+import { Container, Content, Header, From, Input, Item, Label, Form, Button, Icon } from 'native-base';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { registration } from '../API/firebaseMethods';
 
 export default function SignUp({ navigation }) {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
   const emptyState = () => {
-    setFirstName('');
-    setLastName('');
+    setName('');
     setEmail('');
     setPassword('');
     setConfirmPassword('');
   };
 
   const handlePress = () => {
-    if (!firstName) {
-      Alert.alert('First name is required');
+    if (!name) {
+      Alert.alert('Nafn ekki rétt sláð inn');
+    } else if (name.length < 3) {
+      Alert.alert('Nafn of stutt');
     } else if (!email) {
-      Alert.alert('Email field is required.');
+      Alert.alert('Vantar netfang');
     } else if (!password) {
-      Alert.alert('Password field is required.');
+      Alert.alert('Vantar lykilorð');
     } else if (!confirmPassword) {
       setPassword('');
-      Alert.alert('Confirm password field is required.');
+      Alert.alert('Vantar staðfestingar lykilorð');
     } else if (password !== confirmPassword) {
-      Alert.alert('Password does not match!');
+      Alert.alert('Lykilorð passa ekki');
     } else {
       registration(
         email,
         password,
-        lastName,
-        firstName,
+        name,
       );
       navigation.navigate('Loading');
       emptyState();
@@ -43,106 +43,185 @@ export default function SignUp({ navigation }) {
   };
 
   return (
-    <SafeAreaView>
-     <View style={styles.container}>
-       <Text style={styles.text}>Create an account </Text>
 
-       <ScrollView onBlur={Keyboard.dismiss}>
-          <TextInput
-          style={styles.textInput}
-          placeholder="First name*"
-          value={firstName}
-          onChangeText={(name) => setFirstName(name)}
-          />
-         <TextInput
-          style={styles.textInput}
-          placeholder="Last name"
-          value={lastName}
-          onChangeText={(name) => setLastName(name)}
-         />
+    <View style={styles.container}>
+      <Text style={styles.HeaderText}>Nýr notandi</Text>
 
-         <TextInput
-          style={styles.textInput}
-          placeholder="Enter your email*"
-          value={email}
-          onChangeText={(email) => setEmail(email)}
-          keyboardType="email-address"
-          autoCapitalize="none"
-         />
+      <Container style={styles.LoginContainer}>
+        <Form>
+          <View style={styles.container}>
 
-          <TextInput
-          style={styles.textInput}
-          placeholder="Enter your password*"
-          value={password}
-          onChangeText={(password) => setPassword(password)}
-          secureTextEntry={true}
-         />
-         <TextInput
-          style={styles.textInput}
-          placeholder="Retype your password to confirm*"
-          value={confirmPassword}
-          onChangeText={(password2) => setConfirmPassword(password2)}
-          secureTextEntry={true}
-          />
-          <TouchableOpacity style={styles.button} onPress={handlePress}>
-           <Text style={styles.buttonText}>Sign Up</Text>
-          </TouchableOpacity>
+            <View style={styles.EmailForm}>
+              <Icon style={styles.Icons}
+                name='person-outline'
+              />
+              <Item floatingLabel>
+                <Label style={styles.LabelText}>Nafn</Label>
+                <Input
+                  style={styles.InputBox}
+                  autoCorrect={false}
+                  autoCapitalize="none"
+                  value={name}
+                  onChangeText={(name) => setName(name)} // setur þennan input sem name
+                />
+              </Item>
+            </View>
 
-          <Text style={styles.inlineText}>Already have an account?</Text>
-          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Sign In')}>
-            <Text style={styles.buttonText}>Sign In</Text>
-          </TouchableOpacity>
-       </ScrollView>
-     </View>
-    </SafeAreaView>
+            <View style={styles.EmailForm}>
+              <Icon style={styles.Icons}
+                name='mail-outline'
+              />
+              <Item floatingLabel>
+                <Label style={styles.LabelText}>Netfang</Label>
+                <Input
+                  style={styles.InputBox}
+                  autoCorrect={false}
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  value={email}
+                  onChangeText={(email) => setEmail(email)} // setur þennan input sem email
+                />
+              </Item>
+            </View>
+
+            <View style={styles.EmailForm}>
+              <Icon style={styles.Icons}
+                name='lock-closed-outline'
+              />
+              <Item floatingLabel>
+                <Label style={styles.LabelText}>Lykilorð</Label>
+                <Input
+                  value={password}
+                  secureTextEntry={true}
+                  autoCorrect={false}
+                  autoCapitalize="none"
+                  onChangeText={(password) => setPassword(password)} // setur þennan input sem password
+                />
+              </Item>
+            </View>
+
+            <View style={styles.EmailForm}>
+              <Icon style={styles.Icons}
+                name='lock-closed-outline'
+
+              />
+              <Item floatingLabel>
+                <Label style={styles.LabelText}>Staðfesta lykilorð</Label>
+                <Input
+                  secureTextEntry={true}
+                  autoCorrect={false}
+                  autoCapitalize="none"
+                  value={confirmPassword}
+                  onChangeText={(password2) => setConfirmPassword(password2)} // setur þennan input sem confirm password
+                />
+              </Item>
+            </View>
+
+            <View style={styles.LoginButtons}>
+              <Button style={styles.RegisterButton}
+                full
+                onPress={handlePress}>
+                <Text style={styles.text}>Nýskráning</Text>
+              </Button>
+            </View>
+            
+          </View>
+        </Form>
+      </Container>
+
+      <View style={styles.BottomContainer}>
+        <Text style={styles.ContinueText}>Ertu nú þegar með með aðgang? </Text>
+        <Button
+          style={styles.ContinueButton}
+          full
+          success
+          onPress={() => navigation.navigate('Sign In')}>
+          <Text style={styles.ContinueTextBold}>Innskráning</Text>
+        </Button>
+      </View>
+
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-    container: {
-      height: '100%',
-      width: '100%',
-      backgroundColor: '#3FC5AB',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    button: {
-      width: 200,
-      padding: 5,
-      backgroundColor: '#ff9999',
-      borderWidth: 2,
-      borderColor: 'white',
-      borderRadius: 15,
-      alignSelf: 'center',
-      margin: '5%',
-    },
-    buttonText: {
-      fontSize:20,
-      color: 'white',
-      fontWeight: 'bold',
-      textAlign: 'center',
-    },
-    inlineText: {
-      fontSize: 20,
-      fontWeight: 'bold',
-      color: 'navy',
-      textAlign: 'center',
-      marginTop: '5%',
-    },
-    text: {
-      textAlign: 'center',
-      fontSize: 25,
-      margin: '5%',
-      marginTop:'15%',
-      fontWeight: 'bold',
-      color: '#2E6194',
-    },
-    textInput: {
-      width: 300,
-      fontSize:18,
-      borderWidth: 1,
-      borderColor:'#a4eddf',
-      padding: 10,
-      margin: 5,
-    },
-  });
+
+  container: {
+    flex: 1,
+    paddingTop: 50,
+    backgroundColor: '#F2F9F4',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    alignContent: 'space-around',
+  },
+  HeaderText: {
+    color: '#56B980',
+    fontSize: 40,
+    fontWeight: "bold",
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  text: {
+    color: '#fff',
+    fontSize: 20,
+    // fontFamily: Lato-Regular
+  },
+  LoginContainer: {
+    flex: 2,
+    width: 300,
+    height: 200,
+    // margin: 40,
+    backgroundColor: '#F2F9F4',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  LabelText: {
+    color: '#56B980',
+    fontSize: 20
+  },
+
+  LoginButtons: {
+    marginTop: 30,
+    marginBottom: 30,
+  },
+  RegisterButton: {
+    margin: 15,
+    backgroundColor: '#56B980',
+    borderRadius: 20,
+  },
+  BottomContainer: {
+    flex: 1,
+    alignItems: 'center',
+    alignContent: 'space-around',
+    justifyContent: 'flex-end',
+    marginBottom: 36
+  },
+  ContinueText: {
+    color: '#56B980',
+    fontSize: 20,
+    paddingBottom: 10,
+  },
+  ContinueTextBold: {
+    color: '#56B980',
+    fontSize: 20,
+    fontWeight: 'bold'
+  },
+  ContinueButton: {
+    backgroundColor: '#F2F9F4',
+    marginBottom: 10
+  },
+  EmailForm: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  Icons: {
+    color: '#56B980',
+    paddingTop: 40,
+  },
+  InputBox: {
+    borderBottomColor: '#56B980',
+    alignSelf: 'center',
+  }
+});
