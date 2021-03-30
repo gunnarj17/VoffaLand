@@ -3,14 +3,30 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 // hjálpar til með að stacka screens ofaná hvort annað þegar verið er að navigate-a á milli skjáa
 import { createStackNavigator } from '@react-navigation/stack';
+// Bottom tab navigator
+
+// import AuthNavigator from './src/navigation/AuthNavigator';
+
+
+// export default class App extends React.Component {
+//   render() {
+//     return <AuthNavigator />;
+//   }
+// }
+
+
 
 import Home from './src/screens/Home';
 import Parks from './src/screens/Parks';
 import Login from './src/screens/Login';
 import Register from './src/screens/Register';
+import TabNavigator from './src/navigation/TabNavigator';
 
-import * as firebase from 'firebase';
-import {firebaseConfig} from './src/firebase/config';
+function BottomTabNavigator(){
+  <NavigationContainer>
+    <TabNavigator/>
+  </NavigationContainer>
+}
 
 export default function App() {
   const Stack = createStackNavigator();
@@ -25,7 +41,7 @@ export default function App() {
           name="Hundasvæði" component={Parks} />
         <Stack.Screen name="Innskráning" component={Login} /> 
         <Stack.Screen name="Nýskráning" component={Register} /> 
-      </Stack.Navigator>
+      </Stack.Navigator>  
     </NavigationContainer>
 
   );
