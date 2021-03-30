@@ -6,7 +6,7 @@ import { loggingOut } from '../API/firebaseMethods';
 
 
 
-export default function Dashboard({ navigation }) {
+export default function Profile({ navigation }) {
   let currentUserUID = firebase.auth().currentUser.uid;
   const [name, setName] = useState('');
 
@@ -36,7 +36,7 @@ export default function Dashboard({ navigation }) {
   return (
     <View style={styles.container}>
       <Text style={styles.titleText}>Dashboard</Text>
-      <Text style={styles.text}>Hæ {name} þetta er dashboard skjárinn!</Text>
+      <Text style={styles.text}>Hæ {name} þetta er profile skjárinn</Text>
       <TouchableOpacity style={styles.button} onPress={handlePress}>
         <Text style={styles.buttonText}>Útskráning</Text>
       </TouchableOpacity>
