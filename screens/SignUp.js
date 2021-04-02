@@ -92,6 +92,7 @@ export default function SignUp({ navigation }) {
               <Item floatingLabel>
                 <Label style={styles.LabelText}>Lykilorð</Label>
                 <Input
+                  style={styles.InputBox}
                   value={password}
                   secureTextEntry={true}
                   autoCorrect={false}
@@ -109,6 +110,7 @@ export default function SignUp({ navigation }) {
               <Item floatingLabel>
                 <Label style={styles.LabelText}>Staðfesta lykilorð</Label>
                 <Input
+                  style={styles.InputBox}
                   secureTextEntry={true}
                   autoCorrect={false}
                   autoCapitalize="none"
@@ -225,5 +227,6 @@ const styles = StyleSheet.create({
   InputBox: {
     borderBottomColor: '#56B980',
     alignSelf: 'center',
+    color: '#56B980',
   }
 });

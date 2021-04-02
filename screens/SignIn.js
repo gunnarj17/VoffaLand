@@ -112,9 +112,6 @@ const styles = StyleSheet.create({
     color: '#56B980',
     fontSize: 40,
     fontWeight: "bold",
-    // justifyContent: 'center',
-    // alignItems: 'center',
-
   },
   text: {
     color: '#fff',
