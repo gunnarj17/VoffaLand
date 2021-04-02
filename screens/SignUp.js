@@ -45,11 +45,12 @@ export default function SignUp({ navigation }) {
   return (
 
     <View style={styles.container}>
-      <Text style={styles.HeaderText}>Nýr notandi</Text>
 
       <Container style={styles.LoginContainer}>
+        <Text style={styles.HeaderText}>Nýr notandi</Text>
+        
         <Form>
-          <View style={styles.container}>
+          <View style={styles.FormContainer}>
 
             <View style={styles.EmailForm}>
               <Icon style={styles.Icons}
@@ -170,11 +171,12 @@ const styles = StyleSheet.create({
     flex: 2,
     width: 300,
     height: 200,
-    // margin: 40,
     backgroundColor: '#F2F9F4',
-    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    marginTop: 100
+  },
+  FormContainer: { 
   },
   LabelText: {
     color: '#56B980',
