@@ -1,53 +1,81 @@
 import React from 'react';
-// hjálpar með að fara til baka á seinasta skjá
 import { NavigationContainer } from '@react-navigation/native';
-// hjálpar til með að stacka screens ofaná hvort annað þegar verið er að navigate-a á milli skjáa
 import { createStackNavigator } from '@react-navigation/stack';
-// Navbar
-import { NavigationContainer } from '@react-navigation/native';
-import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+import * as firebase from 'firebase';
+import apiKeys from './config/keys';
+import WelcomeScreen from './screens/WelcomeScreen';
+import SignUp from './screens/SignUp';
+import SignIn from './screens/SignIn';
+import LoadingScreen from './screens/LoadingScreen';
+import BottomTabScreen from './screens/BottomTabScreen';
 
-import Home from './src/screens/Home';
-import Parks from './src/screens/Parks';
-import Login from './src/screens/Login';
-import Register from './src/screens/Register';
+
+const Stack = createStackNavigator();
+
 
 export default function App() {
-  const Stack = createStackNavigator();
+  if (!firebase.apps.length) {
+    console.log('Connected with Firebase')
+    firebase.initializeApp(apiKeys.firebaseConfig);
+  }
 
   return (
-
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="Forsíða" component={Home} />
-        <Stack.Screen
-          options={{ headerLargeTitle: true }}
-          name="Hundasvæði" component={Parks} />
-        <Stack.Screen name="Innskráning" component={Login} /> 
-        <Stack.Screen name="Nýskráning" component={Register} /> 
+        <Stack.Screen name={'Loading'} component={LoadingScreen} options={{ headerShown: false }} />
+        <Stack.Screen name='Home' component={WelcomeScreen} options={{ headerShown: false }} />
+        <Stack.Screen name='Sign Up' component={SignUp} options={{ headerShown: false }} />
+        <Stack.Screen name='Sign In' component={SignIn} options={{ headerShown: false }} />
+        <Stack.Screen name={'BottomTabScreen'} component={BottomTabScreen} options={{ headerShown: false }} />
       </Stack.Navigator>
     </NavigationContainer>
+  );
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// import React from 'react';
+// // hjálpar með að fara til baka á seinasta skjá
+// import { NavigationContainer } from '@react-navigation/native';
+// // hjálpar til með að stacka screens ofaná hvort annað þegar verið er að navigate-a á milli skjáa
+// import { createStackNavigator } from '@react-navigation/stack';
+
+// import Home from './src/screens/Home';
+// import Parks from './src/screens/Parks';
+// import Login from './src/screens/Login';
+// import Register from './src/screens/Register';
+
+// import * as firebase from 'firebase';
+// import {firebaseConfig} from './src/firebase/config';
+
+// export default function App() {
+//   const Stack = createStackNavigator();
+
+//   return (
+
 //     <NavigationContainer>
-// <Tab.Navigator>
-//   <Tab.Screen name="Home" component={HomeScreen} />
-//   <Tab.Screen name="Settings" component={SettingsScreen} />
-// </Tab.Navigator>
-// </NavigationContainer>
+//       <Stack.Navigator>
+//         <Stack.Screen name="Forsíða" component={Home} />
+//         <Stack.Screen
+//           options={{ headerLargeTitle: true }}
+//           name="Hundasvæði" component={Parks} />
+//         <Stack.Screen name="Innskráning" component={Login} /> 
+//         <Stack.Screen name="Nýskráning" component={Register} /> 
+//       </Stack.Navigator>
+//     </NavigationContainer>
 
-  );
-}
-
-// Navbar
-import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
-
-const Tab = createMaterialBottomTabNavigator();
-
-function MyTabs() {
-  return (
-    <Tab.Navigator>
-      <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Settings" component={SettingsScreen} />
-    </Tab.Navigator>
-  );
-}
-
+//   );
+// }
