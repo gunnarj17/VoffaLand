@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, Alert } from 'react-native';
-import { StatusBar } from 'expo-status-bar';
+import { View, Text, TextInput, StyleSheet, Alert, Keyboard,  TouchableWithoutFeedback } from 'react-native';
 import { Container, Content, Header, From, Input, Item, Label, Form, Button, Icon } from 'native-base';
 import { signIn } from '../API/firebaseMethods';
 
@@ -22,13 +21,19 @@ export default function SignIn({ navigation }) {
     setPassword('');
   };
 
+  // const DismissKeyboard = ({ children }) => (
+  //   <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}> 
+  //   {children}
+  //   </TouchableWithoutFeedback>
+  //   );
+
   return (
     
     <View style={styles.container}>
-      <Text style={styles.HeaderText}>Innskráning</Text>
-      <StatusBar style="auto" />
 
       <Container style={styles.LoginContainer}>
+        <Text style={styles.HeaderText}>Innskráning</Text>
+
         <Form>
           <View style={styles.EmailForm}>
             <Icon style={styles.Icons}
@@ -39,7 +44,7 @@ export default function SignIn({ navigation }) {
                 style={styles.InputBox}
                 autoCorrect={false}
                 autoCapitalize="none"
-                value={email}
+                value={email}  
                 onChangeText={(email) => setEmail(email)} // setur þennan input sem email
               />
             </Item>
@@ -61,6 +66,7 @@ export default function SignIn({ navigation }) {
               />
             </Item>
           </View>
+         
           <View style={styles.ExtraOptions}>
             <Text style={styles.ForgotPassword}>Gleymt lykilorð?</Text>
           </View>
@@ -106,9 +112,6 @@ const styles = StyleSheet.create({
     color: '#56B980',
     fontSize: 40,
     fontWeight: "bold",
-    justifyContent: 'center',
-    alignItems: 'center',
-
   },
   text: {
     color: '#fff',
@@ -119,11 +122,12 @@ const styles = StyleSheet.create({
     flex: 2,
     width: 300,
     height: 200,
-    // margin: 40,
+    margin: 40,
+    marginTop: 100,
     backgroundColor: '#F2F9F4',
-    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    alignSelf: 'center'
   },
   LabelText: {
     color: '#56B980',
@@ -139,6 +143,7 @@ const styles = StyleSheet.create({
     margin: 15,
     backgroundColor: '#56B980',
     borderRadius: 20,
+    height: 55
   },
   BottomContainer: {
     flex: 1,

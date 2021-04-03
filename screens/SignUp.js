@@ -45,11 +45,12 @@ export default function SignUp({ navigation }) {
   return (
 
     <View style={styles.container}>
-      <Text style={styles.HeaderText}>Nýr notandi</Text>
 
       <Container style={styles.LoginContainer}>
+        <Text style={styles.HeaderText}>Nýr notandi</Text>
+        
         <Form>
-          <View style={styles.container}>
+          <View style={styles.FormContainer}>
 
             <View style={styles.EmailForm}>
               <Icon style={styles.Icons}
@@ -91,6 +92,7 @@ export default function SignUp({ navigation }) {
               <Item floatingLabel>
                 <Label style={styles.LabelText}>Lykilorð</Label>
                 <Input
+                  style={styles.InputBox}
                   value={password}
                   secureTextEntry={true}
                   autoCorrect={false}
@@ -108,6 +110,7 @@ export default function SignUp({ navigation }) {
               <Item floatingLabel>
                 <Label style={styles.LabelText}>Staðfesta lykilorð</Label>
                 <Input
+                  style={styles.InputBox}
                   secureTextEntry={true}
                   autoCorrect={false}
                   autoCapitalize="none"
@@ -170,11 +173,12 @@ const styles = StyleSheet.create({
     flex: 2,
     width: 300,
     height: 200,
-    // margin: 40,
     backgroundColor: '#F2F9F4',
-    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    marginTop: 100
+  },
+  FormContainer: { 
   },
   LabelText: {
     color: '#56B980',
@@ -223,5 +227,6 @@ const styles = StyleSheet.create({
   InputBox: {
     borderBottomColor: '#56B980',
     alignSelf: 'center',
+    color: '#56B980',
   }
 });
