@@ -7,7 +7,7 @@ export default function LoadingScreen({ navigation }) {
         () => {
             firebase.auth().onAuthStateChanged((user) => {
                 if (user) {
-                    navigation.replace('MainTabScreen');
+                    navigation.replace('BottomTabScreen');
                 } else {
                     navigation.replace('Home');
                 }
