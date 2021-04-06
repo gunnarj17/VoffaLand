@@ -1,9 +1,9 @@
+
 import React, { Component, useEffect } from "react";
 import MapView, { Polyline, Marker } from "react-native-maps";
 import { StyleSheet, Text, LogBox, View, Dimensions, Image } from "react-native";
-import * as Location from "expo-location";
+import * as Location from 'expo-location';
 import { firebaseConfig } from '../API/Firebase';
-
 
 import * as firebase from 'firebase';
 import 'firebase/firestore';
@@ -17,35 +17,54 @@ export default class Parks extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: []
+      data: [],
+      region: null,
     }
   }
-  async componentDidMount() {
-    // let { status } = await Location.requestPermissionsAsync();
-    // if (status !== "granted") {
-    //   alert("Permission to access location was denied");
-    //   return;
-    // }
+
+
+  _getLocation = async () => {
+    let { status } = await Location.requestPermissionsAsync();
+    
+    if (status !== "granted") {
+      alert("Permission to access location was denied");
+      return;
+    }
 
     let location = await Location.getCurrentPositionAsync({});
 
+    let region = {
+      latitude: location.coords.latitude,
+      longitude: location.coords.longitude,
+      latitudeDelta: 0.0999,
+      longitudeDelta: 0.0999
+    }
+
+
+    this.setState({ region: region });
+
+  }
+
+  async componentDidMount() {
+    await this._getLocation();
+
     const documentSnapshot = await firebase.firestore().collection('Parks').get();
 
-        let transformArray = [];
+    let transformArray = [];
 
-        documentSnapshot.forEach((res) => {
+    documentSnapshot.forEach((res) => {
 
-          const { GPS } = res.data();
+      const { GPS } = res.data();
 
-          transformArray.push({
-            Id: res.id,
-            Long: GPS.k,
-            Lat: GPS.U 
-          });
+      transformArray.push({
+        ID: res.id,
+        Long: GPS.longitude,
+        Lat: GPS.latitude
+      });
 
-        });
+    });
 
-        this.setState({ data: transformArray })
+    this.setState({ data: transformArray })
       
   }
 
@@ -53,25 +72,19 @@ export default class Parks extends Component {
 
     LogBox.ignoreLogs(['Setting a timer']);
 
-    const { data } = this.state;
-
-    console.log(data)
+    const { data, region } = this.state;
 
     return (
       <View style={styles.container}>
         <MapView
           style={styles.map}
-          initialRegion={{
-            latitude: 64.12612328,
-            longitude: -21.84200201,
-            latitudeDelta: 0.0999,
-            longitudeDelta: 0.0999
-          }}
+          initialRegion={region}
+          showsUserLocation={true}
         >
           {data.map((m) => {
             return (
               <Marker
-              key={m.ID}
+                key={m.ID}
                 coordinate={{
                   latitude: parseFloat(m.Long),
                   longitude: parseFloat(m.Lat)
