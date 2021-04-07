@@ -3,7 +3,7 @@ import React, { Component, useEffect } from "react";
 import MapView, { Polyline, Marker } from "react-native-maps";
 import { StyleSheet, Text, LogBox, View, Dimensions, Image } from "react-native";
 import * as Location from 'expo-location';
-import { firebaseConfig } from '../API/Firebase';
+//import { firebaseConfig } from '../API/Firebase';
 
 import * as firebase from 'firebase';
 import 'firebase/firestore';
@@ -54,7 +54,7 @@ export default class Parks extends Component {
 
     documentSnapshot.forEach((res) => {
 
-      const { GPS } = res.data();
+      const { GPS, Name, Town  } = res.data();
 
       transformArray.push({
         ID: res.id,
