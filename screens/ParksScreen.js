@@ -1,9 +1,13 @@
 
 import React, { Component, useEffect } from "react";
 import MapView, { Polyline, Marker } from "react-native-maps";
-import { StyleSheet, Text, LogBox, View, Dimensions, Image } from "react-native";
+import { StyleSheet, Text, LogBox, View, Dimensions, Image, Alert } from "react-native";
 import * as Location from 'expo-location';
 import { firebaseConfig } from '../API/Firebase';
+import ParkPreview from './ParkPreview';
+// Importing for Bottom Sheet
+import Animated from 'react-native-reanimated';
+import BottomSheet from 'reanimated-bottom-sheet';
 
 import * as firebase from 'firebase';
 import 'firebase/firestore';
@@ -67,15 +71,44 @@ export default class Parks extends Component {
     this.setState({ data: transformArray })
       
   }
+  renderInner = () => (
+    <Text> hi </Text>
+  );
+  renderHeader = () => (
+    <View style={styles.header}>
+      <View style={styles.panelHeader}>
+        <View style={styles.panelHandle} />
+      </View>
+    </View>
+  );
+  
+  bs = React.createRef();
+  fall = new Animated.Value(1);
 
   render() {
+
+    // The bottom sheet render function
+    const openBottomSheet = value => () => {
+      <ParkPreview name={value}/>
+    };
+
+    
 
     LogBox.ignoreLogs(['Setting a timer']);
 
     const { data, region } = this.state;
 
     return (
-      <View style={styles.container}>
+      <View style={styles.container}>  
+        <BottomSheet
+            ref={this.bs}
+            snapPoints={[330, 0]}
+            renderContent={this.renderInner}
+            renderHeader={this.renderHeader}
+            initialSnap={1}
+            callbackNode={this.fall}
+            enabledGestureInteraction={true}
+          />      
         <MapView
           style={styles.map}
           initialRegion={region}
@@ -89,9 +122,11 @@ export default class Parks extends Component {
                   latitude: parseFloat(m.Long),
                   longitude: parseFloat(m.Lat)
                 }}
-                title={m.ID}
-                description="Description"
+                // Calling function to make bottom sheet appear
+                // onPress={openBottomSheet(m.ID)}
+                onPress={() => this.bs.current.snapTo(0)}
               >
+                
                 <Image
                   key={m.ID}
                   style={{ width: 25, height: 25 }}
