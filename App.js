@@ -37,13 +37,7 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <NavigationContainer >
-        <Stack.Navigator
-          tabBarOptions={{
-            keyboardHidesTabBar: true,
-            style: {
-              position: 'absolute',
-            },
-          }}>
+        <Stack.Navigator>
           <Stack.Screen name={'Loading'} component={LoadingScreen} options={{ headerShown: false }} />
           <Stack.Screen name='Home' component={WelcomeScreen} options={{ headerShown: false }} />
           <Stack.Screen name='Sign Up' component={SignUp} options={{ headerShown: false }} />
@@ -52,17 +46,24 @@ export default function App() {
           <Stack.Screen name={'Parks'} options={{ headerShown: false }} >{() => (
             <Tab.Navigator
               tabBarOptions={{
+                showLabel: false,
+                alignItems: 'center',
+                position: 'absolute',
+                activeBackgroundColor: '#069380',
+                tabStyle: {
+                  // hægt að setja inn meiri styles
+                  borderRadius: 30,
+                },
                 style: {
+                  position: 'absolute',
                   backgroundColor: '#034B42',
                   borderRadius: 30,
+                  left: 80,
+                  right: 80,
                   width: 200,
                   height: 40,
                   bottom: 40,
-                  alignSelf: 'center',
                 },
-                activeTintColor: '#FFFFFF',
-                inactiveTintColor: '#F2F9F4',
-                showLabel: false,
               }}>
 
               <Tab.Screen name='Staðsetningar' component={Parks} options={{
@@ -71,6 +72,7 @@ export default function App() {
                     name="location-sharp"
                     size={22}
                     color={focused ? 'white' : 'gray'}
+                    name={focused ? 'location' : 'location-outline'}
                   />
                 )
               }} />
@@ -81,6 +83,7 @@ export default function App() {
                     name="information-circle"
                     size={23}
                     color={focused ? 'white' : 'gray'}
+                    name={focused ? 'information-circle' : 'information-circle-outline'}
                   />
                 )
               }} />
@@ -91,6 +94,7 @@ export default function App() {
                     name="calendar"
                     size={22}
                     color={focused ? 'white' : 'gray'}
+                    name={focused ? 'calendar' : 'calendar-outline'}
                   />
                 )
               }} />
@@ -101,6 +105,7 @@ export default function App() {
                     name="person"
                     size={22}
                     color={focused ? 'white' : 'gray'}
+                    name={focused ? 'person' : 'person-outline'}
                   />
                 )
               }} />

@@ -105,8 +105,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
-    position: 'absolute'
-    
+    position: 'absolute',
+    bottom: 0,
   },
   map: {
     width: Dimensions.get("window").width,
