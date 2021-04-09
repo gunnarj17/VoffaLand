@@ -1,5 +1,5 @@
 
-import React, { Component, useEffect } from "react";
+import React, { Component, useEffect, useRef } from "react";
 import MapView, { Polyline, Marker } from "react-native-maps";
 import { StyleSheet, Text, LogBox, View, Dimensions, Image, Alert } from "react-native";
 import * as Location from 'expo-location';
@@ -71,9 +71,13 @@ export default class Parks extends Component {
     this.setState({ data: transformArray })
       
   }
-  renderInner = () => (
-    <Text> hi </Text>
+  renderInner = value => (
+    <View style={styles.panel} >
+      <Text> Park name: {value} </Text>
+      {/* <Text>{value}</Text> */}
+    </View>
   );
+
   renderHeader = () => (
     <View style={styles.header}>
       <View style={styles.panelHeader}>
@@ -85,14 +89,17 @@ export default class Parks extends Component {
   bs = React.createRef();
   fall = new Animated.Value(1);
 
+  Name = useRef();
+
   render() {
 
     // The bottom sheet render function
     const openBottomSheet = value => () => {
-      <ParkPreview name={value}/>
+      // <ParkPreview name={value}/>
+      this.bs.current.snapTo(0);
+      console.log(value)
+      
     };
-
-    
 
     LogBox.ignoreLogs(['Setting a timer']);
 
@@ -115,6 +122,7 @@ export default class Parks extends Component {
           showsUserLocation={true}
         >
           {data.map((m) => {
+            Name.current = m.ID;
             return (
               <Marker
                 key={m.ID}
@@ -122,9 +130,9 @@ export default class Parks extends Component {
                   latitude: parseFloat(m.Long),
                   longitude: parseFloat(m.Lat)
                 }}
-                // Calling function to make bottom sheet appear
-                // onPress={openBottomSheet(m.ID)}
-                onPress={() => this.bs.current.snapTo(0)}
+                onPress={openBottomSheet(m.ID)}
+                
+                // onPress={() => this.bs.current.snapTo(0)}
               >
                 
                 <Image
@@ -151,5 +159,38 @@ const styles = StyleSheet.create({
   map: {
     width: Dimensions.get("window").width,
     height: Dimensions.get("window").height
-  }
+  },
+  panel: {
+    padding: 20,
+    backgroundColor: '#FFFFFF',
+    paddingTop: 20,
+    backgroundColor: 'white'
+    // borderTopLeftRadius: 20,
+    // borderTopRightRadius: 20,
+    // shadowColor: '#000000',
+    // shadowOffset: {width: 0, height: 0},
+    // shadowRadius: 5,
+    // shadowOpacity: 0.4,
+  },
+  header: {
+    backgroundColor: '#FFFFFF',
+    shadowColor: '#333333',
+    shadowOffset: {width: -1, height: -3},
+    shadowRadius: 2,
+    shadowOpacity: 0.4,
+    // elevation: 5,
+    paddingTop: 20,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+  },
+  panelHeader: {
+    alignItems: 'center',
+  },
+  panelHandle: {
+    width: 60,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: '#00000040',
+    marginBottom: 10,
+  },
 });
