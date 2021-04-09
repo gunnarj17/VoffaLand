@@ -49,7 +49,7 @@ export default function App() {
                 showLabel: false,
                 alignItems: 'center',
                 position: 'absolute',
-                activeBackgroundColor: '#069380',
+                // activeBackgroundColor: '#069380',
                 tabStyle: {
                   // hægt að setja inn meiri styles
                   borderRadius: 30,
