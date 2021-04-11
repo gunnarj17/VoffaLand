@@ -40,6 +40,7 @@ export default function SignIn({ navigation }) {
               name='mail-outline' />
             <Item floatingLabel>
               <Label style={styles.LabelText}>Netfang</Label>
+            
               <Input
                 style={styles.InputBox}
                 autoCorrect={false}
@@ -47,6 +48,7 @@ export default function SignIn({ navigation }) {
                 value={email}  
                 onChangeText={(email) => setEmail(email)} // setur þennan input sem email
               />
+            
             </Item>
           </View>
 
