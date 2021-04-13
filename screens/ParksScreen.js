@@ -1,4 +1,4 @@
-import React, { Component, useEffect } from "react";
+import React, { Component, useEffect, useRef } from "react";
 import MapView, { Polyline, Marker } from "react-native-maps";
 import { StyleSheet, Text, LogBox, View, Dimensions, Image, TouchableOpacity, ScrollView, TextInput } from "react-native";
 import * as Location from 'expo-location';
@@ -14,14 +14,18 @@ import {
 } from 'native-base';
 import Option from '../components/Option'; // buttons for filter
 import Card from '../components/Card'; // listing options from search and filter //  mögulega breytta þessu útliti í popupið hjá mariu?
+import ParkPreview from "./ParkPreview";
+
 
 export default class Parks extends Component {
-
   constructor(props) {
     super(props);
     this.state = {
       data: [],
       region: null,
+      park: {},
+    };
+
       isFilterModalVisible: false,
       filterOption: {
         'Fence': false,
@@ -49,7 +53,6 @@ export default class Parks extends Component {
     }
   }
 
-
   _getLocation = async () => {
     let { status } = await Location.requestPermissionsAsync();
 
@@ -64,26 +67,27 @@ export default class Parks extends Component {
       latitude: location.coords.latitude,
       longitude: location.coords.longitude,
       latitudeDelta: 0.0999,
-      longitudeDelta: 0.0999
-    }
-
+      longitudeDelta: 0.0999,
+    };
 
     this.setState({ region: region });
-
-  }
+  };
 
   async componentDidMount() {
     this.setState({ isLoading: true });
     await this._getLocation();
 
-    const documentSnapshot = await firebase.firestore().collection('Parks').get();
+    const documentSnapshot = await firebase
+      .firestore()
+      .collection("Parks")
+      .get();
 
     let transformArray = [];
+
     let parkList = []
     documentSnapshot.forEach(async (res) => {
-      const { GPS } = res.data();
+      const { GPS, Name } = res.data();
       let parkObj = res.data();
-
       let townRef = parkObj.Town;
       let townName = ''
       if (townRef) {
@@ -95,9 +99,11 @@ export default class Parks extends Component {
       parkObj.townName = townName;
       transformArray.push({
         ID: res.id,
+        Name: Name,
         Long: GPS.longitude,
-        Lat: GPS.latitude
+        Lat: GPS.latitude,
       });
+
 
       parkList.push(parkObj)
     });
@@ -178,6 +184,9 @@ export default class Parks extends Component {
     });
     this.setState({ isLoading: false });
   }
+
+
+    this.setState({ data: transformArray });
 
   // Method to handle change search key
   _changeSearchKey = (key) => {
@@ -306,9 +315,14 @@ export default class Parks extends Component {
     const { isFilterModalVisible } = this.state;
     if (isFilterModalVisible)
       this.setState({ isFilterModalVisible: false })
+
   }
 
+  bs = React.createRef();
+
+
   render() {
+    LogBox.ignoreLogs(["Setting a timer"]);
 
     const { data, region, isFilterModalVisible } = this.state;
 
@@ -320,8 +334,14 @@ export default class Parks extends Component {
     }
 
 
+    const openBottomSheet = (value) => {
+      this.bs.current.snapTo(0);
+      this.setState({ park: value });
+    };
+
     return (
       <View style={styles.container}>
+        <ParkPreview ref={this.bs} props={this.state.park} />
         <MapView
           style={styles.map}
           initialRegion={initialRegion}
@@ -334,10 +354,10 @@ export default class Parks extends Component {
                 key={m.ID}
                 coordinate={{
                   latitude: parseFloat(m.Long),
-                  longitude: parseFloat(m.Lat)
+                  longitude: parseFloat(m.Lat),
                 }}
-                title={m.ID}
-                description="Description" // þarf að breyta þessu í styttri lýsingu á svæði eða taka út.
+                onPress={() => openBottomSheet(m)}
+
               >
                 <Image
                   key={m.ID}
