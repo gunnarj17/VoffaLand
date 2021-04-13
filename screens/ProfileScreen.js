@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Alert } from 'react-native';
+import { View, Text, StyleSheet, Alert, Dimensions } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import * as firebase from 'firebase';
 import { loggingOut } from '../API/firebaseMethods';
@@ -62,8 +62,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   container: {
-    height: '100%',
-    width: '100%',
+    flex: 1,
+    width: Dimensions.get("window").width,
+    height: Dimensions.get("window").height,
     backgroundColor: '#3FC5AB',
     alignItems: 'center',
     justifyContent: 'center',
