@@ -16,7 +16,7 @@ export async function registration(email, password, name) {
                 name: name,
             });
     } catch (err) {
-        Alert.alert('There is something wrong!', err.message);
+        Alert.alert('Eitthvað fór úrskeiðis!', err.message);
     }
 }
 
@@ -26,7 +26,7 @@ export async function signIn(email, password) {
             .auth()
             .signInWithEmailAndPassword(email, password);
     } catch (err) {
-        Alert.alert('There is something wrong!', err.message);
+        Alert.alert('Eitthvað fór úrskeiðis!', err.message);
     }
 }
 
@@ -34,6 +34,6 @@ export async function loggingOut() {
     try {
         await firebase.auth().signOut();
     } catch (err) {
-        Alert.alert('There is something wrong!', err.message);
+        Alert.alert('Eitthvað fór úrskeiðis!', err.message);
     }
 }

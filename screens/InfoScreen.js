@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Alert, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Alert } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import * as firebase from 'firebase';
 import { loggingOut } from '../API/firebaseMethods';
 
 
 
-export default function Profile({ navigation }) {
+export default function Dashboard({ navigation }) {
   let currentUserUID = firebase.auth().currentUser.uid;
   const [name, setName] = useState('');
 
@@ -36,7 +36,7 @@ export default function Profile({ navigation }) {
   return (
     <View style={styles.container}>
       <Text style={styles.titleText}>Dashboard</Text>
-      <Text style={styles.text}>Hæ {name} þetta er profile skjárinn</Text>
+      <Text style={styles.text}>Hæ {name} þetta er gott að vita skjárinn!</Text>
       <TouchableOpacity style={styles.button} onPress={handlePress}>
         <Text style={styles.buttonText}>Útskráning</Text>
       </TouchableOpacity>
@@ -62,9 +62,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   container: {
-    flex: 1,
-    width: Dimensions.get("window").width,
-    height: Dimensions.get("window").height,
+    height: '100%',
+    width: '100%',
     backgroundColor: '#3FC5AB',
     alignItems: 'center',
     justifyContent: 'center',
