@@ -1,6 +1,6 @@
 // import React in our code
 import React, { useState } from "react";
-
+import { Ionicons } from '@expo/vector-icons';
 // import all the components we are going to use
 import {
   SafeAreaView,
@@ -9,6 +9,7 @@ import {
   Text,
   View,
   TouchableOpacity,
+  Platform,
 } from "react-native";
 
 //import for the animation of Collapse and Expand
@@ -44,41 +45,11 @@ const CONTENT = [
     content:
       "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
   },
-  {
-    title: "Gott að vita...",
-    content:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-  },
-  {
-    title: "Gott að vita...",
-    content:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-  },
-  {
-    title: "Gott að vita...",
-    content:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-  },
-  {
-    title: "Gott að vita...",
-    content:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-  },
-  {
-    title: "Gott að vita...",
-    content:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-  },
 ];
 
 const Info = () => {
   // Default active selector
   const [activeSections, setActiveSections] = useState([]);
-
-  // MultipleSelect is for the Multiple Expand allowed
-  // True: Expand multiple at a time
-  // False: One can be expand at a time
-  const [multipleSelect, setMultipleSelect] = useState(false);
 
   const setSections = (sections) => {
     //setting up a active section state
@@ -92,11 +63,22 @@ const Info = () => {
     return (
       <Animatable.View
         duration={400}
-        style={[styles.header, isActive ? styles.active : styles.inactive]}
-        transition="backgroundColor"
-
+        
+        
+        style={[styles.content, isActive ? styles.active : styles.inactive]}
+        // transition="backgroundColor"
       >
-        <Text style={styles.headerText}>{section.title}</Text>
+        <Ionicons
+                    name="location-sharp"
+                    size={22}
+                  />
+        <Animatable.Text
+          // animation={isActive ? "bounceIn" : undefined}
+          // style={{ textAlign: "left", color: "blue" }}
+          style={styles.headerText}
+        >
+          {section.title}
+        </Animatable.Text>
       </Animatable.View>
     );
   };
@@ -108,11 +90,11 @@ const Info = () => {
         duration={400}
         style={[styles.content, isActive ? styles.active : styles.inactive]}
         transition="backgroundColor"
-
+        // transition="opacity"
       >
         <Animatable.Text
-          animation={isActive ? "bounceIn" : undefined}
-          style={{ textAlign: "left" }}
+          // animation={isActive ? "bounceIn" : undefined}
+          style={{ textAlign: "left", color: "white" }}
         >
           {section.content}
         </Animatable.Text>
@@ -121,33 +103,18 @@ const Info = () => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={styles.droidSafeArea}>
       <View style={styles.container}>
         <ScrollView>
           <Text style={styles.title}>Gott að vita</Text>
-          {/*Code for Accordion/Expandable List starts here*/}
           <Accordion
-            activeSections={activeSections}
-            //for any default active section
-            sections={CONTENT}
-            //title and content of accordion
-            touchableComponent={TouchableOpacity}
-            //which type of touchable component you want
-            //It can be the following Touchables
-            //TouchableHighlight, TouchableNativeFeedback
-            //TouchableOpacity , TouchableWithoutFeedback
-            expandMultiple={multipleSelect}
-            //Do you want to expand mutiple at a time or single at a time
-            renderHeader={renderHeader}
-            //Header Component(View) to render
-            renderContent={renderContent}
-            //Content Component(View) to render
-            duration={400}
-            //Duration for Collapse and expand
-            onChange={setSections}
-            //setting the state of active sections
+            activeSections={activeSections} //for any default active section
+            sections={CONTENT} //title and content of accordion
+            renderHeader={renderHeader} //Header Component(View) to render
+            renderContent={renderContent} //Content Component(View) to render
+            duration={400} //Duration for Collapse and expand
+            onChange={setSections} //setting the state of active sections
           />
-          {/*Code for Accordion/Expandable List ends here*/}
         </ScrollView>
       </View>
     </SafeAreaView>
@@ -159,22 +126,25 @@ export default Info;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 30,
+    backgroundColor: "white",
+    // paddingBottom: 60,
   },
   title: {
     textAlign: "center",
-    fontSize: 18,
-    fontWeight: "300",
+    fontSize: 24,
     marginBottom: 20,
+    marginTop: 40,
+    fontWeight: "bold",
+    color: "#069380",
   },
   header: {
-    backgroundColor: "#F5FCFF",
-    padding: 10,
+    // textAlign: "left",
+    paddingBottom: 10,
   },
   headerText: {
-    textAlign: "center",
+    // textAlign: "left",
     fontSize: 16,
-    fontWeight: "500",
+    fontWeight: "bold",
     color: "#069380",
   },
   content: {
@@ -183,37 +153,12 @@ const styles = StyleSheet.create({
   },
   active: {
     backgroundColor: "#034B42",
-    color: "white",
   },
   inactive: {
-    backgroundColor: "rgba(245,252,255,1)",
+    backgroundColor: "white",
   },
-  selectors: {
-    marginBottom: 10,
-    flexDirection: "row",
-    justifyContent: "center",
-  },
-  selector: {
-    backgroundColor: "#F5FCFF",
-    padding: 10,
-  },
-  activeSelector: {
-    fontWeight: "bold",
-  },
-  selectTitle: {
-    fontSize: 14,
-    fontWeight: "500",
-    padding: 10,
-    textAlign: "center",
-  },
-  multipleToggle: {
-    flexDirection: "row",
-    justifyContent: "center",
-    marginVertical: 30,
-    alignItems: "center",
-  },
-  multipleToggle__title: {
-    fontSize: 16,
-    marginRight: 8,
+  droidSafeArea: {
+    flex: 1,
+    paddingTop: Platform.OS === 'android' ? 35 : 0,
   },
 });
