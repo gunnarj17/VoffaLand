@@ -1,17 +1,32 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import * as firebase from 'firebase';
 import apiKeys from './config/keys';
+import { Ionicons } from '@expo/vector-icons';
+import {
+  SafeAreaView, SafeAreaProvider,
+  SafeAreaInsetsContext,
+  useSafeAreaInsets,
+  initialWindowMetrics,
+} from 'react-native-safe-area-context';
+
+// stack screens
 import WelcomeScreen from './screens/WelcomeScreen';
 import SignUp from './screens/SignUp';
 import SignIn from './screens/SignIn';
 import LoadingScreen from './screens/LoadingScreen';
-import BottomTabScreen from './screens/BottomTabScreen';
 
+
+// Tab Screens
+import Info from './screens/InfoScreen';
+import Profile from './screens/ProfileScreen';
+import Parks from './screens/ParksScreen';
+import Events from './screens/EventsScreen';
 
 const Stack = createStackNavigator();
-
+const Tab = createBottomTabNavigator();
 
 export default function App() {
   if (!firebase.apps.length) {
@@ -20,62 +35,85 @@ export default function App() {
   }
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name={'Loading'} component={LoadingScreen} options={{ headerShown: false }} />
-        <Stack.Screen name='Home' component={WelcomeScreen} options={{ headerShown: false }} />
-        <Stack.Screen name='Sign Up' component={SignUp} options={{ headerShown: false }} />
-        <Stack.Screen name='Sign In' component={SignIn} options={{ headerShown: false }} />
-        <Stack.Screen name={'BottomTabScreen'} component={BottomTabScreen} options={{ headerShown: false }} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <SafeAreaProvider>
+      <NavigationContainer >
+        <Stack.Navigator>
+          <Stack.Screen name={'Loading'} component={LoadingScreen} options={{ headerShown: false }} />
+          <Stack.Screen name='Home' component={WelcomeScreen} options={{ headerShown: false }} />
+          <Stack.Screen name='Sign Up' component={SignUp} options={{ headerShown: false }} />
+          <Stack.Screen name='Sign In' component={SignIn} options={{ headerShown: false }} />
+          
+          <Stack.Screen name={'Parks'} options={{ headerShown: false }} >{() => (
+            <Tab.Navigator
+              tabBarOptions={{
+                showLabel: false,
+                alignItems: 'center',
+                position: 'absolute',
+                // activeBackgroundColor: '#069380',
+                tabStyle: {
+                  // hægt að setja inn meiri styles
+                  borderRadius: 30,
+                },
+                style: {
+                  position: 'absolute',
+                  backgroundColor: '#034B42',
+                  borderRadius: 30,
+                  left: 80,
+                  right: 80,
+                  width: 200,
+                  height: 40,
+                  bottom: 40,
+                },
+              }}>
+
+              <Tab.Screen name='Staðsetningar' component={Parks} options={{
+                tabBarIcon: ({ focused }) => (
+                  <Ionicons
+                    name="location-sharp"
+                    size={22}
+                    color={focused ? 'white' : 'gray'}
+                    name={focused ? 'location' : 'location-outline'}
+                  />
+                )
+              }} />
+
+              <Tab.Screen name='Upplýsingar' component={Info} options={{
+                tabBarIcon: ({ focused }) => (
+                  <Ionicons
+                    name="information-circle"
+                    size={23}
+                    color={focused ? 'white' : 'gray'}
+                    name={focused ? 'information-circle' : 'information-circle-outline'}
+                  />
+                )
+              }} />
+
+              <Tab.Screen name='Viðburðir' component={Events} options={{
+                tabBarIcon: ({ focused }) => (
+                  <Ionicons
+                    name="calendar"
+                    size={22}
+                    color={focused ? 'white' : 'gray'}
+                    name={focused ? 'calendar' : 'calendar-outline'}
+                  />
+                )
+              }} />
+
+              <Tab.Screen name='Prófíll' component={Profile} options={{
+                tabBarIcon: ({ focused }) => (
+                  <Ionicons
+                    name="person"
+                    size={22}
+                    color={focused ? 'white' : 'gray'}
+                    name={focused ? 'person' : 'person-outline'}
+                  />
+                )
+              }} />
+            </Tab.Navigator>)}
+          </Stack.Screen>
+
+        </Stack.Navigator>
+      </NavigationContainer>
+    </SafeAreaProvider>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import React from 'react';
-// // hjálpar með að fara til baka á seinasta skjá
-// import { NavigationContainer } from '@react-navigation/native';
-// // hjálpar til með að stacka screens ofaná hvort annað þegar verið er að navigate-a á milli skjáa
-// import { createStackNavigator } from '@react-navigation/stack';
-
-// import Home from './src/screens/Home';
-// import Parks from './src/screens/Parks';
-// import Login from './src/screens/Login';
-// import Register from './src/screens/Register';
-
-// import * as firebase from 'firebase';
-// import {firebaseConfig} from './src/firebase/config';
-
-// export default function App() {
-//   const Stack = createStackNavigator();
-
-//   return (
-
-//     <NavigationContainer>
-//       <Stack.Navigator>
-//         <Stack.Screen name="Forsíða" component={Home} />
-//         <Stack.Screen
-//           options={{ headerLargeTitle: true }}
-//           name="Hundasvæði" component={Parks} />
-//         <Stack.Screen name="Innskráning" component={Login} /> 
-//         <Stack.Screen name="Nýskráning" component={Register} /> 
-//       </Stack.Navigator>
-//     </NavigationContainer>
-
-//   );
-// }
