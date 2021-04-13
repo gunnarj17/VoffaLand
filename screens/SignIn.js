@@ -45,6 +45,7 @@ export default function SignIn({ navigation }) {
               isPassword={false}
               inputValue={(email) => setEmail(email)}
             />
+
             <InputBox
               icon="lock-closed-outline"
               label="Lykilorð"

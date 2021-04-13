@@ -36,7 +36,7 @@ export default function Dashboard({ navigation }) {
   return (
     <View style={styles.container}>
       <Text style={styles.titleText}>Dashboard</Text>
-      <Text style={styles.text}>Hæ {name} þetta er dashboard skjárinn!</Text>
+      <Text style={styles.text}>Hæ {name} þetta er viðburða skjárinn!</Text>
       <TouchableOpacity style={styles.button} onPress={handlePress}>
         <Text style={styles.buttonText}>Útskráning</Text>
       </TouchableOpacity>
