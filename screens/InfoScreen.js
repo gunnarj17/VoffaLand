@@ -1,6 +1,3 @@
-// Example of Collapsible/Accordion/Expandable List View in React Native
-// https://aboutreact.com/collapsible-accordion-expandable-view/
-
 // import React in our code
 import React, { useState } from "react";
 
@@ -20,9 +17,28 @@ import * as Animatable from "react-native-animatable";
 //import for the Accordion view
 import Accordion from "react-native-collapsible/Accordion";
 
-//Dummy content to show
-//You can also use dynamic data by calling web service
+//Content to show
 const CONTENT = [
+  {
+    title: "Gott að vita...",
+    content:
+      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+  },
+  {
+    title: "Gott að vita...",
+    content:
+      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+  },
+  {
+    title: "Gott að vita...",
+    content:
+      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+  },
+  {
+    title: "Gott að vita...",
+    content:
+      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+  },
   {
     title: "Gott að vita...",
     content:
@@ -69,6 +85,8 @@ const Info = () => {
     setActiveSections(sections.includes(undefined) ? [] : sections);
   };
 
+
+  //Renders the head of each Accordition when clicked on
   const renderHeader = (section, _, isActive) => {
     //Accordion Header view
     return (
@@ -76,6 +94,7 @@ const Info = () => {
         duration={400}
         style={[styles.header, isActive ? styles.active : styles.inactive]}
         transition="backgroundColor"
+
       >
         <Text style={styles.headerText}>{section.title}</Text>
       </Animatable.View>
@@ -89,10 +108,11 @@ const Info = () => {
         duration={400}
         style={[styles.content, isActive ? styles.active : styles.inactive]}
         transition="backgroundColor"
+
       >
         <Animatable.Text
           animation={isActive ? "bounceIn" : undefined}
-          // style={{ textAlign: "center" }}
+          style={{ textAlign: "left" }}
         >
           {section.content}
         </Animatable.Text>
@@ -155,13 +175,15 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 16,
     fontWeight: "500",
+    color: "#069380",
   },
   content: {
     padding: 20,
     backgroundColor: "#fff",
   },
   active: {
-    backgroundColor: "rgba(255,255,255,1)",
+    backgroundColor: "#034B42",
+    color: "white",
   },
   inactive: {
     backgroundColor: "rgba(245,252,255,1)",
