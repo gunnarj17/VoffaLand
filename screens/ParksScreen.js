@@ -1,6 +1,3 @@
-import React, { Component, useEffect, useRef } from "react";
-import MapView, { Polyline, Marker } from "react-native-maps";
-import { StyleSheet, Text, LogBox, View, Dimensions, Image, TouchableOpacity, ScrollView, TextInput } from "react-native";
 import React, { Component, useEffect } from "react";
 import MapView, { PROVIDER_GOOGLE, Polyline, Marker } from "react-native-maps";
 import { StyleSheet, Alert, Text, LogBox, View, Dimensions, Image, TouchableOpacity, ScrollView, TextInput } from "react-native";
@@ -21,8 +18,6 @@ import { Feather } from '@expo/vector-icons';
 
 import Option from '../components/Option'; // buttons for filter
 import Card from '../components/Card'; // listing options from search and filter //  mögulega breytta þessu útliti í popupið hjá mariu?
-import ParkPreview from "./ParkPreview";
-
 import apiKeys from '../config/keys';
 
 import { fetchRoute } from '../API/GoogleMap';
@@ -33,9 +28,6 @@ export default class Parks extends Component {
     this.state = {
       data: [],
       region: null,
-      park: {},
-    };
-
       isFilterModalVisible: false,
       filterOption: {
         'Fence': false,
@@ -59,7 +51,6 @@ export default class Parks extends Component {
       filteredParks: [],
       isLoading: false,
       search_key: '',
-      parkList: []
       parkList: [],
       destination: {
         GPS: null,
@@ -123,44 +114,28 @@ export default class Parks extends Component {
 
   _getLocation = async () => {
     let { status } = await Location.requestPermissionsAsync();
-
     if (status !== "granted") {
-      // alert("Permission to access location was denied");
       Alert.alert("Permission to access location was denied");
       return;
     }
-
     // Get Current Position
     let location = await Location.getCurrentPositionAsync({});
-
     let region = {
       latitude: location.coords.latitude,
       longitude: location.coords.longitude,
       latitudeDelta: 0.0999,
-      longitudeDelta: 0.0999,
-    };
-
       longitudeDelta: 0.0999
     }
     this.setState({ region: region });
-  };
   }
 
   async componentDidMount() {
     this.setState({ isLoading: true });
     await this._getLocation();
-
-    const documentSnapshot = await firebase
-      .firestore()
-      .collection("Parks")
-      .get();
-
     const documentSnapshot = await firebase.firestore().collection('Parks').get();
     let transformArray = [];
-
     let parkList = []
     documentSnapshot.forEach(async (res) => {
-      const { GPS, Name } = res.data();
       const { GPS } = res.data();
       let parkObj = res.data();
 
@@ -175,12 +150,9 @@ export default class Parks extends Component {
       parkObj.townName = townName;
       transformArray.push({
         ID: res.id,
-        Name: Name,
         Long: GPS.longitude,
-        Lat: GPS.latitude,
         Lat: GPS.latitude
       });
-
 
       parkList.push(parkObj)
     });
@@ -261,9 +233,6 @@ export default class Parks extends Component {
     });
     this.setState({ isLoading: false });
   }
-
-
-    this.setState({ data: transformArray });
 
   // Method to handle change search key
   _changeSearchKey = (key) => {
@@ -378,12 +347,10 @@ export default class Parks extends Component {
   // Method to show Filter or Search Result by List / þetta er notað til að sýna Filter eða search niðurstöður í lista
   _renderResultList = () => {
     const { filteredParks } = this.state;
-    console.log('filteredParks: ', filteredParks);
     return (
       <ScrollView style={styles.resultList}>
         {
           filteredParks.length > 0 && filteredParks.map((park, key) =>
-            (<Card park={park} key={key} />)
             (<Card park={park} key={key} onClick={() => this.onShowRoute(park)} />)
           )
         }
@@ -407,17 +374,6 @@ export default class Parks extends Component {
     const { directionTitle } = this.state;
     return (
       <View style={styles.filterArea}>
-        <View style={styles.actionArea}>
-          <View style={styles.left}>
-            <Item style={styles.searchArea}>
-              <Input
-                style={styles.searchInputBox}
-                placeholder='Leita af svæði ...'
-                value={this.state.search_key}
-                onChangeText={(txt) => this._changeSearchKey(txt)}
-              />
-              <Icon active name='search' />
-            </Item>
         {
           directionTitle == '' &&
           <View style={styles.actionArea}>
@@ -449,19 +405,10 @@ export default class Parks extends Component {
           directionTitle != '' &&
           <View style={styles.directonContainer}>
             {
-              this._renderResultList()
               this._renderDirectionSymbol()
             }
             <HTML source={{ html: directionTitle }} containerStyle={{flex:1, }}baseFontStyle={styles.directionText} />
           </View>
-
-          <Button style={styles.filterButton} onPress={this.showFilterModal}>
-            <Image
-              style={styles.filterIcon}
-              source={require("../assets/filter.png")}
-            />
-          </Button>
-        </View>
         }
       </View>
     )
@@ -482,7 +429,6 @@ export default class Parks extends Component {
     this.setState({ destination });
   }
 
-  bs = React.createRef();
   exitRoute = () => {
     this.props.navigation.setOptions({ 'tabBarVisible': true });
 
@@ -529,35 +475,22 @@ export default class Parks extends Component {
   }
 
   render() {
-    LogBox.ignoreLogs(["Setting a timer"]);
 
     const { data, region, isFilterModalVisible } = this.state;
     if(!region)
       return null;
 
-    let initialRegion = {
-      latitude: 64.07287152431486,
-      longitude: -21.948613737592083,
-      latitudeDelta: 0.0999,
-      longitudeDelta: 0.0999
     let origin = {
       latitude: region.latitude,
       longitude: region.longitude,
     }
 
-
-    const openBottomSheet = (value) => {
-      this.bs.current.snapTo(0);
-      this.setState({ park: value });
-    };
     const { destination, currentUserPosition } = this.state;
 
     return (
       <View style={styles.container}>
-        <ParkPreview ref={this.bs} props={this.state.park} />
         <MapView
           style={styles.map}
-          initialRegion={initialRegion}
           initialRegion={region}
           showsUserLocation={true}
           onPress={(e) => this.onPressMapView(e)}
@@ -571,17 +504,13 @@ export default class Parks extends Component {
                 key={m.ID}
                 coordinate={{
                   latitude: parseFloat(m.Long),
-                  longitude: parseFloat(m.Lat),
                   longitude: parseFloat(m.Lat)
                 }}
-                onPress={() => openBottomSheet(m)}
-
                 title={m.ID}
                 description="Description" // þarf að breyta þessu í styttri lýsingu á svæði eða taka út.
               >
                 <Image
                   key={m.ID}
-                  style={{ width: 25, height: 25 }}
                   style={{ width: 30, height: 30 }}
                   source={require("../assets/dog.png")}
                 />
@@ -804,5 +733,4 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 18
   }
-})
 })

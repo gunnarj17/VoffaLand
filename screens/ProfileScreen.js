@@ -1,6 +1,3 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Alert, Dimensions } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, Alert, ActivityIndicator, Dimensions, SafeAreaView } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
@@ -8,7 +5,6 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import ProfileHeader from '../components/ProfileHeader';
 import PetModal from '../components/PetModal';
 import * as firebase from 'firebase';
-import { loggingOut } from '../API/firebaseMethods';
 import 'firebase/firestore';
 import 'firebase/auth';
 
@@ -16,9 +12,6 @@ const { height } = Dimensions.get('window');
 
 export default function ProfileScreen({ navigation }) {
 
-export default function Profile({ navigation }) {
-  let currentUserUID = firebase.auth().currentUser.uid;
-  const [name, setName] = useState('');
   const [dogs, setDogs] = useState([]);
   const [dogItem, setDogItems] = useState({});
   const [getUser, setGetUser] = useState({});
@@ -70,26 +63,11 @@ export default function Profile({ navigation }) {
 
         setDogs(transformArray);
 
-  useEffect(() => {
-    async function getUserInfo() {
-      let doc = await firebase
-        .firestore()
-        .collection('users')
-        .doc(currentUserUID)
-        .get();
-
-      if (!doc.exists) {
-        Alert.alert('Notandi finnst ekki, reyndu aftur.')
-      } else {
-        let dataObj = doc.data();
-        setName(dataObj.name)
       }
 
     } catch (err) {
       setError(true);
     }
-    getUserInfo();
-  })
   }, [setError]);
 
   useEffect(() => {
@@ -99,9 +77,6 @@ export default function Profile({ navigation }) {
     });
   }, [getData, setIsFetching]);
 
-  const handlePress = () => {
-    loggingOut();
-    navigation.replace('Home');
   if (isFetching) {
     return (
       <View style={styles.indicator}>
@@ -160,16 +135,6 @@ export default function Profile({ navigation }) {
   }    
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.titleText}>Dashboard</Text>
-      <Text style={styles.text}>Hæ {name} þetta er profile skjárinn</Text>
-      <TouchableOpacity style={styles.button} onPress={handlePress}>
-        <Text style={styles.buttonText}>Útskráning</Text>
-      </TouchableOpacity>
-      
-    </View>
-  )
-}
     <SafeAreaView style={styles.container}>
       <StatusBar style="dark"  backgroundColor={height > 850 ? '#D7D7D7' : '#FFFFFF'} />
       <FlatList
@@ -220,13 +185,6 @@ export default function Profile({ navigation }) {
 };
 
 const styles = StyleSheet.create({
-  button: {
-    width: 150,
-    padding: 5,
-    backgroundColor: '#ff9999',
-    borderWidth: 2,
-    borderColor: 'white',
-    borderRadius: 15,
   container: {
     flex: 1,
     backgroundColor: 'white'
@@ -236,11 +194,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginBottom: hp(2)
   },
-  buttonText: {
-    fontSize: 20,
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
   dogContainer: { 
     height: hp(22.5), 
     backgroundColor: 'white', 
@@ -253,7 +206,6 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     marginBottom: hp(.8)
   },
-  container: {
   dogTitle: { 
     marginBottom: hp(2), 
     textAlign: 'center', 
@@ -268,27 +220,8 @@ const styles = StyleSheet.create({
   },
   indicator: {
     flex: 1,
-    width: Dimensions.get("window").width,
-    height: Dimensions.get("window").height,
-    backgroundColor: '#3FC5AB',
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  text: {
-    textAlign: 'center',
-    fontSize: 20,
-    fontStyle: 'italic',
-    marginTop: '2%',
-    marginBottom: '10%',
-    fontWeight: 'bold',
-    color: 'black',
-  },
-  titleText: {
-    textAlign: 'center',
-    fontSize: 30,
-    fontWeight: 'bold',
-    color: '#2E6194',
-  },
     backgroundColor: 'white'
   }
 });

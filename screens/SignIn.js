@@ -104,7 +104,6 @@ export default function SignIn({ navigation }) {
       Alert.alert('Vantar að slá inn rétt lykilorð');
     }
 
-    signIn(email, password);
     signInWithEmail(email, password);
     setEmail('');
     setPassword('');
@@ -117,7 +116,6 @@ export default function SignIn({ navigation }) {
   //   );
 
   return (
-    
 
     <View style={styles.container}>
 
@@ -125,26 +123,12 @@ export default function SignIn({ navigation }) {
         <Text style={styles.HeaderText}>Innskráning</Text>
 
         <Form>
-           <View>
-           <InputBox
-              icon="mail-outline"
-              label="Netfang"
-              errorText=""
-              isPassword={false}
-              inputValue={(email) => setEmail(email)}
-            />
           <View style={styles.EmailForm}>
             <Icon style={styles.Icons}
               name='mail-outline' />
             <Item floatingLabel>
               <Label style={styles.LabelText}>Netfang</Label>
 
-            <InputBox
-              icon="lock-closed-outline"
-              label="Lykilorð"
-              isPassword={true}
-              errorText={passwordError}
-              inputValue={(password) => setPassword(password)}
               <Input
                 style={styles.InputBox}
                 autoCorrect={false}
@@ -160,7 +144,6 @@ export default function SignIn({ navigation }) {
             <Icon style={styles.Icons}
               name='lock-closed-outline'
             />
-           
             <Item floatingLabel>
               <Label style={styles.LabelText}>Lykilorð</Label>
               <Input
@@ -217,7 +200,6 @@ export default function SignIn({ navigation }) {
               onPress={() => navigation.navigate("Sign Up")}>
               <Text style={styles.ContinueTextBold}> Nýskrá</Text>
             </Button>
-          </View>
           </View>
 
         </Form>
