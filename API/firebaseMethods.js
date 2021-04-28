@@ -21,6 +21,7 @@ export async function registration(email, password, name) {
 }
 
 export async function signIn(email, password) {
+export async function signInWithEmail(email, password) {
     try {
         await firebase
             .auth()
@@ -36,4 +37,4 @@ export async function loggingOut() {
     } catch (err) {
         Alert.alert('Eitthvað fór úrskeiðis!', err.message);
     }
-}
+}}

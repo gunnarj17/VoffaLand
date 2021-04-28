@@ -20,6 +20,7 @@ const Card = (props) => {
 		</View>
 		<View style={Styles.right}>
                 <Button style={Styles.filterButton} onPress={() => true}>
+                <Button style={Styles.filterButton} onPress={props.onClick}>
                   <Image
                       style={Styles.filterIcon}
                       source={require("../assets/direct.png")}
