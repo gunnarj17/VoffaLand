@@ -18,10 +18,10 @@ import SignUp from './screens/SignUp';
 import SignIn from './screens/SignIn';
 import LoadingScreen from './screens/LoadingScreen';
 
-
 // Tab Screens
 import Info from './screens/InfoScreen';
 import Profile from './screens/ProfileScreen';
+import AddDogs from './screens/AddDogs';
 import Parks from './screens/ParksScreen';
 import Events from './screens/EventsScreen';
 
@@ -42,31 +42,28 @@ export default function App() {
           <Stack.Screen name='Home' component={WelcomeScreen} options={{ headerShown: false }} />
           <Stack.Screen name='Sign Up' component={SignUp} options={{ headerShown: false }} />
           <Stack.Screen name='Sign In' component={SignIn} options={{ headerShown: false }} />
-          
+          <Stack.Screen name='addDogs' component={AddDogs} options={{ headerShown: false }} />
           <Stack.Screen name={'Parks'} options={{ headerShown: false }} >{() => (
             <Tab.Navigator
               tabBarOptions={{
                 showLabel: false,
-                alignItems: 'center',
-                position: 'absolute',
                 // activeBackgroundColor: '#069380',
                 tabStyle: {
                   // hægt að setja inn meiri styles
-                  borderRadius: 30,
+                  height: 40,
                 },
                 style: {
                   position: 'absolute',
                   backgroundColor: '#034B42',
-                  borderRadius: 30,
-                  left: 80,
-                  right: 80,
-                  width: 200,
+                  borderRadius: 20,
+                  left: "25%",
+                  width: "50%",
                   height: 40,
-                  bottom: 40,
+                  bottom: 15
                 },
               }}>
 
-              <Tab.Screen name='Staðsetningar' component={Parks} options={{
+              <Tab.Screen name='Staðsetningar' component={Parks} options={({route}) => ({
                 tabBarIcon: ({ focused }) => (
                   <Ionicons
                     name="location-sharp"
@@ -75,8 +72,7 @@ export default function App() {
                     name={focused ? 'location' : 'location-outline'}
                   />
                 )
-              }} />
-
+              })} />
               <Tab.Screen name='Upplýsingar' component={Info} options={{
                 tabBarIcon: ({ focused }) => (
                   <Ionicons

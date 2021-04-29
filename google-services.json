@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "445652201476",
+    "firebase_url": "https://voffaland-2db0c-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "voffaland-2db0c",
+    "storage_bucket": "voffaland-2db0c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:445652201476:android:8422e4757667c9358f4551",
+        "android_client_info": {
+          "package_name": "com.fixly.voffaland"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "445652201476-fg7edqr0s2drge1ivp6fq6e07koinlkg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.fixly.voffaland",
+            "certificate_hash": "3406cea94a07521670ec71ba71be3f0164d6ccf6"
+          }
+        },
+        {
+          "client_id": "445652201476-mph6ef3im4bc9u886vdcihl62iu5a37s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAU_tbQsXf0OAOeeSb5UcizATnAwjbM2Ek"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "445652201476-mph6ef3im4bc9u886vdcihl62iu5a37s.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "445652201476-qtacjlkcnpoh7i655g5rkcc0gf09g2iq.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.fixly.voffaland"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

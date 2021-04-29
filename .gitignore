@@ -12,5 +12,4 @@ package-lock.json
 
 # macOS
 .DS_Store
-
-.yarn.lockyarn.lock
+yarn.lock
