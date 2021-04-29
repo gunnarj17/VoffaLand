@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, Alert, Keyboard,  TouchableWithoutFeedback } from 'react-native';
 import { Container, Content, Header, From, Input, Item, Label, Form, Button, Icon } from 'native-base';
 import { signIn } from '../API/firebaseMethods';
+import InputBox from './components/InputBox';
 
 export default function SignIn({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [passwordError, setPasswordError] = useState("");
 
   const handlePress = () => {
     if (!email) {
@@ -35,38 +37,23 @@ export default function SignIn({ navigation }) {
         <Text style={styles.HeaderText}>Innskráning</Text>
 
         <Form>
-          <View style={styles.EmailForm}>
-            <Icon style={styles.Icons}
-              name='mail-outline' />
-            <Item floatingLabel>
-              <Label style={styles.LabelText}>Netfang</Label>
-              <Input
-                style={styles.InputBox}
-                autoCorrect={false}
-                autoCapitalize="none"
-                value={email}  
-                onChangeText={(email) => setEmail(email)} // setur þennan input sem email
-              />
-            </Item>
-          </View>
-
-          <View style={styles.EmailForm}>
-            <Icon style={styles.Icons}
-              name='lock-closed-outline'
+           <View>
+           <InputBox
+              icon="mail-outline"
+              label="Netfang"
+              errorText=""
+              isPassword={false}
+              inputValue={(email) => setEmail(email)}
             />
-            <Item floatingLabel>
-              <Label style={styles.LabelText}>Lykilorð</Label>
-              <Input
-                style={styles.InputBox}
-                secureTextEntry={true}
-                autoCorrect={false}
-                value={password}
-                autoCapitalize="none"
-                onChangeText={(password) => setPassword(password)} // setur þennan input sem password
-              />
-            </Item>
-          </View>
-         
+
+            <InputBox
+              icon="lock-closed-outline"
+              label="Lykilorð"
+              isPassword={true}
+              errorText={passwordError}
+              inputValue={(password) => setPassword(password)}
+            />
+           
           <View style={styles.ExtraOptions}>
             <Text style={styles.ForgotPassword}>Gleymt lykilorð?</Text>
           </View>
@@ -90,7 +77,7 @@ export default function SignIn({ navigation }) {
               <Text style={styles.ContinueTextBold}> Nýskrá</Text>
             </Button>
           </View>
-
+          </View>
         </Form>
       </Container>
 
@@ -129,11 +116,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignSelf: 'center'
   },
-  LabelText: {
-    color: '#56B980',
-    fontSize: 20
-  },
-
   LoginButtons: {
     marginTop: 30,
     marginBottom: 30,
@@ -164,22 +146,6 @@ const styles = StyleSheet.create({
   ContinueButton: {
     backgroundColor: '#F2F9F4',
     marginBottom: 10
-  },
-  EmailForm: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginLeft: 10,
-    marginRight: 10,
-  },
-  Icons: {
-    color: '#56B980',
-    paddingTop: 40,
-  },
-  InputBox: {
-    color: '#56B980',
-    alignSelf: 'center',
-    margin: 2,
   },
   ExtraOptions: {
     padding: 10
