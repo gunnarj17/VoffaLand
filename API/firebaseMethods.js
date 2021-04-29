@@ -36,4 +36,4 @@ export async function loggingOut() {
     } catch (err) {
         Alert.alert('Eitthvað fór úrskeiðis!', err.message);
     }
-}
+}}
