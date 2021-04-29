@@ -17,6 +17,7 @@ import WelcomeScreen from './screens/WelcomeScreen';
 import SignUp from './screens/SignUp';
 import SignIn from './screens/SignIn';
 import LoadingScreen from './screens/LoadingScreen';
+import SelectedPark from './screens/SelectedPark';
 
 // Tab Screens
 import Info from './screens/InfoScreen';
