@@ -49,22 +49,19 @@ export default function App() {
             <Tab.Navigator
               tabBarOptions={{
                 showLabel: false,
-                alignItems: 'center',
-                position: 'absolute',
                 // activeBackgroundColor: '#069380',
                 tabStyle: {
                   // hægt að setja inn meiri styles
-                  borderRadius: 30,
+                  height: 40,
                 },
                 style: {
                   position: 'absolute',
                   backgroundColor: '#034B42',
-                  borderRadius: 30,
-                  left: 80,
-                  right: 80,
-                  width: 200,
+                  borderRadius: 20,
+                  left: "25%",
+                  width: "50%",
                   height: 40,
-                  bottom: 40,
+                  bottom: 40
                 },
               }}>
 
