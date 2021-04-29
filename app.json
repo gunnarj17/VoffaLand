@@ -3,8 +3,11 @@
     "name": "VoffaLand",
     "slug": "VoffaLand",
     "version": "1.0.0",
+    "scheme": "voffaland",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
+    "facebookAppId": "450535086254132",
+    "facebookDisplayName": "VoffaLand",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -17,13 +20,24 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.fixly.voffaland",
+      "config": {
+        "googleSignIn": {
+          "reservedClientId": "com.googleusercontent.apps.445652201476-qtacjlkcnpoh7i655g5rkcc0gf09g2iq"
+        }
+      },
+      "googleServicesFile": "./GoogleService-Info.plist",
+      "buildNumber" : "1.0.0"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.fixly.voffaland",
+      "googleServicesFile": "./google-services.json",
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png"
