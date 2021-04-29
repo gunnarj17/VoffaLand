@@ -1,12 +1,16 @@
 // park preview
-import * as React from "react";
-import { StyleSheet, Text, View, Button} from "react-native";
-import { Icon,} from "native-base";
+// import * as React from "react";
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, Text, View,} from "react-native";
+import { Icon, Button} from "native-base";
 import Animated from "react-native-reanimated";
 import BottomSheet from "reanimated-bottom-sheet";
+import { useNavigation } from '@react-navigation/native';
+
 
 const ParkPreview = React.forwardRef(({ props }, ref) => {
-  console.log(props)
+  const navigation = useNavigation();
+
   const renderInner = () => (
     <View style={styles.panel}>
       <View style={styles.panelTop}>
@@ -15,12 +19,18 @@ const ParkPreview = React.forwardRef(({ props }, ref) => {
       <View style={styles.panelBottom}>
         <View style={styles.panelLeft}>
           <View style={styles.iconView}>
+            {/* Hérna þarf að birta actual stjörnugjöf sem svæðið hefur, þetta eru bara place-holder icons */}
             <Icon style={styles.Icons} name='star'/><Icon style={styles.Icons} name='star'/><Icon style={styles.Icons} name='star'/>
+            {/* Hérna vantar líka að birta tögg-in sem svæðið hefur :) */}
           </View>
           <Text style={styles.leftText}> </Text>
         </View>
         <View style={styles.panelRight}>
-          <Text style={styles.rightText}>Right</Text>
+          <Button
+           style={styles.SeeMoreButton}
+           onPress={() => { navigation.navigate('Selected Park',  props  ) }}>
+              <Text style={styles.ButtonText}>Sjá nánar</Text>
+          </Button>
         </View>
       </View>
     </View>
@@ -37,7 +47,7 @@ const ParkPreview = React.forwardRef(({ props }, ref) => {
   return (
     <BottomSheet
       ref={ref}
-      snapPoints={[350, 0]}
+      snapPoints={[450, 0]}
       renderContent={renderInner}
       renderHeader={renderHeader}
       initialSnap={1}
@@ -49,6 +59,15 @@ const ParkPreview = React.forwardRef(({ props }, ref) => {
 export default ParkPreview;
 
 const styles = StyleSheet.create({
+  SeeMoreButton: {
+    backgroundColor: "#069380",
+    padding: 20,
+    borderRadius: 20
+  },
+  ButtonText: {
+    color: 'white',
+    fontSize: 18
+  },
   panel: {
     padding: 20,
     backgroundColor: "#FFFFFF",
@@ -63,6 +82,7 @@ const styles = StyleSheet.create({
   panelBottom: {
     flexDirection:'row',
     justifyContent:'space-between',
+    marginBottom: 100 //Mjög mikil HAX leið, tökum þetta út þegar allar upplýsingarnar á þessu Bottom Sheet eru komnar inn!
   },
   panelLeft: {
     alignSelf: 'flex-start',
