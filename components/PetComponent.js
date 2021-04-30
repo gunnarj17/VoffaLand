@@ -8,6 +8,8 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 
 const { height } = Dimensions.get('window');
 
+
+
 const PetComponent = ({ 
     Id,
     Name, 
@@ -101,18 +103,21 @@ const PetComponent = ({
                         }}
                         size='large'
                     />
+                    <Text style={styles.textS}>{Name}</Text>
                 </View>
                 <View style={styles.center}> 
-                    <Text style={styles.textS}> Nafn: </Text>
-                    <Text style={styles.textS}>Tegund: </Text>
-                    <Text>Aldur: </Text>
-                    <Text style={styles.textS}>Um: </Text>
+                    <Text style={styles.lefttextS}>Nafn: </Text>
+                    <Text style={styles.lefttextS}>Tegund: </Text>
+                    <Text style={styles.lefttextS}>Kyn: </Text>
+                    <Text style={styles.lefttextS}>Aldur: </Text>
+                    <Text style={styles.lefttextS}>Um: </Text>
                 </View>
                 <View style={styles.rightmost}>
                     <Text style={styles.textS}>{Name}</Text>
                     <Text style={styles.textS}>{Breed}</Text>
-                    <Text>{ageCalculator(Birthday)}</Text>
-                    <Text numberOfLines={lines ? 2 : null} style={styles.descriptionText}>
+                    <Text style={styles.textS}>{Sex}</Text>
+                    <Text style={styles.textS}>{ageCalculator(Birthday)}</Text>
+                    <Text numberOfLines={lines ? 2 : null} style={styles.textS}>
                         {About}
                     </Text>
                     <TouchableOpacity onPress={() => setLines(!lines)} style={styles.seeContainer}>
@@ -130,26 +135,35 @@ const styles = StyleSheet.create({
     },
     container: { 
         flexDirection: 'row',
-        marginHorizontal: wp(1),
+        // marginHorizontal: wp(1),
         marginVertical: wp(2),
-        backgroundColor: '#81A5A1',
         borderRadius: 15,
+        backgroundColor: '#81A5A1',
         padding: 10
     },
     leftmost: {
         flex: 1,
-        alignSelf: 'center'
+        alignSelf: 'center',
+        alignItems: 'center'
     },
     center: {
         flex: 1,
+        paddingRight: wp(3),
     },
     rightmost: {
-        flex: 1,
+        flex: 2,
     },
     textS: {
-        color: 'black',
-        fontSize: 15
+        color: 'white',
+        fontSize: 18,
+        paddingBottom: hp(1)
     },
+    lefttextS: {
+        color: 'white',
+        fontSize: 18,
+        textAlign: 'right',
+        paddingBottom: hp(1)
+    }
 });
 
 export default PetComponent

@@ -36,6 +36,7 @@ export default function App() {
     firebase.initializeApp(apiKeys.firebaseConfig);
   }
 
+
   return (
     <SafeAreaProvider>
       <NavigationContainer >

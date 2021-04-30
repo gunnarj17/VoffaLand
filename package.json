@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@alessiocancian/react-native-actionsheet": "^2.4.11",
+    "@expo-google-fonts/lato": "^0.1.0",
     "@expo/vector-icons": "^12.0.0",
     "@react-native-community/datetimepicker": "3.0.4",
     "@react-native-community/masked-view": "0.1.10",
@@ -21,6 +22,7 @@
     "expo-application": "^3.1.2",
     "expo-auth-session": "~3.0.0",
     "expo-facebook": "~9.1.0",
+    "expo-font": "~8.4.0",
     "expo-image-picker": "~9.2.0",
     "expo-linear-gradient": "~8.4.0",
     "expo-location": "^10.0.0",

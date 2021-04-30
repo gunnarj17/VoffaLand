@@ -282,10 +282,10 @@ const styles = StyleSheet.create({
         backgroundColor: 'white'
     },
     backIcon: {
-        marginTop: Platform.OS === 'android' ? hp(7) : hp(4)
+        marginTop: Platform.OS === 'android' ? hp(5) : hp(2)
     },
     logout: {
-        marginTop: Platform.OS === 'android' ? hp(7.5) : hp(4.5)
+        marginTop: Platform.OS === 'android' ? hp(5.5) : hp(2.5)
     },
     img: {
         marginTop: hp(1.8),
