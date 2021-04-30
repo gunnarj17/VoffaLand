@@ -134,7 +134,7 @@ const AddDogs = ({ navigation, route }) => {
 
     const submit = async () => {
         if (name == '' || breed == '' || description == '' || photoURL == null) {
-            Alert.alert('fields are empty. Fill the fields.');
+            Alert.alert('Some fields are still empty. Fill the fields.');
         } else {
             setIsFetching(true);
             try {
@@ -356,14 +356,14 @@ const AddDogs = ({ navigation, route }) => {
                         </Text>
                         { Platform.OS === 'android' ?
                             <RadioButton
-                                value="Tik"
+                                value="Tík"
                                 status={ checked === 'Tik' ? 'checked' : 'unchecked' }
                                 onPress={() => setChecked('Tik')}
                             />
                         :
                             <View style={styles.radioIos}>
                                 <RadioButton
-                                    value="Tik"
+                                    value="Tík"
                                     status={ checked === 'Tik' ? 'checked' : 'unchecked' }
                                     onPress={() => setChecked('Tik')}
                                 />
