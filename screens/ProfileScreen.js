@@ -7,6 +7,7 @@ import PetModal from '../components/PetModal';
 import * as firebase from 'firebase';
 import 'firebase/firestore';
 import 'firebase/auth';
+import PetComponent from '../components/PetComponent';
 
 const { height } = Dimensions.get('window');
 
@@ -142,12 +143,27 @@ export default function ProfileScreen({ navigation }) {
         data={dogs}
         style={styles.flatList}
         showsVerticalScrollIndicator={false}
-        numColumns={2}
         ListHeaderComponent={() => <ProfileHeader navigation={navigation} logout={logout} username={getUser.username} userphoto={getUser.userphoto} />}
         renderItem={({ item }) => {
             return (
               <>
-                <TouchableOpacity 
+                <PetComponent
+                    Id={item.id}
+                    Name={item.Name}
+                    Photo={item.Photo}
+                    Breed={item.Breed}
+                    About={item.About}
+                    Sex={item.Sex}
+                    User={item.User}
+                    Birthday={item.Birthday}
+                    isModalVisible={isModalVisible} 
+                    toggleModal={toggleModal} 
+                    lines={lines}
+                    setLines={setLines}
+                    deleteDog={deleteDog}
+                    navigation={navigation}
+                />
+                {/* <TouchableOpacity 
                   onPress={() => { 
                     setModalVisible(true);
                     openModal(item)
@@ -159,12 +175,12 @@ export default function ProfileScreen({ navigation }) {
                   <Text style={styles.dogTitle}>
                     {item.Name}
                   </Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
               </>
             );
         }} 
       />
-      <PetModal 
+      {/* <PetModal 
         Id={dogItem.id}
         Name={dogItem.Name}
         Photo={dogItem.Photo}
@@ -179,7 +195,7 @@ export default function ProfileScreen({ navigation }) {
         setLines={setLines}
         deleteDog={deleteDog}
         navigation={navigation}
-      />
+      /> */}
     </SafeAreaView>
   );
 };
@@ -187,12 +203,14 @@ export default function ProfileScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white'
+    backgroundColor: 'white',
+    flexDirection: 'column',
   },
   flatList: {
     flex: 1,
+    flexDirection: 'column',
     alignSelf: 'center',
-    marginBottom: hp(2)
+    marginBottom: hp(2),
   },
   dogContainer: { 
     height: hp(22.5), 
@@ -204,7 +222,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.3,
     shadowRadius: 2,
-    marginBottom: hp(.8)
+    marginBottom: hp(.8),
   },
   dogTitle: { 
     marginBottom: hp(2), 

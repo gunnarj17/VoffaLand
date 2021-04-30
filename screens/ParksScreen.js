@@ -15,6 +15,7 @@ import {
 import MapViewDirections from 'react-native-maps-directions';
 import HTML from "react-native-render-html";
 import { Feather } from '@expo/vector-icons';
+import ParkPreview from './ParkPreview';
 
 import Option from '../components/Option'; // buttons for filter
 import Card from '../components/Card'; // listing options from search and filter //  mögulega breytta þessu útliti í popupið hjá mariu?
@@ -136,7 +137,7 @@ export default class Parks extends Component {
     let transformArray = [];
     let parkList = []
     documentSnapshot.forEach(async (res) => {
-      const { GPS } = res.data();
+      const { GPS, Name, Information } = res.data();
       let parkObj = res.data();
 
       let townRef = parkObj.Town;
@@ -150,6 +151,8 @@ export default class Parks extends Component {
       parkObj.townName = townName;
       transformArray.push({
         ID: res.id,
+        Name: Name,
+        Information: Information,
         Long: GPS.longitude,
         Lat: GPS.latitude
       });
@@ -474,6 +477,8 @@ export default class Parks extends Component {
       return null
   }
 
+  bs = React.createRef();
+
   render() {
 
     const { data, region, isFilterModalVisible } = this.state;
@@ -487,8 +492,14 @@ export default class Parks extends Component {
 
     const { destination, currentUserPosition } = this.state;
 
+    const openBottomSheet = (value) => {
+      this.bs.current.snapTo(0);
+      this.setState({ park: value})
+    }
+
     return (
       <View style={styles.container}>
+        <ParkPreview ref={this.bs} props={this.state.park} />
         <MapView
           style={styles.map}
           initialRegion={region}
@@ -500,15 +511,15 @@ export default class Parks extends Component {
 
           {data.map((m) => {
             return (
+              
               <Marker
                 key={m.ID}
                 coordinate={{
                   latitude: parseFloat(m.Long),
                   longitude: parseFloat(m.Lat)
                 }}
-                title={m.ID}
-                description="Description" // þarf að breyta þessu í styttri lýsingu á svæði eða taka út.
-              >
+                onPress={() => openBottomSheet(m)} 
+                >
                 <Image
                   key={m.ID}
                   style={{ width: 30, height: 30 }}

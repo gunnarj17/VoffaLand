@@ -84,7 +84,7 @@ const PetModal = ({
         else if ( (age.years == 0) && (age.months > 0) && (age.days > 0) )  
            ageString = age.months + " mánaða " + age.days + " daga";  
         else if ( (age.years > 0) && (age.months == 0) && (age.days > 0) )  
-           ageString = age.years + " ára, og" + age.days + " daga";  
+           ageString = age.years + " ára, og " + age.days + " daga";  
         else if ( (age.years == 0) && (age.months > 0) && (age.days == 0) )  
            ageString = age.months + " mánaða";  
         else ageString = "Þetta er fyrsti dagurinn";   
@@ -147,7 +147,7 @@ const PetModal = ({
                     </View>
                     <View style={styles.detailContainer}>
                         <Text style={styles.fontSizes}>
-                            Um okkur:
+                            Um {Name}:
                         </Text>
                         <Text numberOfLines={lines ? 2 : null} style={styles.descriptionText}>
                             {About}
@@ -192,7 +192,7 @@ const PetModal = ({
 const styles = StyleSheet.create({
     container: { 
         height: hp(75),
-        backgroundColor: 'white' 
+        backgroundColor: 'grey' 
     },
     closeIcon: { 
         alignSelf: 'flex-end', 
