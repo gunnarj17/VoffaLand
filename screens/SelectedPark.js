@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React,{useState,useEffect} from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity, Alert, Modal, TextInput, Keyboard, KeyboardAvoidingView} from "react-native";
 import park_img from '../assets/place_holder.png';
 import star_outline from '../assets/star_outline.png';
@@ -6,11 +6,48 @@ import star_filled from '../assets/star_filled.png';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons'; 
 
+
+// import Weather from '../components/GetWeather'
+import API_KEY from '../API/Weather'
+
+
 export default function SelectedPark( props ) {
     const [actionTriggered, setActionTriggered] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
     const [defaultRating, setdefaultRating] = useState(2);
     const [maxRating, setmaxRating] = useState([1,2,3,4,5]);
+
+    
+    console.log(props.route.params)
+    const [Latitude, setLatitude] = useState(props.route.params.Lat);
+    const [Longitude, setLongitude] = useState(props.route.params.Long);
+    let url = 'https://api.openweathermap.org/data/2.5/weather?lat=' + Longitude + '&lon=' + Latitude + '&units=metric&appid=59989a6fa648999ce02375ef2c360678';
+
+    console.log(Latitude);
+    console.log(Longitude);
+
+    const [info,setInfo] = useState ({
+        name:"Villa!",
+        temp:"Villa!",
+        icon:"Villa!",
+    })
+    useEffect(()=>{
+        getWeather()
+    },[])
+    const getWeather = (Latitude, Longitude) => {
+        console.log(url)
+        fetch(url)
+        .then(data=>data.json())
+        .then(results=>{
+            // console.log(results)
+            setInfo({
+                temp:results.main.temp,
+                icon:results.weather[0].icon
+            })
+            // console.log(info.icon)
+        })
+    }
+
 
     // Þetta er stjörnugjafar gæjinn
     const CustomRatingBar = () => {
@@ -121,6 +158,19 @@ export default function SelectedPark( props ) {
             <View style={styles.middleContainer}>
                 <View style={styles.textContainer}>
                     <Text style={styles.panelTitle}>{props.route.params && props.route.params.Name ? props.route.params.Name : "Vantar nafn"}</Text>
+                    
+                    {/* Hérna kemur veðurspáin*/}
+                    <View style={styles.weather}>
+                        <Image style={styles.weatherimage}
+                        
+                        source={{uri:"http://openweathermap.org/img/wn/"+info.icon+"@2x.png"}}
+                        />
+                        <Text style={styles.weatherText}>Hiti: {info.temp}°</Text>
+                    </View>
+                    
+
+                    {/* <Weather></Weather> */}
+
                     {/* Hérna þarf að birta actual stjörnugjöf sem svæðið hefur, þetta eru bara place-holder icons */}
                         <AntDesign name="staro" size={24} color="black" />
                     <Text style={styles.aboutPark}>{props.route.params.Information}</Text>
@@ -162,7 +212,8 @@ export default function SelectedPark( props ) {
 
 const styles = StyleSheet.create({
     parentContainer: {
-        flex: 1
+        flex: 1,
+        backgroundColor: "#F7F5F4"
     },
     iconStyle:{
         color: 'white',
@@ -330,6 +381,21 @@ const styles = StyleSheet.create({
         height: 50,
         width: 240,
         marginBottom: 30
+      },
+      weather:{
+        width:80,
+        height: 70,
+        borderRadius: 30,
+        backgroundColor: '#44cbe3',
+        alignItems: 'center',
+        justifyContent: 'center',
+      },
+      weatherimage:{
+        width:100,
+        height:100,
+      },
+      weatherText:{
+          color: 'black',
       }
     
 })

@@ -11,8 +11,6 @@ import PetComponent from '../components/PetComponent';
 
 const { height } = Dimensions.get('window');
 
-const { height } = Dimensions.get("window");
-
 export default function ProfileScreen({ navigation }) {
   const [dogs, setDogs] = useState([]);
   const [dogItem, setDogItems] = useState({});
