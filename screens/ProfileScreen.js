@@ -147,40 +147,22 @@ export default function ProfileScreen({ navigation }) {
         renderItem={({ item }) => {
             return (
               <>
-                <PetComponent
-                    Id={item.id}
+              <TouchableOpacity 
+                onPress={() => { 
+                  setModalVisible(true);
+                  openModal(item)
+                }}>
+                  <PetComponent
                     Name={item.Name}
-                    Photo={item.Photo}
                     Breed={item.Breed}
-                    About={item.About}
-                    Sex={item.Sex}
-                    User={item.User}
-                    Birthday={item.Birthday}
-                    isModalVisible={isModalVisible} 
-                    toggleModal={toggleModal} 
-                    lines={lines}
-                    setLines={setLines}
-                    deleteDog={deleteDog}
-                    navigation={navigation}
-                />
-                {/* <TouchableOpacity 
-                  onPress={() => { 
-                    setModalVisible(true);
-                    openModal(item)
-                  }}
-                  activeOpacity={0.7} 
-                  style={styles.dogContainer}
-                >
-                  <Image source={{ uri: item.Photo }} resizeMode='cover' style={styles.dogImage} />
-                  <Text style={styles.dogTitle}>
-                    {item.Name}
-                  </Text>
-                </TouchableOpacity> */}
+                    Photo={item.Photo}
+                  />
+                </TouchableOpacity>
               </>
             );
         }} 
       />
-      {/* <PetModal 
+      <PetModal 
         Id={dogItem.id}
         Name={dogItem.Name}
         Photo={dogItem.Photo}
@@ -195,7 +177,7 @@ export default function ProfileScreen({ navigation }) {
         setLines={setLines}
         deleteDog={deleteDog}
         navigation={navigation}
-      /> */}
+      /> 
     </SafeAreaView>
   );
 };
@@ -212,18 +194,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: hp(2),
     marginBottom: hp(2),
   },
-  // dogContainer: { 
-  //   height: hp(22.5), 
-  //   backgroundColor: 'white', 
-  //   width: wp(42.5),
-  //   margin: hp(1.2),
-  //   elevation: 2.8, 
-  //   shadowColor: '#000',
-  //   shadowOffset: { width: 0, height: 1 },
-  //   shadowOpacity: 0.3,
-  //   shadowRadius: 2,
-  //   marginBottom: hp(.8),
-  // },
   dogTitle: { 
     marginBottom: hp(2), 
     textAlign: 'center', 
