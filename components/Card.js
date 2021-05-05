@@ -1,9 +1,9 @@
 import React from 'react';
-import { 
+import {
 	StyleSheet,
-	View, 
+	View,
 	Text,
-	Image 
+	Image
 } from 'react-native';
 import {
 	Button,
@@ -19,7 +19,7 @@ const Card = (props) => {
 			<View><Text style={Styles.text}>Lengd * {props.park && props.park.Name}</Text></View>
 		</View>
 		<View style={Styles.right}>
-                <Button style={Styles.filterButton} onPress={props.onClick}>
+                <Button style={Styles.filterButton} onPress={() => props.onClick()}>
                   <Image
                       style={Styles.filterIcon}
                       source={require("../assets/direct.png")}

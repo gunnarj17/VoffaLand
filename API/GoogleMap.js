@@ -21,7 +21,13 @@ export function fetchRoute(
         if (json.routes.length) {
           const route = json.routes[0];
           return Promise.resolve({
-            nextStep: route.legs[0].steps[0]
+              nextStep: route.legs[0].steps[0],
+              waypoints: route.overview_polyline.points,
+              distance: route.legs[0].distance.text,
+              duration: route.legs[0].duration.text,
+              maneuver: route.legs[0].steps[0].maneuver,
+              distanceNextWaypoint: route.legs[0].steps[0].distance.text,
+              nextManeuver: route.legs[0].steps.length > 1 ? route.legs[0].steps[1]?.maneuver : null,
           });
         } else {
           return Promise.reject();
