@@ -1,5 +1,5 @@
 import React,{useState,useEffect, useCallback} from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, Alert, Modal, TextInput, Keyboard, KeyboardAvoidingView, FlatList} from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity, Alert, Modal, TextInput, Keyboard, KeyboardAvoidingView, FlatList, ActivityIndicator} from "react-native";
 import park_img from '../assets/place_holder.png';
 import star_outline from '../assets/star_outline.png';
 import star_filled from '../assets/star_filled.png';
@@ -15,7 +15,10 @@ import 'firebase/auth';
 import API_KEY from '../API/Weather'
 
 export default function SelectedPark( props ) {
-    const [comments, setComments] = useState([]);
+    const [comments, setComments] = useState([]); // set/add comments
+
+    const [loading, setLoading] = useState(true); 
+    const [allComments, getComments] = useState([]); // get comments
 
     const [actionTriggered, setActionTriggered] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
@@ -27,9 +30,6 @@ export default function SelectedPark( props ) {
     const [getUser, setGetUser] = useState({});
     const [error, setError] = useState();
     const [isFetching, setIsFetching] = useState(false);
-
-    // birta endurgjöf
-
 
     // Veðrið
     // console.log(props.route.params)
@@ -118,14 +118,13 @@ export default function SelectedPark( props ) {
         firestore()
         .collection('comments')
         .add({
-            commentId: autoId,
+            key: autoId,
             UserId: getUser.userId,
             UserName: getUser.username,
             Comment: userComment,
             Rating: defaultRating,
             ParkId: props.route.params.ID,
             date: firebase.firestore.Timestamp.fromDate(new Date()),
-            
         })
         .then(() => {
             console.log("Það virkaði að setja inn comment");
@@ -160,7 +159,46 @@ export default function SelectedPark( props ) {
         )
     }
 
+    
 
+    // ná í comments
+    useEffect(() => {
+        const currentPark = props.route.params.ID;
+        const commenters = firebase.firestore()
+          .collection('comments')
+          .onSnapshot(querySnapshot => {
+            const all = [];
+      
+            querySnapshot.forEach(documentSnapshot => {
+                all.push({
+                ...documentSnapshot.data(),
+                key: documentSnapshot.id,
+              });
+            });
+
+            const correctPark = [];
+            for (let i = 0; i <= all.length - 1; i++) {
+                // console.log(all[i])
+                if (all[i].ParkId == currentPark) {
+                    // console.log("Park number: " + [i])
+                    // console.log("Park inside array: " + all[i].ParkId)
+                    // console.log(all[i])
+                    correctPark.push(all[i])
+                }
+            }
+            console.log(correctPark);
+            // console.log(currentPark)
+            getComments(correctPark);
+            setLoading(false);
+          });
+          console.log()
+        // Unsubscribe from events when no longer in use
+        return () => commenters();
+      }, []);
+        if (loading) {
+            return <ActivityIndicator />;
+        }
+        
     return (
         <View style={styles.parentContainer}>
             {/* Hér er einkunnar módalinn */}
@@ -293,8 +331,19 @@ export default function SelectedPark( props ) {
                     </TouchableOpacity>
                 </View>
                 
-
             </View>
+                <FlatList
+                    data={allComments}
+                    renderItem={({ item }) => (
+                    <View>
+                        <Text>User Name: {item.UserName}</Text>
+                        <Text>Rating: {item.Rating}</Text>
+                        <Text>Comment: {item.Comment}</Text>
+                        <Text>Staður: {item.ParkId}</Text>
+                    </View>
+                    )}
+                />
+                
         </View>
       );
 }
