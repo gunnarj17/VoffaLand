@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import {View, Text, StyleSheet, SafeAreaView, Alert, KeyboardAvoidingView} from "react-native";
+import {View, Text, StyleSheet, SafeAreaView, Alert, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard} from "react-native";
 import {Container, Form, Button, } from "native-base";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { registration } from "../API/firebaseMethods";
 import InputBox from "./components/InputBox";
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 export default function SignUp({ navigation }) {
@@ -54,81 +53,89 @@ export default function SignUp({ navigation }) {
       }
   }
 
+  const keyboardVerticalOffset = Platform.OS === 'ios' ? 50 : 0
+
   return (
-    <SafeAreaView style={styles.safeContainer}>
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}> 
+      <SafeAreaView style={styles.safeContainer}>
+        <View style={styles.container}>
     
-    <View style={styles.container}>
-    
-      <Container style={styles.LoginContainer}>
-      <KeyboardAvoidingView>
-        <Text style={styles.HeaderText}>Nýr notandi</Text>
+          <Container style={styles.LoginContainer}>
+         <KeyboardAvoidingView 
+                    behavior='position' keyboardVerticalOffset={keyboardVerticalOffset}>
+              <Text style={styles.HeaderText}>Nýr notandi</Text>
+              
+              <Form>
+                <View style={styles.FormContainer}>
+                  <InputBox
+                    icon="person-outline"
+                    label="Nafn"
+                    errorText=""
+                    isPassword={false}
+                    inputValue={(name) => inputNameChange(name)}
+                  />
+                  <InputBox
+                    icon="mail-outline"
+                    label="Netfang"
+                    errorText=""
+                    isPassword={false}
+                    inputValue={(email) => setEmail(email)}
+                  />
 
-        <Form>
-          <View style={styles.FormContainer}>
-            <InputBox
-              icon="person-outline"
-              label="Nafn"
-              errorText=""
-              isPassword={false}
-              inputValue={(name) => inputNameChange(name)}
-            />
-            <InputBox
-              icon="mail-outline"
-              label="Netfang"
-              errorText=""
-              isPassword={false}
-              inputValue={(email) => setEmail(email)}
-            />
+                  <InputBox
+                    icon="lock-closed-outline"
+                    label="Lykilorð"
+                    isPassword={true}
+                    errorText={passwordError}
+                    inputValue={(password) => setPassword(password)}
+                  />
 
-            <InputBox
-              icon="lock-closed-outline"
-              label="Lykilorð"
-              isPassword={true}
-              errorText={passwordError}
-              inputValue={(password) => setPassword(password)}
-            />
+                  <InputBox
+                    icon="lock-closed-outline"
+                    label="Staðfesta lykilorð"
+                    errorText=""
+                    isPassword={true}
+                    inputValue={(password2) => setConfirmPassword(password2)}
+                  />
 
-            <InputBox
-              icon="lock-closed-outline"
-              label="Staðfesta lykilorð"
-              errorText=""
-              isPassword={true}
-              inputValue={(password2) => setConfirmPassword(password2)}
-            />
-
-            <View style={styles.LoginButtons}>
-              <Button style={styles.RegisterButton} full onPress={handlePress}>
-                <Text style={styles.text}>Nýskráning</Text>
-              </Button>
-            </View>
+                  <View style={styles.LoginButtons}>
+                    <Button style={styles.RegisterButton} full onPress={handlePress}>
+                      <Text style={styles.text}>Nýskráning</Text>
+                    </Button>
+                  </View>
+                </View>
+              </Form>
+              </KeyboardAvoidingView>
+          <View style={styles.BottomContainer}>
+            <Text style={styles.ContinueText}>Ertu nú þegar með með aðgang? </Text>
+            <Button
+              style={styles.ContinueButton}
+              full
+              success
+              onPress={() => navigation.navigate("Sign In")}
+            >
+              <Text style={styles.ContinueTextBold}>Innskráning</Text>
+            </Button>
           </View>
-        </Form>
-        <View style={styles.BottomContainer}>
-          <Text style={styles.ContinueText}>Ertu nú þegar með með aðgang? </Text>
-          <Button
-            style={styles.ContinueButton}
-            full
-            success
-            onPress={() => navigation.navigate("Sign In")}
-          >
-            <Text style={styles.ContinueTextBold}>Innskráning</Text>
-          </Button>
-        </View>
-        </KeyboardAvoidingView>
-      </Container>
-
-      
-    </View>
-    
-    
+          
+        </Container>
+      </View>
     </SafeAreaView>
+  </TouchableWithoutFeedback>
   );
 
   }
+
+
 const styles = StyleSheet.create({
   safeContainer: {
-    backgroundColor: 'pink',
+    backgroundColor: 'white',
     flex: 1
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   container: {
     flex: 1,
@@ -138,21 +145,20 @@ const styles = StyleSheet.create({
     alignContent: "space-around",
   },
   HeaderText: {
-    color: "#56B980",
-    fontSize: 40,
-    fontWeight: "bold",
-    justifyContent: "center",
-    alignItems: "center",
+    color: "#069380",
+    fontSize: hp(5),
+    fontWeight: "300",
+    alignSelf: 'center'
   },
   text: {
     color: "#fff",
-    fontSize: 20,
-    // fontFamily: Lato-Regular
+    fontSize: hp(2.5),
   },
   LoginContainer: {
     flex: 2,
     width: wp(75),
     height: hp(80),
+    paddingTop: hp(10),
     backgroundColor: "white",
     alignItems: "center",
     justifyContent: "center",
@@ -164,24 +170,27 @@ const styles = StyleSheet.create({
   },
   RegisterButton: {
     marginHorizontal: wp(10),
-    backgroundColor: "#56B980",
+    backgroundColor: "#069380",
     borderRadius: 20,
   },
   BottomContainer: {
     flex: 1,
-    alignItems: "center",
-    alignContent: "space-around",
     justifyContent: "flex-end",
+    alignItems: 'center',
+    paddingBottom: hp(2)
   },
   ContinueText: {
-    color: "#56B980",
-    fontSize: 20,
+    color: "#069380",
+    textAlign: 'center',
+    fontSize: hp(2.5),
     paddingBottom: hp(1),
   },
   ContinueTextBold: {
-    color: "#56B980",
-    fontSize: 20,
+    color: "#069380",
+    fontSize: hp(2.5),
     fontWeight: "bold",
+    alignSelf: 'center',
+    textAlign: 'center',
   },
   ContinueButton: {
     backgroundColor: "white",
