@@ -1,37 +1,44 @@
 // park preview
 // import * as React from "react";
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View,} from "react-native";
+import {Image, StyleSheet, Text, View,} from "react-native";
 import { Icon, Button} from "native-base";
 import Animated from "react-native-reanimated";
 import BottomSheet from "reanimated-bottom-sheet";
 import { useNavigation } from '@react-navigation/native';
 
 
-const ParkPreview = React.forwardRef(({ props }, ref) => {
+const ParkPreview = React.forwardRef(({ park, showRoute }, ref) => {
   const navigation = useNavigation();
 
   const renderInner = () => (
     <View style={styles.panel}>
       <View style={styles.panelTop}>
-        <Text style={styles.panelTitle}>{props && props.Name ? props.Name : "Vantar nafn"}</Text>
+        <Text style={styles.panelTitle}>{park && park.Name ? park.Name : "Vantar nafn"}</Text>
       </View>
       <View style={styles.panelBottom}>
         <View style={styles.panelLeft}>
           <View style={styles.iconView}>
             {/* Hérna þarf að birta actual stjörnugjöf sem svæðið hefur, þetta eru bara place-holder icons */}
-            <Icon style={styles.Icons} name='star'/><Icon style={styles.Icons} name='star'/><Icon style={styles.Icons} name='star'/>
+            <Icon style={styles.Icons} name='star'/><Icon style={styles.Icons} name='star'/><Icon style={styles.Icons} name='star'/><Icon style={styles.Icons} name='star'/><Icon style={styles.Icons} name='star'/>
             {/* Hérna vantar líka að birta tögg-in sem svæðið hefur :) */}
+
+            <Button style={styles.filterButton} onPress={showRoute ? () => showRoute(park) : ()=>{}}>
+              <Image
+                  style={styles.filterIcon}
+                  source={require("../assets/direct.png")}
+              />
+            </Button>
           </View>
           <Text style={styles.leftText}> </Text>
         </View>
-        <View style={styles.panelRight}>
-          <Button
-           style={styles.SeeMoreButton}
-           onPress={() => { navigation.navigate('Selected Park',  props  ) }}>
-              <Text style={styles.ButtonText}>Sjá nánar</Text>
-          </Button>
-        </View>
+      </View>
+      <View style={styles.panelRight}>
+        <Button
+            style={styles.SeeMoreButton}
+            onPress={() => { navigation.navigate('Selected Park',  park  ) }}>
+          <Text style={styles.ButtonText}>Sjá nánar</Text>
+        </Button>
       </View>
     </View>
   );
@@ -47,7 +54,7 @@ const ParkPreview = React.forwardRef(({ props }, ref) => {
   return (
     <BottomSheet
       ref={ref}
-      snapPoints={[450, 0]}
+      snapPoints={[500, 0]}
       renderContent={renderInner}
       renderHeader={renderHeader}
       initialSnap={1}
@@ -68,21 +75,31 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 18
   },
+  filterButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    marginLeft: 20
+  },
+  filterIcon: {
+    width: 40,
+    height: 40
+  },
   panel: {
     padding: 20,
-    backgroundColor: "#FFFFFF",
     paddingTop: 20,
     backgroundColor: "white",
+    paddingBottom: 100
   },
   panelTop: {
   },
   panelTitle: {
     fontSize: 24,
+    paddingLeft: 10
   },
   panelBottom: {
     flexDirection:'row',
     justifyContent:'space-between',
-    marginBottom: 100 //Mjög mikil HAX leið, tökum þetta út þegar allar upplýsingarnar á þessu Bottom Sheet eru komnar inn!
   },
   panelLeft: {
     alignSelf: 'flex-start',

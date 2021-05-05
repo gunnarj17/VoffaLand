@@ -19,10 +19,10 @@ import SignIn from './screens/SignIn';
 import LoadingScreen from './screens/LoadingScreen';
 import SelectedPark from './screens/SelectedPark';
 
+
 // Tab Screens
 import Info from './screens/InfoScreen';
 import Profile from './screens/ProfileScreen';
-import AddDogs from './screens/AddDogs';
 import Parks from './screens/ParksScreen';
 import Events from './screens/EventsScreen';
 
@@ -43,28 +43,29 @@ export default function App() {
           <Stack.Screen name='Home' component={WelcomeScreen} options={{ headerShown: false }} />
           <Stack.Screen name='Sign Up' component={SignUp} options={{ headerShown: false }} />
           <Stack.Screen name='Sign In' component={SignIn} options={{ headerShown: false }} />
-          <Stack.Screen name='addDogs' component={AddDogs} options={{ headerShown: false }} />
+          <Stack.Screen name='Selected Park' component={SelectedPark} options={{ headerShown: false }} />
+
           <Stack.Screen name={'Parks'} options={{ headerShown: false }} >{() => (
             <Tab.Navigator
-              tabBarOptions={{
-                showLabel: false,
-                // activeBackgroundColor: '#069380',
-                tabStyle: {
-                  // hægt að setja inn meiri styles
-                  height: 40,
-                },
-                style: {
-                  position: 'absolute',
-                  backgroundColor: '#034B42',
-                  borderRadius: 20,
-                  left: "25%",
-                  width: "50%",
-                  height: 40,
-                  bottom: 15
-                },
-              }}>
+                tabBarOptions={{
+                  showLabel: false,
+                  // activeBackgroundColor: '#069380',
+                  tabStyle: {
+                    // hægt að setja inn meiri styles
+                    height: 40,
+                  },
+                  style: {
+                    position: 'absolute',
+                    backgroundColor: '#034B42',
+                    borderRadius: 20,
+                    left: "25%",
+                    width: "50%",
+                    height: 40,
+                    bottom: 40
+                  },
+                }}>
 
-              <Tab.Screen name='Staðsetningar' component={Parks} options={({route}) => ({
+              <Tab.Screen name='Staðsetningar' component={Parks} options={{
                 tabBarIcon: ({ focused }) => (
                   <Ionicons
                     name="location-sharp"
@@ -73,7 +74,8 @@ export default function App() {
                     name={focused ? 'location' : 'location-outline'}
                   />
                 )
-              })} />
+              }} />
+
               <Tab.Screen name='Upplýsingar' component={Info} options={{
                 tabBarIcon: ({ focused }) => (
                   <Ionicons

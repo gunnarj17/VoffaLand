@@ -4,7 +4,7 @@ import park_img from '../assets/place_holder.png';
 import star_outline from '../assets/star_outline.png';
 import star_filled from '../assets/star_filled.png';
 import { FontAwesome5 } from '@expo/vector-icons';
-import { AntDesign } from '@expo/vector-icons'; 
+import { AntDesign } from '@expo/vector-icons';
 
 export default function SelectedPark( props ) {
     const [actionTriggered, setActionTriggered] = useState('');
@@ -23,7 +23,7 @@ export default function SelectedPark( props ) {
                             activeOpacity={0.7}
                             key={item}
                             onPress={() => setdefaultRating(item)}>
-                                <Image style={styles.starImg} 
+                                <Image style={styles.starImg}
                                     source={
                                     item <= defaultRating
                                         ? star_filled
@@ -45,15 +45,15 @@ export default function SelectedPark( props ) {
             transparent={true}
             visible={modalVisible}
             onRequestClose={() => {Alert.alert('Modal has been closed. ');}} //OnRequest close is called when the user taps the hardware back button on Android. Required for Android users
-            > 
+            >
             {/* ACTION_1 er aðal módalinn, þegar smellt er á 'Staðfesta' opnast nýr módall sem segir "umsögn þín hefur verið skráð" */}
             {actionTriggered === 'ACTION_1' ?
-                <KeyboardAvoidingView 
-                    style ={styles.centeredView}  
+                <KeyboardAvoidingView
+                    style ={styles.centeredView}
                     behavior="padding">
                         {/* Til að loka modal-num án þess að senda gögn áfram (x takkinn í efra horni) */}
                         <View style={styles.modalView}>
-                            <View style={styles.closeModalView}> 
+                            <View style={styles.closeModalView}>
                                 <TouchableOpacity  onPress={() => {setModalVisible(!modalVisible)}}>
                                     <AntDesign name="closecircleo" size={26} style={styles.closeIcon} />
                                 </TouchableOpacity>
@@ -82,7 +82,7 @@ export default function SelectedPark( props ) {
                                 onBlur={Keyboard.dismiss}/>
                             </View>
 
-                        {/* Hér þarf að senda gögnin í Firebase. 
+                        {/* Hér þarf að senda gögnin í Firebase.
                         - setActionTrigger opnar hinn modalinn sem sést fyrir neðan
                         - á eftir að sækja gögnin út text input-inu og senda þau hér líka
                         - defaultRating skilar stjörnu magni sem notandi sláði inn */}
@@ -94,9 +94,9 @@ export default function SelectedPark( props ) {
                             </TouchableOpacity>
                         </View>
                 </KeyboardAvoidingView> :
-                
+
                 actionTriggered === 'ACTION_2' ?
-                
+
                     <View style={styles.centeredView}>
                         <View style={styles.modalView}>
                             <Text style={styles.confirmmodalText}>Endurgjöfin þín hefur verið skráð</Text>
@@ -105,11 +105,11 @@ export default function SelectedPark( props ) {
                             onPress={() => {setModalVisible(!modalVisible)}}>
                                 <Text style={styles.textStyle}>Loka</Text>
                             </TouchableOpacity>
-                        </View> 
+                        </View>
                     </View>:
                 null}
             </Modal>
-            
+
 
             {/* Hér er það sem er á skjánum, sem er ekki einkunnargjöf modal-inn */}
 
@@ -128,7 +128,7 @@ export default function SelectedPark( props ) {
                 </View>
                 <View style={styles.rightContainer}>
                     {/* Hérna er Directions takkinn. Vantar virkni í hann */}
-                    <TouchableOpacity 
+                    <TouchableOpacity
                     style={styles.iconButton}
                     onPress={() => console.log("Vantar virkni")}
                     >
@@ -145,7 +145,7 @@ export default function SelectedPark( props ) {
                 </View>
                 <View style={styles.rightReviewComponent}>
                     {/* Takki sem er fimm gular stjörnur. Opnar review modal-inn */}
-                    <TouchableOpacity 
+                    <TouchableOpacity
                     style={styles.reviewButton}
                     onPress={() => { setModalVisible(true); setActionTriggered('ACTION_1');}}>
                         <AntDesign name="staro" size={26} style={styles.starIcon}/>
@@ -312,7 +312,7 @@ const styles = StyleSheet.create({
       customRatingBarStyle: {
           justifyContent: 'center',
           flexDirection: 'row',
-         
+
       },
       starImg: {
           width: 30,
@@ -331,5 +331,5 @@ const styles = StyleSheet.create({
         width: 240,
         marginBottom: 30
       }
-    
+
 })
