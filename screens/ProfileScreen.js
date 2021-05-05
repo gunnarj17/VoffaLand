@@ -36,7 +36,7 @@ export default function ProfileScreen({ navigation }) {
           .get();
 
         const userdata = userSnapshot.data();
-
+        console.log(userdata);
         setGetUser({
           username: userdata.name,
           userphoto: userdata.photo,
