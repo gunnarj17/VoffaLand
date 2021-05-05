@@ -133,6 +133,27 @@ export default function SignIn({ navigation }) {
               </Button>
             </View>
 
+            {/* <View style={styles.SocialButtons}>
+            <Button
+              style={styles.SocialBtn}
+              onPress={() => fbPromptAsync()}
+            >
+              <Image
+                source={require("../assets/facebook.png")}
+                style={styles.SocialBtnImg}
+              />
+            </Button>
+            <Button
+              style={styles.SocialBtn}
+              onPress={() => ggPromptAsync()}
+            >
+              <Image
+                source={require("../assets/google.png")}
+                style={styles.SocialBtnImg}
+              />
+            </Button>
+          </View> */}
+
             <View style={styles.BottomContainer}>
               <Text style={styles.ContinueText}>Ekki með aðgang? </Text>
               <Button
@@ -222,5 +243,22 @@ const styles = StyleSheet.create({
     color: '#069380',
     fontSize: hp(2),
     fontWeight: 'bold'
-  }
+  },
+  // SocialButtons: {
+  //   display: 'flex',
+  //   flexDirection: 'row',
+  //   justifyContent: 'center',
+  //   alignItems: 'center'
+  // },
+  // SocialBtn: {
+  //   marginLeft: 15,
+  //   marginRight: 15,
+  //   width: 50,
+  //   height: 50,
+  //   backgroundColor: 'white'
+  // },
+  // SocialBtnImg: {
+  //   width: 50,
+  //   height: 50
+  // }
 });
