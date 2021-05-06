@@ -29,20 +29,20 @@ export default function SignIn({ navigation }) {
   );
 
   // Method to handle register if user is not registered yet.
-  // registerAccount = async (currentUser) => {
-  //   const db = firebase.firestore();
-  //   const savedUser = await db.collection('users')
-  //     .doc(currentUser.uid)
-  //     .get()
-  //   if (!savedUser.data()) {
-  //     db.collection('users')
-  //       .doc(currentUser.uid)
-  //       .set({
-  //         email: currentUser.email,
-  //         name: currentUser.name || currentUser.displayName,
-  //       });
-  //   }
-  // }
+  registerAccount = async (currentUser) => {
+    const db = firebase.firestore();
+    const savedUser = await db.collection('users')
+      .doc(currentUser.uid)
+      .get()
+    if (!savedUser.data()) {
+      db.collection('users')
+        .doc(currentUser.uid)
+        .set({
+          email: currentUser.email,
+          name: currentUser.name || currentUser.displayName,
+        });
+    }
+  }
 
   // Hook for Google SignIn 
   React.useEffect(() => {
