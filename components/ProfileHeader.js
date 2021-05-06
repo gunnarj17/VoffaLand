@@ -246,7 +246,7 @@ const ProfileHeader = ({ username, userphoto, navigation, logout }) => {
             </TouchableOpacity>
 
             <View style={styles.headingView2}>
-                <Text style={{ ...styles.viewText,color: '#295E73', fontSize: hp(3), fontWeight: 'bold' }}>
+                <Text style={{ ...styles.viewText,color: '#295E73', fontSize: hp(3), fontWeight: '300' }}>
                     Hundarnir Mínir
                 </Text>
             </View>
@@ -282,10 +282,10 @@ const styles = StyleSheet.create({
         backgroundColor: 'white'
     },
     backIcon: {
-        marginTop: Platform.OS === 'android' ? hp(7) : hp(4)
+        marginTop: Platform.OS === 'android' ? hp(5) : hp(2)
     },
     logout: {
-        marginTop: Platform.OS === 'android' ? hp(7.5) : hp(4.5)
+        marginTop: Platform.OS === 'android' ? hp(5.5) : hp(2.5)
     },
     img: {
         marginTop: hp(1.8),
@@ -304,12 +304,11 @@ const styles = StyleSheet.create({
     },
     actionSheetTitle: { 
         fontSize: hp(2.6), 
-        fontWeight: 'bold', 
+        fontWeight: '500', 
         color: '#0B666B',
     },
     actionSheetOptions: { 
         fontSize: hp(2.4), 
-        fontWeight: 'bold', 
         color: 'gray'
     },
     inputStyle: { 
@@ -332,14 +331,14 @@ const styles = StyleSheet.create({
     },
     viewText: { 
         textAlign: 'center', 
-        fontSize: hp(2.5), 
+        fontSize: hp(2.4), 
         padding: 8 
     },
     headingView: { 
         borderRadius: 30,  
         alignSelf: 'center', 
         width: wp(60),
-        padding: hp(1) 
+        padding: hp(0.5),
     },
     headingView2: { 
         marginTop: hp(5),
