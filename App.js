@@ -44,26 +44,26 @@ export default function App() {
           <Stack.Screen name='Sign Up' component={SignUp} options={{ headerShown: false }} />
           <Stack.Screen name='Sign In' component={SignIn} options={{ headerShown: false }} />
           <Stack.Screen name='Selected Park' component={SelectedPark} options={{ headerShown: false }} />
-          
+
           <Stack.Screen name={'Parks'} options={{ headerShown: false }} >{() => (
             <Tab.Navigator
-              tabBarOptions={{
-                showLabel: false,
-                // activeBackgroundColor: '#069380',
-                tabStyle: {
-                  // hægt að setja inn meiri styles
-                  height: 40,
-                },
-                style: {
-                  position: 'absolute',
-                  backgroundColor: '#034B42',
-                  borderRadius: 20,
-                  left: "25%",
-                  width: "50%",
-                  height: 40,
-                  bottom: 40
-                },
-              }}>
+                tabBarOptions={{
+                  showLabel: false,
+                  // activeBackgroundColor: '#069380',
+                  tabStyle: {
+                    // hægt að setja inn meiri styles
+                    height: 40,
+                  },
+                  style: {
+                    position: 'absolute',
+                    backgroundColor: '#034B42',
+                    borderRadius: 20,
+                    left: "25%",
+                    width: "50%",
+                    height: 40,
+                    bottom: 40
+                  },
+                }}>
 
               <Tab.Screen name='Staðsetningar' component={Parks} options={{
                 tabBarIcon: ({ focused }) => (

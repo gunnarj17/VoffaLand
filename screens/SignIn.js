@@ -1,13 +1,99 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, Alert, Keyboard,  TouchableWithoutFeedback } from 'react-native';
-import { Container, Content, Header, From, Input, Item, Label, Form, Button, Icon } from 'native-base';
-import { signIn } from '../API/firebaseMethods';
-import InputBox from './components/InputBox';
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  Alert,
+  Keyboard,
+  TouchableWithoutFeedback,
+  Image
+} from 'react-native';
+
+import {
+  Container,
+  Content,
+  Header,
+  From,
+  Input,
+  Item,
+  Label,
+  Form,
+  Button,
+  Icon
+} from 'native-base';
+import * as firebase from 'firebase';
+
+import { signInWithEmail } from '../API/firebaseMethods';
+
+import * as Google from 'expo-auth-session/providers/google';
+import * as Facebook from 'expo-auth-session/providers/facebook';
+import { ResponseType } from 'expo-auth-session';
+
+import apiKeys from '../config/keys';
 
 export default function SignIn({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [passwordError, setPasswordError] = useState("");
+
+  const [request, response, ggPromptAsync] = Google.useIdTokenAuthRequest(
+    {
+      clientId: apiKeys.extra.clientId
+    },
+  );
+
+  // Method to handle register if user is not registered yet.
+  registerAccount = async (currentUser) => {
+    const db = firebase.firestore();
+    const savedUser = await db.collection('users')
+      .doc(currentUser.uid)
+      .get()
+    if (!savedUser.data()) {
+      db.collection('users')
+        .doc(currentUser.uid)
+        .set({
+          email: currentUser.email,
+          name: currentUser.name || currentUser.displayName,
+        });
+    }
+  }
+
+  // Hook for Google SignIn 
+  React.useEffect(() => {
+    async function signInWithGoogle() {
+      if (response?.type === 'success') {
+        const { id_token } = response.params;
+        const credential = firebase.auth.GoogleAuthProvider.credential(id_token);
+        await firebase.auth().signInWithCredential(credential);
+        const currentUser = firebase.auth().currentUser;
+        await registerAccount(currentUser);
+      } else if (response?.error) {
+        Alert.alert('Google Login Error:', response.error);
+      }
+    }
+    signInWithGoogle();
+  }, [response]);
+
+  const [fbRequest, fbResponse, fbPromptAsync] = Facebook.useAuthRequest({
+    responseType: ResponseType.Token,
+    clientId: apiKeys.extra.facebookAppId,
+  });
+
+  React.useEffect(() => {
+    async function signInWithFacebook() {
+      if (fbResponse?.type === 'success') {
+        const { access_token } = fbResponse.params;
+        const credential = firebase.auth.FacebookAuthProvider.credential(access_token);
+        // Sign in with the credential from the Facebook user.
+        await firebase.auth().signInWithCredential(credential);
+        const currentUser = firebase.auth().currentUser;
+        await registerAccount(currentUser);
+      } else if (response?.error) {
+        Alert.alert('Facebook Login Error:', response.error);
+      }
+    }
+    signInWithFacebook();
+  }, [fbResponse]);
 
   const handlePress = () => {
     if (!email) {
@@ -18,7 +104,7 @@ export default function SignIn({ navigation }) {
       Alert.alert('Vantar að slá inn rétt lykilorð');
     }
 
-    signIn(email, password);
+    signInWithEmail(email, password);
     setEmail('');
     setPassword('');
   };
@@ -30,30 +116,47 @@ export default function SignIn({ navigation }) {
   //   );
 
   return (
-    
+
     <View style={styles.container}>
 
       <Container style={styles.LoginContainer}>
         <Text style={styles.HeaderText}>Innskráning</Text>
 
         <Form>
-           <View>
-           <InputBox
-              icon="mail-outline"
-              label="Netfang"
-              errorText=""
-              isPassword={false}
-              inputValue={(email) => setEmail(email)}
-            />
+          <View style={styles.EmailForm}>
+            <Icon style={styles.Icons}
+              name='mail-outline' />
+            <Item floatingLabel>
+              <Label style={styles.LabelText}>Netfang</Label>
 
-            <InputBox
-              icon="lock-closed-outline"
-              label="Lykilorð"
-              isPassword={true}
-              errorText={passwordError}
-              inputValue={(password) => setPassword(password)}
+              <Input
+                style={styles.InputBox}
+                autoCorrect={false}
+                autoCapitalize="none"
+                value={email}
+                onChangeText={(email) => setEmail(email)} // setur þennan input sem email
+              />
+
+            </Item>
+          </View>
+
+          <View style={styles.EmailForm}>
+            <Icon style={styles.Icons}
+              name='lock-closed-outline'
             />
-           
+            <Item floatingLabel>
+              <Label style={styles.LabelText}>Lykilorð</Label>
+              <Input
+                style={styles.InputBox}
+                secureTextEntry={true}
+                autoCorrect={false}
+                value={password}
+                autoCapitalize="none"
+                onChangeText={(password) => setPassword(password)} // setur þennan input sem password
+              />
+            </Item>
+          </View>
+
           <View style={styles.ExtraOptions}>
             <Text style={styles.ForgotPassword}>Gleymt lykilorð?</Text>
           </View>
@@ -67,6 +170,27 @@ export default function SignIn({ navigation }) {
             </Button>
           </View>
 
+          <View style={styles.SocialButtons}>
+            <Button
+              style={styles.SocialBtn}
+              onPress={() => fbPromptAsync()}
+            >
+              <Image
+                source={require("../assets/facebook.png")}
+                style={styles.SocialBtnImg}
+              />
+            </Button>
+            <Button
+              style={styles.SocialBtn}
+              onPress={() => ggPromptAsync()}
+            >
+              <Image
+                source={require("../assets/google.png")}
+                style={styles.SocialBtnImg}
+              />
+            </Button>
+          </View>
+
           <View style={styles.BottomContainer}>
             <Text style={styles.ContinueText}>Ekki með aðgang? </Text>
             <Button
@@ -77,7 +201,7 @@ export default function SignIn({ navigation }) {
               <Text style={styles.ContinueTextBold}> Nýskrá</Text>
             </Button>
           </View>
-          </View>
+
         </Form>
       </Container>
 
@@ -116,6 +240,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignSelf: 'center'
   },
+  LabelText: {
+    color: '#56B980',
+    fontSize: 20
+  },
+
   LoginButtons: {
     marginTop: 30,
     marginBottom: 30,
@@ -147,6 +276,22 @@ const styles = StyleSheet.create({
     backgroundColor: '#F2F9F4',
     marginBottom: 10
   },
+  EmailForm: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginLeft: 10,
+    marginRight: 10,
+  },
+  Icons: {
+    color: '#56B980',
+    paddingTop: 40,
+  },
+  InputBox: {
+    color: '#56B980',
+    alignSelf: 'center',
+    margin: 2,
+  },
   ExtraOptions: {
     padding: 10
   },
@@ -155,5 +300,22 @@ const styles = StyleSheet.create({
     color: '#56B980',
     fontSize: 15,
     fontWeight: 'bold'
+  },
+  SocialButtons: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  SocialBtn: {
+    marginLeft: 15,
+    marginRight: 15,
+    width: 50,
+    height: 50,
+    backgroundColor: 'white'
+  },
+  SocialBtnImg: {
+    width: 50,
+    height: 50
   }
 });
