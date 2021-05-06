@@ -72,9 +72,9 @@ const PetModal = ({
         };  
             
         if ( (age.years > 1) && (age.months > 0) && (age.days > 0) )  
-           ageString = age.years + " ára, " + age.months + " mánaða, og " + age.days + " daga";  
+           ageString = age.years + " ára, " + age.months + " mánaða og " + age.days + " daga";  
            else if ( (age.years > 0 && age.years <= 1) && (age.months > 0) && (age.days > 0) )  
-           ageString = age.years + " árs, " + age.months + " mánaða, og " + age.days + " daga";  
+           ageString = age.years + " árs, " + age.months + " mánaða og " + age.days + " daga";  
         else if ( (age.years == 0) && (age.months == 0) && (age.days > 0) )  
            ageString = "Bara " + age.days + " daga";  
         else if ( (age.years > 0) && (age.months == 0) && (age.days == 0) )  
@@ -96,7 +96,7 @@ const PetModal = ({
     return (
         <Modal 
             isVisible={isModalVisible} 
-            animationIn="jello"
+            animationType="slide"
             coverScreen={false}
             deviceHeight={height}
             hasBackdrop={false}
@@ -121,44 +121,7 @@ const PetModal = ({
                     <Text style={styles.dogNameText}>
                         {Name}
                     </Text>
-                    <View style={styles.typeContainer}>
-                        <Text style={styles.fontSizes}>
-                            Tegund:
-                        </Text>
-                        <Text style={styles.charPropertyText}>
-                            {Breed}
-                        </Text>
-                    </View>
-                    <View style={styles.dogSizeContainer}>
-                        <Text style={styles.fontSizes}>
-                            Kyn:
-                        </Text>
-                        <Text style={styles.charPropertyText}>
-                            {Sex}
-                        </Text>
-                    </View>
-                    <View style={styles.dogSizeContainer}>
-                        <Text style={styles.fontSizes}>
-                            Aldur:
-                        </Text>
-                        <Text style={styles.charPropertyText}>
-                            {ageCalculator(Birthday)}
-                        </Text>
-                    </View>
-                    <View style={styles.detailContainer}>
-                        <Text style={styles.fontSizes}>
-                            Um okkur:
-                        </Text>
-                        <Text numberOfLines={lines ? 2 : null} style={styles.descriptionText}>
-                            {About}
-                        </Text>
-                        <TouchableOpacity onPress={() => setLines(!lines)} style={styles.seeContainer}>
-                            <Text style={styles.seemoreText}>
-                                { lines ? 'See more' : 'Hide' }
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.buttonViewContainer}>
+                    <View style={styles.buttonContainer}>
                         <TouchableOpacity 
                             onPress={() => navigation.navigate('addDogs', {
                                 dogId: Id, 
@@ -171,15 +134,47 @@ const PetModal = ({
                             })} 
                             style={styles.editButtonContainer}
                         >
-                            <AntDesign name="edit" size={hp(3.8)} color="#5C909B" />
-                            <Text style={styles.editButtonText}>
-                                Edit
-                            </Text>
+                            <AntDesign name="edit" size={hp(2.5)} color="white" />
+
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => deleteDog(Id)} style={styles.deleteButtonContainer}>
-                            <AntDesign name="delete" size={hp(3.8)} color="#5C909B" />
-                            <Text style={styles.deleteButtonText}>
-                                Delete
+                            <AntDesign name="delete" size={hp(2.5)} color="white" />
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.detailContainer}>
+                        <Text style={styles.fontSizes}>
+                            Tegund:
+                        </Text>
+                        <Text style={styles.descriptionText}>
+                        {Breed}
+                        </Text>
+                    </View>
+                    <View style={styles.detailContainer}>
+                        <Text style={styles.fontSizes}>
+                            Kyn:
+                        </Text>
+                        <Text style={styles.descriptionText}>
+                        {Sex}
+                        </Text>
+                    </View>
+                    <View style={styles.detailContainer}>
+                        <Text style={styles.fontSizes}>
+                            Aldur:
+                        </Text>
+                        <Text style={styles.descriptionText}>
+                        {ageCalculator(Birthday)}
+                        </Text>
+                    </View>
+                    <View style={styles.detailContainer}>
+                        <Text style={styles.fontSizes}>
+                            Um Voffa:
+                        </Text>
+                        <Text numberOfLines={lines ? 2 : null} style={styles.descriptionText}>
+                            {About}
+                        </Text>
+                        <TouchableOpacity onPress={() => setLines(!lines)} style={styles.seeContainer}>
+                            <Text style={styles.seemoreText}>
+                                { lines ? 'See more' : 'Hide' }
                             </Text>
                         </TouchableOpacity>
                     </View>
@@ -192,7 +187,17 @@ const PetModal = ({
 const styles = StyleSheet.create({
     container: { 
         height: hp(75),
-        backgroundColor: 'white' 
+        backgroundColor: '#FCFCFC',
+        borderRadius: 20,
+        padding: wp(1.5),
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
     },
     closeIcon: { 
         alignSelf: 'flex-end', 
@@ -207,38 +212,27 @@ const styles = StyleSheet.create({
         borderWidth: .8
     },
     dogNameText: { 
-        marginTop: hp(4), 
+        marginTop: hp(2), 
         textAlign: 'center', 
-        fontWeight: 'bold', 
+        fontWeight: '300', 
         color: '#03738C', 
-        fontSize: hp(2.5), 
-        textDecorationLine: 'underline' 
+        fontSize: hp(4), 
     },
-    typeContainer: { 
-        flexDirection: 'row', 
-        marginLeft: wp(3),
-        marginTop: hp(3) 
-    },
+
     fontSizes: { 
-        fontSize: hp(2.4) 
+        fontSize: hp(2.4),
+        fontWeight: '500',
+        color: '#03738C'
     },
-    charPropertyText: { 
-        fontSize: hp(2.4), 
-        marginLeft: wp(1) 
-    },
-    dogSizeContainer: { 
-        flexDirection: 'row', 
-        marginLeft: wp(3),
-        marginTop: hp(1) 
-    },
+
     detailContainer: { 
         marginLeft: wp(3),
         marginTop: hp(2) 
     },
     descriptionText: { 
         fontSize: hp(2.3),
-        marginTop: hp(1.5), 
-        width: wp(85) 
+        marginTop: hp(0.5), 
+        paddingRight: wp(2)
     },
     seeContainer: { 
         alignSelf: 'center', 
@@ -255,38 +249,28 @@ const styles = StyleSheet.create({
     },
     editButtonContainer: { 
         flexDirection: 'row', 
-        elevation: 5, 
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.3,
-        shadowRadius: 2,
-        backgroundColor: 'white', 
-        borderRadius: 10, 
-        paddingHorizontal: 20, 
-        padding: 8 
-    },
-    editButtonText: { 
-        fontSize: hp(2.8), 
-        color: 'blue', 
-        marginLeft: wp(2.4) 
+        backgroundColor: '#81A5A1', 
+        borderRadius: 50, 
+        paddingHorizontal: 15, 
+        alignItems: 'center',
+        marginRight: wp(2),
+        padding: wp(3.5)
     },
     deleteButtonContainer: { 
         flexDirection: 'row', 
-        elevation: 5, 
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.3,
-        shadowRadius: 2,
-        backgroundColor: 'white', 
-        borderRadius: 10, 
         paddingHorizontal: 15, 
-        padding: 8 
+        backgroundColor: '#F56A6D', 
+        borderRadius: 50, 
+        alignItems: 'center',
+        marginLeft: wp(2),
+        padding: wp(3.5)
     },
-    deleteButtonText: { 
-        fontSize: hp(2.8), 
-        color: 'red', 
-        marginLeft: wp(2.4) 
-    },
+    buttonContainer: {
+        justifyContent: 'center',
+        padding: wp(2),
+        flexDirection: 'row'
+    }
+   
 });
 
 export default PetModal
