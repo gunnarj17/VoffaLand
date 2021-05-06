@@ -1,6 +1,6 @@
-import React, { Component, useEffect, useRef } from "react";
-import MapView, { Polyline, Marker } from "react-native-maps";
-import { StyleSheet, Text, LogBox, View, Dimensions, Image, TouchableOpacity, ScrollView, TextInput } from "react-native";
+import React, { Component, useEffect } from "react";
+import MapView, { PROVIDER_GOOGLE, Polyline, Marker } from "react-native-maps";
+import { StyleSheet, Alert, Text, LogBox, View, Dimensions, Image, TouchableOpacity, ScrollView, TextInput } from "react-native";
 import * as Location from 'expo-location';
 import * as firebase from 'firebase';
 import 'firebase/firestore';
@@ -12,20 +12,23 @@ import {
   Input,
   Form
 } from 'native-base';
+import MapViewDirections from 'react-native-maps-directions';
+import HTML from "react-native-render-html";
+import { Feather } from '@expo/vector-icons';
+import ParkPreview from './ParkPreview';
+
 import Option from '../components/Option'; // buttons for filter
 import Card from '../components/Card'; // listing options from search and filter //  mögulega breytta þessu útliti í popupið hjá mariu?
-import ParkPreview from "./ParkPreview";
+import apiKeys from '../config/keys';
 
-
+import { fetchRoute } from '../API/GoogleMap';
 export default class Parks extends Component {
+
   constructor(props) {
     super(props);
     this.state = {
       data: [],
       region: null,
-      park: {},
-    };
-
       isFilterModalVisible: false,
       filterOption: {
         'Fence': false,
@@ -49,45 +52,94 @@ export default class Parks extends Component {
       filteredParks: [],
       isLoading: false,
       search_key: '',
-      parkList: []
+      parkList: [],
+      destination: {
+        GPS: null,
+        distance: null,
+        duration: null
+      },
+      currentUserPosition: null,
+      directionTitle: '',
+      maneuver: ''
+    }
+  }
+
+  onChangeUserLocation = (newLocation) => {
+    let currentUserPosition = {
+      latitude: newLocation.coords.latitude,
+      longitude: newLocation.coords.longitude,
+    }
+    console.log('user location updated', newLocation)
+    // For Test
+    // let currentUserPosition = {
+    //   latitude: 64.07287152431486,
+    //   longitude: -21.948613737592083,
+    // }
+    this.mapRef.setCamera({
+      center: currentUserPosition,
+      pitch: 1000, 
+      heading: 0,
+      altitude: 200, 
+      zoom: 50
+    })
+
+    this.setState({ currentUserPosition });
+    // Get Direction Description Info
+    this.getDirectionInfo(currentUserPosition);
+  }
+
+  getDirectionInfo = async (currentUserPosition) => {
+    const { destination } = this.state;
+
+    let directionTitle = '', origin, dest;
+    if (currentUserPosition.latitude && currentUserPosition.longitude) {
+      origin = `${currentUserPosition.latitude},${currentUserPosition.longitude}`;
+    }
+    if (destination.GPS.latitude && destination.GPS.longitude) {
+      dest = `${destination.GPS.latitude},${destination.GPS.longitude}`;
+    }
+    const apiKey = apiKeys.extra.googleMapApiKey;
+    const result = await fetchRoute(
+      origin,
+      dest,
+      apiKey
+    )
+    console.log('result: ', result)
+    if (result && result.nextStep && result.nextStep.html_instructions) {
+      directionTitle = result.nextStep.html_instructions;
+      maneuver = result.nextStep.maneuver ? result.nextStep.maneuver : '';
+      console.log('direction title: ', directionTitle);
+      this.setState({ directionTitle, maneuver });
     }
   }
 
   _getLocation = async () => {
     let { status } = await Location.requestPermissionsAsync();
-
     if (status !== "granted") {
-      // alert("Permission to access location was denied");
+      Alert.alert("Permission to access location was denied");
       return;
     }
-
+    // Get Current Position
     let location = await Location.getCurrentPositionAsync({});
-
     let region = {
       latitude: location.coords.latitude,
       longitude: location.coords.longitude,
       latitudeDelta: 0.0999,
-      longitudeDelta: 0.0999,
-    };
-
+      longitudeDelta: 0.0999
+    }
     this.setState({ region: region });
-  };
+  }
 
   async componentDidMount() {
     this.setState({ isLoading: true });
     await this._getLocation();
-
-    const documentSnapshot = await firebase
-      .firestore()
-      .collection("Parks")
-      .get();
-
+    const documentSnapshot = await firebase.firestore().collection('Parks').get();
     let transformArray = [];
-
     let parkList = []
     documentSnapshot.forEach(async (res) => {
-      const { GPS, Name } = res.data();
+      const { GPS, Name, Information } = res.data();
       let parkObj = res.data();
+
       let townRef = parkObj.Town;
       let townName = ''
       if (townRef) {
@@ -100,10 +152,10 @@ export default class Parks extends Component {
       transformArray.push({
         ID: res.id,
         Name: Name,
+        Information: Information,
         Long: GPS.longitude,
-        Lat: GPS.latitude,
+        Lat: GPS.latitude
       });
-
 
       parkList.push(parkObj)
     });
@@ -185,9 +237,6 @@ export default class Parks extends Component {
     this.setState({ isLoading: false });
   }
 
-
-    this.setState({ data: transformArray });
-
   // Method to handle change search key
   _changeSearchKey = (key) => {
     this.setState({ search_key: key });
@@ -264,48 +313,106 @@ export default class Parks extends Component {
     )
   }
 
+  // Method to handle show path to destination Park from User Location.
+  onShowRoute = async (park) => {
+    
+    this.props.navigation.setOptions({ 'tabBarVisible': false });
+    this.setState({ filteredParks: [] })
+    let { destination } = this.state;
+    if (park.GPS && park.GPS.latitude) {
+      const destination_gps = {
+        latitude: park.GPS.longitude,
+        longitude: park.GPS.latitude
+      }
+      destination.GPS = destination_gps
+
+    this.setState({ destination });
+    } else {
+      this.setState({ destination: null })
+    }
+
+    // Starting Watch User Position
+    // Watch User Position
+    // let { status } = await Location.requestPermissionsAsync();
+    // if (status !== "granted") {
+    //   // alert("Permission to access location was denied");
+    //   return;
+    // }
+    this.watchId = await Location.watchPositionAsync({ 
+      enableHighAccuracy: true, 
+      timeInterval: 10
+    },
+      newLocation => {
+        this.onChangeUserLocation(newLocation)
+      })
+  }
+
   // Method to show Filter or Search Result by List / þetta er notað til að sýna Filter eða search niðurstöður í lista
   _renderResultList = () => {
     const { filteredParks } = this.state;
-    console.log('filteredParks: ', filteredParks);
     return (
       <ScrollView style={styles.resultList}>
         {
           filteredParks.length > 0 && filteredParks.map((park, key) =>
-            (<Card park={park} key={key} />)
+            (<Card park={park} key={key} onClick={() => this.onShowRoute(park)} />)
           )
         }
       </ScrollView>
     )
   }
+  _renderDirectionSymbol = () => {
+    const { maneuver } = this.state;
+    switch (maneuver) {
+      case 'turn-right':
+        return <Feather name="arrow-up-right" size={30} color="white" />;
+      case 'turn-left':
+        return <Feather name="arrow-up-left" size={30} color="white" />
+      default:
+        return null;
+    }
+  }
+
 
   renderResultList = () => {
+    const { directionTitle } = this.state;
     return (
       <View style={styles.filterArea}>
-        <View style={styles.actionArea}>
-          <View style={styles.left}>
-            <Item style={styles.searchArea}>
-              <Input
-                style={styles.searchInputBox}
-                placeholder='Leita af svæði ...'
-                value={this.state.search_key}
-                onChangeText={(txt) => this._changeSearchKey(txt)}
+        {
+          directionTitle == '' &&
+          <View style={styles.actionArea}>
+            <View style={styles.left}>
+              <Item style={styles.searchArea}>
+                <Input
+                  style={styles.searchInputBox}
+                  placeholder='Leita af svæði ...'
+                  value={this.state.search_key}
+                  onChangeText={(txt) => this._changeSearchKey(txt)}
+                />
+                <Icon active name='search' />
+              </Item>
+
+              {
+                this._renderResultList()
+              }
+            </View>
+
+            <Button style={styles.filterButton} onPress={this.showFilterModal}>
+              <Image
+                style={styles.filterIcon}
+                source={require("../assets/filter.png")}
               />
-              <Icon active name='search' />
-            </Item>
-
-            {
-              this._renderResultList()
-            }
+            </Button>
           </View>
-
-          <Button style={styles.filterButton} onPress={this.showFilterModal}>
-            <Image
-              style={styles.filterIcon}
-              source={require("../assets/filter.png")}
-            />
-          </Button>
-        </View>
+        }
+        {
+          directionTitle != '' &&
+          <View style={styles.directonContainer}>
+            {
+              this._renderDirectionSymbol()
+            }
+            <HTML source={{ html: directionTitle }} containerStyle={{flex:1, }}baseFontStyle={styles.directionText} />
+          </View>
+        }
       </View>
     )
   }
@@ -315,61 +422,151 @@ export default class Parks extends Component {
     const { isFilterModalVisible } = this.state;
     if (isFilterModalVisible)
       this.setState({ isFilterModalVisible: false })
+  }
 
+  // Method to set distance and duration of the Destination
+  setDestination = (result) => {
+    let { destination } = this.state;
+    destination.distance = result.distance;
+    destination.duration = result.duration;
+    this.setState({ destination });
+  }
+
+  exitRoute = () => {
+    this.props.navigation.setOptions({ 'tabBarVisible': true });
+
+    // Set the Camera Default
+    this.mapRef.setCamera({
+      center: this.state.currentUserPosition,
+      pitch: 10, 
+      heading: 0,
+      altitude: 200, 
+      zoom: 15
+    })
+
+    // Unsubscribe location watch
+    this.watchId.remove();
+    this.setState({
+      destination: {
+        GPS: null,
+        distance: null,
+        duration: null
+      },
+      currentUserPosition: null,
+      directionTitle: ''
+    })
+  }
+
+  renderRouteInfo = () => {
+    const { destination } = this.state;
+    if (destination.distance) {
+      return (
+        <View style={styles.pathInfoBar}>
+          <View style={styles.infoWrapper}>
+            <View>
+              <Text style={styles.infoText}>{destination.duration.toFixed(0)} Min</Text>
+              <Text style={styles.infoText}>{destination.distance.toFixed(0)} Km</Text>
+            </View>
+
+            <View>
+              <Button style={styles.routeExitBtn} onPress={this.exitRoute}><Text style={styles.exitText}>Exit</Text></Button>
+            </View>
+          </View>
+        </View>)
+    } else
+      return null
   }
 
   bs = React.createRef();
 
-
   render() {
-    LogBox.ignoreLogs(["Setting a timer"]);
 
     const { data, region, isFilterModalVisible } = this.state;
+    if(!region)
+      return null;
 
-    let initialRegion = {
-      latitude: 64.07287152431486,
-      longitude: -21.948613737592083,
-      latitudeDelta: 0.0999,
-      longitudeDelta: 0.0999
+    let origin = {
+      latitude: region.latitude,
+      longitude: region.longitude,
     }
 
+    const { destination, currentUserPosition } = this.state;
 
     const openBottomSheet = (value) => {
       this.bs.current.snapTo(0);
-      this.setState({ park: value });
-    };
+      this.setState({ park: value})
+    }
 
     return (
       <View style={styles.container}>
         <ParkPreview ref={this.bs} props={this.state.park} />
         <MapView
           style={styles.map}
-          initialRegion={initialRegion}
+          initialRegion={region}
           showsUserLocation={true}
           onPress={(e) => this.onPressMapView(e)}
+          provider={PROVIDER_GOOGLE}
+          ref={ref => { this.mapRef = ref }}
         >
+
           {data.map((m) => {
             return (
+              
               <Marker
                 key={m.ID}
                 coordinate={{
                   latitude: parseFloat(m.Long),
-                  longitude: parseFloat(m.Lat),
+                  longitude: parseFloat(m.Lat)
                 }}
-                onPress={() => openBottomSheet(m)}
-
-              >
+                onPress={() => openBottomSheet(m)} 
+                >
                 <Image
                   key={m.ID}
-                  style={{ width: 25, height: 25 }}
+                  style={{ width: 30, height: 30 }}
                   source={require("../assets/dog.png")}
                 />
               </Marker>
             );
           })}
+          {
+            currentUserPosition &&
+            <Marker
+              coordinate={currentUserPosition}
+              description="User Position"
+            >
+              <Image
+                style={{ width: 25, height: 25 }}
+                source={require("../assets/google_marker.png")}
+              />
+            </Marker>
+          }
+
+
+          {
+            destination.GPS &&
+            <MapViewDirections
+              origin={origin}
+              destination={destination.GPS}
+              apikey={apiKeys.extra.googleMapApiKey}
+              strokeWidth={3}
+              strokeColor="hotpink"
+              mode="DRIVING"
+              optimizeWaypoints={true}
+              onError={(errorMessage) => {
+                console.log('errorMessage: ', errorMessage)
+              }}
+              onReady={result => {
+                this.setDestination(result)
+              }
+              }
+            />
+          }
         </MapView>
         {
           isFilterModalVisible ? this.renderFilterModal() : this.renderResultList()
+        }
+        {
+          this.renderRouteInfo()
         }
       </View>
     );
@@ -379,6 +576,7 @@ export default class Parks extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    width: '100%',
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
@@ -491,5 +689,59 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     shadowRadius: 3.84,
     elevation: 1,
+  },
+  infoWrapper: {
+    display: 'flex',
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingLeft: 30,
+    paddingRight: 20,
+  },
+  pathInfoBar: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    width: '100%',
+    height: 100,
+    backgroundColor: '#034B42',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+  },
+
+  routeExitBtn: {
+    backgroundColor: '#C05C5C',
+    borderRadius: 20,
+  },
+  exitText: {
+    color: 'white',
+    paddingLeft: 20,
+    paddingRight: 20,
+    paddingTop: 5,
+    paddingBottom: 5,
+    fontSize: 18
+  },
+  infoText: {
+    color: 'white',
+    fontSize: 18
+  },
+  directonContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+    width: '100%',
+    paddingTop: 15,
+    paddingBottom: 15,
+    paddingRight: 10,
+    paddingLeft: 10,
+    backgroundColor: '#034B42',
+    borderRadius: 10
+  },
+  directionText: {
+    marginLeft: 10,
+    color: 'white',
+    fontSize: 18
   }
 })
