@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
-    paddingBottom: 90,
+    // paddingBottom: 20,
   },
   title: {
     textAlign: "center",
