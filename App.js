@@ -17,6 +17,7 @@ import WelcomeScreen from './screens/WelcomeScreen';
 import SignUp from './screens/SignUp';
 import SignIn from './screens/SignIn';
 import LoadingScreen from './screens/LoadingScreen';
+
 import SelectedPark from './screens/SelectedPark';
 
 
@@ -43,8 +44,15 @@ export default function App() {
           <Stack.Screen name='Home' component={WelcomeScreen} options={{ headerShown: false }} />
           <Stack.Screen name='Sign Up' component={SignUp} options={{ headerShown: false }} />
           <Stack.Screen name='Sign In' component={SignIn} options={{ headerShown: false }} />
+<<<<<<< HEAD
           <Stack.Screen name='Selected Park' component={SelectedPark} options={{ headerShown: false }} />
 
+=======
+          <Stack.Screen name='addDogs' component={AddDogs} options={{ headerShown: false }} />
+          <Stack.Screen name='Selected Park' component={SelectedPark} options={{ headerShown: false }} />
+
+
+>>>>>>> dfbb201060c87a32f0812aeb6265799f910cac61
           <Stack.Screen name={'Parks'} options={{ headerShown: false }} >{() => (
             <Tab.Navigator
                 tabBarOptions={{

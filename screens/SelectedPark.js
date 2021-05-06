@@ -1,16 +1,138 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, Alert, Modal, TextInput, Keyboard, KeyboardAvoidingView} from "react-native";
+import React,{useState,useEffect, useCallback} from 'react';
+import { StyleSheet, Text, View, Image, TouchableOpacity, Alert, Modal, TextInput, Keyboard, KeyboardAvoidingView, FlatList, ActivityIndicator} from "react-native";
 import park_img from '../assets/place_holder.png';
 import star_outline from '../assets/star_outline.png';
 import star_filled from '../assets/star_filled.png';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 
+import * as firebase from 'firebase';
+import 'firebase/firestore';
+import 'firebase/auth';
+
+
+// import Weather from '../components/GetWeather'
+import API_KEY from '../API/Weather'
+
 export default function SelectedPark( props ) {
+    const [comments, setComments] = useState([]); // set/add comments
+
+    const [loading, setLoading] = useState(true); 
+    const [allComments, getComments] = useState([]); // get comments
+
     const [actionTriggered, setActionTriggered] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
     const [defaultRating, setdefaultRating] = useState(2);
     const [maxRating, setmaxRating] = useState([1,2,3,4,5]);
+    const [userComment, setuserComment] = useState(null);
+    // const [parkId, setparkId] = useState([''])
+    
+    const [getUser, setGetUser] = useState({});
+    const [error, setError] = useState();
+    const [isFetching, setIsFetching] = useState(false);
+
+    // Veðrið
+    // console.log(props.route.params)
+    const [Latitude, setLatitude] = useState(props.route.params.Lat);
+    const [Longitude, setLongitude] = useState(props.route.params.Long);
+    let url = 'https://api.openweathermap.org/data/2.5/weather?lat=' + Longitude + '&lon=' + Latitude + '&units=metric&appid=59989a6fa648999ce02375ef2c360678';
+
+    // console.log(Latitude);
+    // console.log(Longitude);
+
+    const [info,setInfo] = useState ({
+        name:"Villa!",
+        temp:"Villa!",
+        icon:"Villa!",
+    })
+    useEffect(()=>{
+        getWeather()
+    },[])
+    const getWeather = (Latitude, Longitude) => {
+        // console.log(url)
+        fetch(url)
+        .then(data=>data.json())
+        .then(results=>{
+            // console.log(results)
+            setInfo({
+                temp:results.main.temp,
+                icon:results.weather[0].icon
+            })
+            // console.log(info.icon)
+        })
+    }
+    // ----- Endir á Veður kóðanum
+
+    // Ná í nafn á user og UserId
+    const getName = useCallback(async () => {
+        setError(null);
+        try {
+    
+          const user = await firebase.auth().currentUser;
+        //   console.log(user.uid);
+    
+          if (user) {
+            const userSnapshot = await firebase
+              .firestore()
+              .collection("users")
+              .doc(user.uid)
+              .get();
+    
+            const userdata = userSnapshot.data();
+            // console.log(userdata.name);
+            setGetUser({
+              username: userdata.name,
+              userId: user.uid,
+            });
+          }
+        } catch (err) {
+          setError(true);
+        }
+      }, [setError]);
+      
+      useEffect(() => {
+        setIsFetching(true);
+        getName().then(() => {
+          setIsFetching(false);
+        });
+      }, [getName, setIsFetching]);
+
+    //   console.log(getUser.username);
+    //   console.log(getUser);
+    // console.log(props.route.params.ID);
+
+
+    // Vista comments, stjörnugjöf og annað tengt userinum í firestore
+
+    const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+    let autoId = ''
+
+    const submitComment = async () => {
+    for (let i = 0; i < 20; i++) {
+        autoId += CHARS.charAt(
+        Math.floor(Math.random() * CHARS.length)
+        )
+    }
+
+        firebase.
+        firestore()
+        .collection('comments')
+        .add({
+            key: autoId,
+            UserId: getUser.userId,
+            UserName: getUser.username,
+            Comment: userComment,
+            Rating: defaultRating,
+            ParkId: props.route.params.ID,
+            date: firebase.firestore.Timestamp.fromDate(new Date()),
+        })
+        .then(() => {
+            console.log("Það virkaði að setja inn comment");
+        })
+        .catch((error) => {
+            console.log("Eitthvað fór úrskeiðis við að gefa endurgjöf", error);
+        });
+      }
 
     // Þetta er stjörnugjafar gæjinn
     const CustomRatingBar = () => {
@@ -37,6 +159,46 @@ export default function SelectedPark( props ) {
         )
     }
 
+    
+
+    // ná í comments
+    useEffect(() => {
+        const currentPark = props.route.params.ID;
+        const commenters = firebase.firestore()
+          .collection('comments')
+          .onSnapshot(querySnapshot => {
+            const all = [];
+      
+            querySnapshot.forEach(documentSnapshot => {
+                all.push({
+                ...documentSnapshot.data(),
+                key: documentSnapshot.id,
+              });
+            });
+
+            const correctPark = [];
+            for (let i = 0; i <= all.length - 1; i++) {
+                // console.log(all[i])
+                if (all[i].ParkId == currentPark) {
+                    // console.log("Park number: " + [i])
+                    // console.log("Park inside array: " + all[i].ParkId)
+                    // console.log(all[i])
+                    correctPark.push(all[i])
+                }
+            }
+            console.log(correctPark);
+            // console.log(currentPark)
+            getComments(correctPark);
+            setLoading(false);
+          });
+          console.log()
+        // Unsubscribe from events when no longer in use
+        return () => commenters();
+      }, []);
+        if (loading) {
+            return <ActivityIndicator />;
+        }
+        
     return (
         <View style={styles.parentContainer}>
             {/* Hér er einkunnar módalinn */}
@@ -77,6 +239,7 @@ export default function SelectedPark( props ) {
                                 style={styles.inputBox}
                                 placeholder="Hámark 120 stafir"
                                 maxLength={120}
+                                onChangeText = {(content) => setuserComment(content)} //update-ar comment state með því sem er skrifað í comment textaboxið
                                 multiline={true} //þetta þarf að vera true svo að línurnar wrap-ist
                                 numberOfLines={4} //held að þetta geri ekkert, en virkar kannski betur i android
                                 onBlur={Keyboard.dismiss}/>
@@ -88,8 +251,7 @@ export default function SelectedPark( props ) {
                         - defaultRating skilar stjörnu magni sem notandi sláði inn */}
                             <TouchableOpacity
                             style={styles.closeModalButton}
-                            onPress={() => { setActionTriggered('ACTION_2'); console.log("Fjöldi stjarna: ",defaultRating)
-                            }}>
+                            onPress={() => { submitComment(); setActionTriggered('ACTION_2');}}>
                                 <Text style={styles.textStyle}>Staðfesta</Text>
                             </TouchableOpacity>
                         </View>
@@ -121,6 +283,19 @@ export default function SelectedPark( props ) {
             <View style={styles.middleContainer}>
                 <View style={styles.textContainer}>
                     <Text style={styles.panelTitle}>{props.route.params && props.route.params.Name ? props.route.params.Name : "Vantar nafn"}</Text>
+                    
+                    {/* Hérna kemur veðurspáin*/}
+                    <View style={styles.weather}>
+                        <Image style={styles.weatherimage}
+                        
+                        source={{uri:"http://openweathermap.org/img/wn/"+info.icon+"@2x.png"}}
+                        />
+                        <Text style={styles.weatherText}>Hiti: {info.temp}°</Text>
+                    </View>
+                    
+
+                    {/* <Weather></Weather> */}
+
                     {/* Hérna þarf að birta actual stjörnugjöf sem svæðið hefur, þetta eru bara place-holder icons */}
                         <AntDesign name="staro" size={24} color="black" />
                     <Text style={styles.aboutPark}>{props.route.params.Information}</Text>
@@ -155,14 +330,28 @@ export default function SelectedPark( props ) {
                         <AntDesign name="staro" size={26} style={styles.starIcon} />
                     </TouchableOpacity>
                 </View>
+                
             </View>
+                <FlatList
+                    data={allComments}
+                    renderItem={({ item }) => (
+                    <View>
+                        <Text>User Name: {item.UserName}</Text>
+                        <Text>Rating: {item.Rating}</Text>
+                        <Text>Comment: {item.Comment}</Text>
+                        <Text>Staður: {item.ParkId}</Text>
+                    </View>
+                    )}
+                />
+                
         </View>
       );
 }
 
 const styles = StyleSheet.create({
     parentContainer: {
-        flex: 1
+        flex: 1,
+        backgroundColor: "#F7F5F4"
     },
     iconStyle:{
         color: 'white',
@@ -330,6 +519,21 @@ const styles = StyleSheet.create({
         height: 50,
         width: 240,
         marginBottom: 30
+      },
+      weather:{
+        width:80,
+        height: 70,
+        borderRadius: 30,
+        backgroundColor: '#44cbe3',
+        alignItems: 'center',
+        justifyContent: 'center',
+      },
+      weatherimage:{
+        width:100,
+        height:100,
+      },
+      weatherText:{
+          color: 'black',
       }
 
 })
