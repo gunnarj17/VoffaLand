@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, Alert, Platform, Dimensions, ActivityIndicator, ScrollView, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, Alert, Platform, Dimensions, ActivityIndicator, ScrollView, SafeAreaView, KeyboardAvoidingView, Keyboard } from 'react-native';
 import { Input, Avatar } from 'react-native-elements';
 import { StatusBar } from 'expo-status-bar';
 import { MaterialCommunityIcons, Ionicons, Octicons, MaterialIcons } from '@expo/vector-icons';
@@ -12,6 +12,7 @@ import Modal from 'react-native-modal';
 import * as firebase from 'firebase';
 import 'firebase/firestore';
 import "firebase/auth";
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 const { height } = Dimensions.get('window');
 
@@ -50,12 +51,12 @@ const AddDogs = ({ navigation, route }) => {
     const optionArray = [
         <View style={styles.flexDirectionRow}>
             <Ionicons name="ios-camera" size={hp(3)} color="gray" />
-            <Text style={{ ...styles.actionSheetOptions, marginLeft: wp(1.5) }}>Camera</Text>
+            <Text style={{ ...styles.actionSheetOptions, marginLeft: wp(1.5) }}>Myndavél</Text>
         </View>
         , 
         <View style={styles.flexDirectionRow}>
             <MaterialIcons name="perm-media" size={hp(3)} color="gray" />
-            <Text style={{ ...styles.actionSheetOptions, marginLeft: wp(1.8) }}>Gallery</Text>
+            <Text style={{ ...styles.actionSheetOptions, marginLeft: wp(1.8) }}>Albúm</Text>
         </View>, 
         'Cancel'
     ];
@@ -134,7 +135,7 @@ const AddDogs = ({ navigation, route }) => {
 
     const submit = async () => {
         if (name == '' || breed == '' || description == '' || photoURL == null) {
-            Alert.alert('fields are empty. Fill the fields.');
+            Alert.alert('Some fields are still empty. Fill the fields.');
         } else {
             setIsFetching(true);
             try {
@@ -177,7 +178,7 @@ const AddDogs = ({ navigation, route }) => {
                         User: user.uid
                     });
 
-                    Alert.alert('Dogs added successfully');
+                    Alert.alert('Voffanum þínum hefur verið bætt við prófílinn þinn!');
 
                     setName('');
                     setDescription('');
@@ -277,112 +278,119 @@ const AddDogs = ({ navigation, route }) => {
     return (
         <SafeAreaView style={styles.container}>
             <StatusBar style="dark"  backgroundColor={height > 850 ? '#D7D7D7' : '#FFFFFF'} />
-            <ScrollView style={styles.container}>
-                <View style={styles.container}>
-                    <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backIcon}>
-                        <MaterialCommunityIcons name='keyboard-backspace' size={hp(5)} color='#445975' />
-                    </TouchableOpacity>
-                    <Text style={styles.headerTitle}>
-                        { dogId != undefined ? 'Uppfæra hunda' : 'Bæta við hundum' }
+               
+                   
+        <KeyboardAwareScrollView>
+            <View style={styles.container}> 
+                
+                <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backIcon}>
+                    <MaterialCommunityIcons name='keyboard-backspace' size={hp(4)} color='#445975' />
+                </TouchableOpacity>
+                <Text style={styles.headerTitle}>
+                    { dogId != undefined ? 'Uppfæra Voffa' : 'Nýr Voffi!' }
+                </Text>
+                <Avatar
+                    rounded
+                    source={{
+                        uri: photoURL ? photoURL : 'http://www.gravatar.com/avatar/4e0a22e6cc6e4fe4c4b5e8f4bee57a6a?s=200&r=pg&d=mm'
+                    }}
+                    onPress={showActionSheet}
+                    size='xlarge'
+                    containerStyle={styles.img}
+                />
+                <Input
+                    placeholder='Hvað heitir hundurinn?'
+                    autoCorrect={false}
+                    inputStyle={styles.inputStyle}
+                    inputContainerStyle={{ ...styles.inputContainerStyle, marginTop: hp(6) }}
+                    value={name}
+                    onChangeText={(e) => setName(e)}
+                />
+                <Input
+                    placeholder='Hvaða tegund er hann?'
+                    autoCorrect={false}
+                    inputStyle={styles.inputStyle}
+                    inputContainerStyle={{ ...styles.inputContainerStyle, marginTop: hp(1) }}
+                    value={breed}
+                    onChangeText={(e) => setBreed(e)}
+                />
+                <TextInput
+                    placeholder='Hvernig myndir þú lýsa hundinum þínum?'
+                    autoCorrect={false}
+                    multiline={true}
+                    maxLength={120}
+                    style={styles.descriptionInput}
+                    value={description}
+                    onBlur={Keyboard.dismiss}
+                    onChangeText={(e) => setDescription(e)}
+                />
+                <View style={{ ...styles.inputContainerStyle, marginBottom: hp(4), marginTop: hp(3) }}>
+                    <Text style={styles.mixText}>
+                        Fæðingardagur
                     </Text>
-                    <Avatar
-                        rounded
-                        source={{
-                            uri: photoURL ? photoURL : 'http://www.gravatar.com/avatar/4e0a22e6cc6e4fe4c4b5e8f4bee57a6a?s=200&r=pg&d=mm'
-                        }}
-                        onPress={showActionSheet}
-                        size='xlarge'
-                        containerStyle={styles.img}
-                    />
-                    <Input
-                        placeholder='Hvað heitir hundurinn?'
-                        autoCorrect={false}
-                        inputStyle={styles.inputStyle}
-                        inputContainerStyle={{ ...styles.inputContainerStyle, marginTop: hp(6) }}
-                        value={name}
-                        onChangeText={(e) => setName(e)}
-                    />
-                    <Input
-                        placeholder='Hvaða tegund er hann?'
-                        autoCorrect={false}
-                        inputStyle={styles.inputStyle}
-                        inputContainerStyle={{ ...styles.inputContainerStyle, marginTop: hp(1) }}
-                        value={breed}
-                        onChangeText={(e) => setBreed(e)}
-                    />
-                    <TextInput
-                        placeholder='Hvernig myndir þú lýsa hundinum þínum?'
-                        autoCorrect={false}
-                        multiline={true}
-                        style={styles.descriptionInput}
-                        value={description}
-                        onChangeText={(e) => setDescription(e)}
-                    />
-                    <View style={{ ...styles.inputContainerStyle, marginBottom: hp(4), marginTop: hp(3) }}>
-                        <Text style={styles.mixText}>
-                            Fæðingardagur
+                    <TouchableOpacity 
+                        onPress={showDatepicker} 
+                        style={styles.dateContainer}
+                    >
+                        <Text style={styles.dateText}>
+                            {date.toDateString()}
                         </Text>
-                        <TouchableOpacity 
-                            onPress={showDatepicker} 
-                            style={styles.dateContainer}
-                        >
-                            <Text style={styles.dateText}>
-                                {date.toDateString()}
-                            </Text>
-                            <Octicons name="calendar" size={hp(3.4)} color="black" style={{ alignSelf: 'center' }} />
-                        </TouchableOpacity>
-                    </View>
-                    <View style={{ ...styles.inputContainerStyle, flexDirection: 'row', marginBottom: hp(4), marginTop: hp(1) }}>
-                        <Text style={styles.sexText}>
-                            Kyn
-                        </Text>
-                        { Platform.OS === 'android' ?
+                        <Octicons name="calendar" size={hp(3.4)} color="black" style={{ alignSelf: 'center' }} />
+                    </TouchableOpacity>
+                </View>
+                <View style={{ ...styles.inputContainerStyle, flexDirection: 'row', marginBottom: hp(4), marginTop: hp(1) }}>
+                    <Text style={styles.sexText}>
+                        Kyn
+                    </Text>
+                    { Platform.OS === 'android' ?
+                        <RadioButton
+                            value="Rakki"
+                            status={ checked === 'Rakki' ? 'checked' : 'unchecked' }
+                            onPress={() => setChecked('Rakki')}
+                        />
+                    :
+                        <View style={styles.radioIos}>
                             <RadioButton
                                 value="Rakki"
                                 status={ checked === 'Rakki' ? 'checked' : 'unchecked' }
                                 onPress={() => setChecked('Rakki')}
                             />
-                        :
-                            <View style={styles.radioIos}>
-                                <RadioButton
-                                    value="Rakki"
-                                    status={ checked === 'Rakki' ? 'checked' : 'unchecked' }
-                                    onPress={() => setChecked('Rakki')}
-                                />
-                            </View>
-                        }
-                        <Text style={styles.mixText}>
-                            Rakki
-                        </Text>
-                        { Platform.OS === 'android' ?
+                        </View>
+                    }
+                    <Text style={styles.mixText}>
+                        Rakki
+                    </Text>
+                    { Platform.OS === 'android' ?
+                        <RadioButton
+                            value="Tík"
+                            status={ checked === 'Tík' ? 'checked' : 'unchecked' }
+                            onPress={() => setChecked('Tík')}
+                        />
+                    :
+                        <View style={styles.radioIos}>
                             <RadioButton
-                                value="Tik"
-                                status={ checked === 'Tik' ? 'checked' : 'unchecked' }
-                                onPress={() => setChecked('Tik')}
+                                value="Tík"
+                                status={ checked === 'Tík' ? 'checked' : 'unchecked' }
+                                onPress={() => setChecked('Tík')}
                             />
-                        :
-                            <View style={styles.radioIos}>
-                                <RadioButton
-                                    value="Tik"
-                                    status={ checked === 'Tik' ? 'checked' : 'unchecked' }
-                                    onPress={() => setChecked('Tik')}
-                                />
-                            </View>
-                        }
-                        <Text style={styles.mixText}>
-                            Tik
-                        </Text>
-                    </View>
-                    <TouchableOpacity onPress={dogId === undefined ? submit : update} activeOpacity={0.6} style={styles.submitButtonContainer}>
-                        <Text style={styles.submitButton}>
-                            Staðfesta
-                        </Text>
-                    </TouchableOpacity>
+                        </View>
+                    }
+                    <Text style={styles.mixText}>
+                        Tík
+                    </Text>
                 </View>
-            </ScrollView>
+                <TouchableOpacity onPress={dogId === undefined ? submit : update} activeOpacity={0.6} style={styles.submitButtonContainer}>
+                    <Text style={styles.submitButton}>
+                        Staðfesta
+                    </Text>
+                </TouchableOpacity>
+                
+            </View>
+        </KeyboardAwareScrollView>
+
             <ActionSheet
                 ref={actionSheet}
-                title={<Text style={styles.actionSheetTitle}>Add Profile Photo</Text>}
+                title={<Text style={styles.actionSheetTitle}>Bæta við mynd</Text>}
                 options={optionArray}
                 cancelButtonIndex={2}
                 destructiveButtonIndex={2}
@@ -431,7 +439,8 @@ const AddDogs = ({ navigation, route }) => {
                     <ActivityIndicator size='large' color='white' />
                 </View>
             </Modal> 
-        </SafeAreaView>
+         
+         </SafeAreaView>
     );
 };
 
@@ -441,18 +450,18 @@ const styles = StyleSheet.create({
         backgroundColor: 'white'
     },
     backIcon: {
-        marginTop: hp(7),
+        marginTop: hp(2),
         marginLeft: wp(7),
     },
     headerTitle: {
         marginTop: hp(2),
         fontSize: hp(3.4),
         textAlign: 'center',
-        fontWeight: 'bold',
-        color: 'brown'
+        fontWeight: '400',
+        color: '#034B42'
     },
     img: {
-        marginTop: hp(6),
+        marginTop: hp(4),
         alignSelf: 'center',
         width: wp(40),
         height: wp(40),
@@ -463,12 +472,12 @@ const styles = StyleSheet.create({
     },
     actionSheetTitle: { 
         fontSize: hp(2.6), 
-        fontWeight: 'bold', 
+        fontWeight: '500', 
         color: '#0B666B',
     },
     actionSheetOptions: { 
         fontSize: hp(2.4), 
-        fontWeight: 'bold', 
+        // fontWeight: 'bold', 
         color: 'gray'
     },
     inputStyle: { 
@@ -544,7 +553,7 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 0.3,
         shadowRadius: 2,
-        borderRadius: 15, 
+        borderRadius: 20, 
         backgroundColor: 'white' 
     },
     radioIos: { 
@@ -567,7 +576,13 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center'
-    }
+    },
+    centeredView: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 22,
+      },
 });
 
 export default AddDogs

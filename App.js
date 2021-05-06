@@ -17,6 +17,7 @@ import WelcomeScreen from './screens/WelcomeScreen';
 import SignUp from './screens/SignUp';
 import SignIn from './screens/SignIn';
 import LoadingScreen from './screens/LoadingScreen';
+
 import SelectedPark from './screens/SelectedPark';
 
 // Tab Screens
@@ -35,6 +36,7 @@ export default function App() {
     firebase.initializeApp(apiKeys.firebaseConfig);
   }
 
+
   return (
     <SafeAreaProvider>
       <NavigationContainer >
@@ -44,6 +46,9 @@ export default function App() {
           <Stack.Screen name='Sign Up' component={SignUp} options={{ headerShown: false }} />
           <Stack.Screen name='Sign In' component={SignIn} options={{ headerShown: false }} />
           <Stack.Screen name='addDogs' component={AddDogs} options={{ headerShown: false }} />
+          <Stack.Screen name='Selected Park' component={SelectedPark} options={{ headerShown: false }} />
+
+
           <Stack.Screen name={'Parks'} options={{ headerShown: false }} >{() => (
             <Tab.Navigator
               tabBarOptions={{

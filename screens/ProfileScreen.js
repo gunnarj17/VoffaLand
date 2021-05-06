@@ -1,28 +1,15 @@
-import React, { useState, useEffect, useCallback } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-  FlatList,
-  Alert,
-  ActivityIndicator,
-  Dimensions,
-  SafeAreaView,
-} from "react-native";
-import { StatusBar } from "expo-status-bar";
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from "react-native-responsive-screen";
-import ProfileHeader from "../components/ProfileHeader";
-import PetModal from "../components/PetModal";
-import * as firebase from "firebase";
-import "firebase/firestore";
-import "firebase/auth";
+import React, { useState, useEffect, useCallback } from 'react';
+import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, Alert, ActivityIndicator, Dimensions, SafeAreaView } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import ProfileHeader from '../components/ProfileHeader';
+import PetModal from '../components/PetModal';
+import * as firebase from 'firebase';
+import 'firebase/firestore';
+import 'firebase/auth';
+import PetComponent from '../components/PetComponent';
 
-const { height } = Dimensions.get("window");
+const { height } = Dimensions.get('window');
 
 export default function ProfileScreen({ navigation }) {
   const [dogs, setDogs] = useState([]);
@@ -49,7 +36,7 @@ export default function ProfileScreen({ navigation }) {
           .get();
 
         const userdata = userSnapshot.data();
-
+        console.log(userdata);
         setGetUser({
           username: userdata.name,
           userphoto: userdata.photo,
@@ -163,38 +150,26 @@ export default function ProfileScreen({ navigation }) {
         data={dogs}
         style={styles.flatList}
         showsVerticalScrollIndicator={false}
-        numColumns={2}
-        ListHeaderComponent={() => (
-          <ProfileHeader
-            navigation={navigation}
-            logout={logout}
-            username={getUser.username}
-            userphoto={getUser.userphoto}
-          />
-        )}
+        ListHeaderComponent={() => <ProfileHeader navigation={navigation} logout={logout} username={getUser.username} userphoto={getUser.userphoto} />}
         renderItem={({ item }) => {
-          return (
-            <>
-              <TouchableOpacity
-                onPress={() => {
+            return (
+              <>
+              <TouchableOpacity 
+                onPress={() => { 
                   setModalVisible(true);
-                  openModal(item);
-                }}
-                activeOpacity={0.7}
-                style={styles.dogContainer}
-              >
-                <Image
-                  source={{ uri: item.Photo }}
-                  resizeMode="cover"
-                  style={styles.dogImage}
-                />
-                <Text style={styles.dogTitle}>{item.Name}</Text>
-              </TouchableOpacity>
-            </>
-          );
-        }}
+                  openModal(item)
+                }}>
+                  <PetComponent
+                    Name={item.Name}
+                    Breed={item.Breed}
+                    Photo={item.Photo}
+                  />
+                </TouchableOpacity>
+              </>
+            );
+        }} 
       />
-      <PetModal
+      <PetModal 
         Id={dogItem.id}
         Name={dogItem.Name}
         Photo={dogItem.Photo}
@@ -209,7 +184,7 @@ export default function ProfileScreen({ navigation }) {
         setLines={setLines}
         deleteDog={deleteDog}
         navigation={navigation}
-      />
+      /> 
     </SafeAreaView>
   );
 }
@@ -217,11 +192,13 @@ export default function ProfileScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: 'white',
+    flexDirection: 'column',
   },
   flatList: {
     flex: 1,
-    alignSelf: "center",
+    flexDirection: 'column',
+    paddingHorizontal: hp(2),
     marginBottom: hp(2),
   },
   dogContainer: {
@@ -234,7 +211,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.3,
     shadowRadius: 2,
-    marginBottom: hp(0.8),
+    marginBottom: hp(.8),
   },
   dogTitle: {
     marginBottom: hp(2),

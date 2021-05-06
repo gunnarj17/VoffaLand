@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F2F9F4',
+    backgroundColor: 'white',
   },
   logo: {
     width: 250,
@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: 270,
     height: 200,
-    backgroundColor: '#F2F9F4',
+    backgroundColor: 'white',
     marginBottom: 30
   },
 
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 10,
     height: 60,
-    backgroundColor: '#F2F9F4',
+    backgroundColor: 'white',
     borderRadius: 16,
     borderWidth: 2.5,
     borderColor: '#069380'
