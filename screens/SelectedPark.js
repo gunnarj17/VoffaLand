@@ -104,6 +104,7 @@ export default function SelectedPark( props ) {
 
     // Vista comments, stjörnugjöf og annað tengt userinum í firestore
 
+    // Hérna er randomizer sem býr til key fyrir comments þannig að hvert comment er með uniqe key
     const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
     let autoId = ''
 
@@ -113,7 +114,8 @@ export default function SelectedPark( props ) {
         Math.floor(Math.random() * CHARS.length)
         )
     }
-
+    
+    // hérna vistast allar upplýsingar um comments í firestore
         firebase.
         firestore()
         .collection('comments')
@@ -332,6 +334,7 @@ export default function SelectedPark( props ) {
                 </View>
                 
             </View>
+            {/* Listi sem birtir öll ummæli á svæði */}
                 <FlatList
                     data={allComments}
                     renderItem={({ item }) => (
