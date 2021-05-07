@@ -1,11 +1,11 @@
 import React,{useState,useEffect, useCallback} from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, Alert, Modal, TextInput, Keyboard, KeyboardAvoidingView, FlatList, ActivityIndicator} from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity, Alert, Modal, TextInput, Keyboard, KeyboardAvoidingView, FlatList, ActivityIndicator, SafeAreaView} from "react-native";
 import park_img from '../assets/place_holder.png';
 import star_outline from '../assets/star_outline.png';
 import star_filled from '../assets/star_filled.png';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons'; 
-
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import * as firebase from 'firebase';
 import 'firebase/firestore';
 import 'firebase/auth';
@@ -13,6 +13,7 @@ import 'firebase/auth';
 
 // import Weather from '../components/GetWeather'
 import API_KEY from '../API/Weather'
+import { ScrollView } from 'react-native-gesture-handler';
 
 export default function SelectedPark( props ) {
     const [comments, setComments] = useState([]); // set/add comments
@@ -133,6 +134,7 @@ export default function SelectedPark( props ) {
         });
       }
 
+
     // Þetta er stjörnugjafar gæjinn
     const CustomRatingBar = () => {
         return (
@@ -179,18 +181,14 @@ export default function SelectedPark( props ) {
             for (let i = 0; i <= all.length - 1; i++) {
                 // console.log(all[i])
                 if (all[i].ParkId == currentPark) {
-                    // console.log("Park number: " + [i])
-                    // console.log("Park inside array: " + all[i].ParkId)
-                    // console.log(all[i])
                     correctPark.push(all[i])
                 }
             }
-            console.log(correctPark);
-            // console.log(currentPark)
+            
             getComments(correctPark);
             setLoading(false);
           });
-          console.log()
+          
         // Unsubscribe from events when no longer in use
         return () => commenters();
       }, []);
@@ -199,6 +197,7 @@ export default function SelectedPark( props ) {
         }
         
     return (
+        <SafeAreaView style={{flex: 1}}>
         <View style={styles.parentContainer}>
             {/* Hér er einkunnar módalinn */}
             <Modal
@@ -231,7 +230,7 @@ export default function SelectedPark( props ) {
                                 <CustomRatingBar/>
                             </View>
 
-                        {/* Comment text box-ið. Kann ekki að sækja upplýsingar úr því, kannski hægt að endurtaka það sem er á SignIn og SignUp? */}
+                        {/* Comment text box-ið */}
                             <View>
                                 <Text style={styles.modalText}>Hvaða ummælum viltu koma á framfæri?</Text>
                                 <TextInput
@@ -273,77 +272,82 @@ export default function SelectedPark( props ) {
             
 
             {/* Hér er það sem er á skjánum, sem er ekki einkunnargjöf modal-inn */}
-
+            
             <View style={styles.imgContainer}>
                 <Image source={park_img}  style={styles.imgStyle}/>
             </View>
 
-            {/* Parturinn af skjánum sem inniheldur nafn, lýsingu og directions takka, vantar veðurspá */}
+            {/* Parturinn af skjánum sem inniheldur nafn, lýsingu og directions takka, veðurspá */}
             <View style={styles.middleContainer}>
-                <View style={styles.textContainer}>
-                    <Text style={styles.panelTitle}>{props.route.params && props.route.params.Name ? props.route.params.Name : "Vantar nafn"}</Text>
-                    
+                <View style={styles.starReview}>
+                    {/* Hérna þarf að birta actual stjörnugjöf sem svæðið hefur, þetta eru bara place-holder icons */}
+                    <AntDesign name="staro" size={24} color="black" />
+                </View>
+                <View style={styles.middleContainerHeader}>
+                    <View style={styles.titleDir}>
+                        <Text style={styles.panelTitle}>{props.route.params && props.route.params.Name ? props.route.params.Name : "Vantar nafn"}</Text>
+                        <TouchableOpacity 
+                            style={styles.iconButton}
+                            onPress={() => console.log("Vantar virkni")}
+                        >
+                            <FontAwesome5 name="directions" size={26} color="white" />
+                        </TouchableOpacity>
+                    </View>
                     {/* Hérna kemur veðurspáin*/}
                     <View style={styles.weather}>
                         <Image style={styles.weatherimage}
-                        
                         source={{uri:"http://openweathermap.org/img/wn/"+info.icon+"@2x.png"}}
                         />
                         <Text style={styles.weatherText}>Hiti: {info.temp}°</Text>
                     </View>
                     
-
-                    {/* <Weather></Weather> */}
-
-                    {/* Hérna þarf að birta actual stjörnugjöf sem svæðið hefur, þetta eru bara place-holder icons */}
-                        <AntDesign name="staro" size={24} color="black" />
+                </View>
+                <View style={styles.aboutParkContainer}>
+                    
                     <Text style={styles.aboutPark}>{props.route.params.Information}</Text>
                     {/* Hérna þarf líka að birta tögg-in sem svæðið hefur :) */}
                 </View>
-                <View style={styles.rightContainer}>
-                    {/* Hérna er Directions takkinn. Vantar virkni í hann */}
-                    <TouchableOpacity 
-                    style={styles.iconButton}
-                    onPress={() => console.log("Vantar virkni")}
-                    >
-                        <FontAwesome5 name="directions" size={26} color="white" />
-                    </TouchableOpacity>
-                </View>
-            </View>
 
-            {/* Parturinn af skjánum fyrir comment og stjörnugjafir. Hér vantar virkni til að birta ummæli */}
-            <View style={styles.reviewComponent}>
-                <View style={styles.leftReviewComponent}>
-                    <Text style={styles.commentTitle}>Ummæli</Text>
-                    <View style={styles.borderLine}/>
-                </View>
-                <View style={styles.rightReviewComponent}>
-                    {/* Takki sem er fimm gular stjörnur. Opnar review modal-inn */}
-                    <TouchableOpacity 
-                    style={styles.reviewButton}
-                    onPress={() => { setModalVisible(true); setActionTriggered('ACTION_1');}}>
-                        <AntDesign name="staro" size={26} style={styles.starIcon}/>
-                        <AntDesign name="staro" size={26} style={styles.starIcon} />
-                        <AntDesign name="staro" size={26} style={styles.starIcon} />
-                        <AntDesign name="staro" size={26} style={styles.starIcon} />
-                        <AntDesign name="staro" size={26} style={styles.starIcon} />
-                    </TouchableOpacity>
-                </View>
-                
-            </View>
-                <FlatList
-                    data={allComments}
-                    renderItem={({ item }) => (
-                    <View>
-                        <Text>User Name: {item.UserName}</Text>
-                        <Text>Rating: {item.Rating}</Text>
-                        <Text>Comment: {item.Comment}</Text>
-                        <Text>Staður: {item.ParkId}</Text>
+                {/* Parturinn af skjánum fyrir comment og stjörnugjafir. Hér vantar virkni til að birta ummæli */}
+                <View style={styles.reviewComponent}>
+                <View style={styles.reviewComponentHeader}>
+                    <View style={styles.leftReviewComponent}>
+                        <Text style={styles.commentTitle}>Ummæli</Text>
+                        <View style={styles.borderLine}/>
                     </View>
-                    )}
-                />
+                    <View style={styles.rightReviewComponent}>
+                        {/* Takki sem er fimm gular stjörnur. Opnar review modal-inn */}
+                        <TouchableOpacity 
+                        style={styles.reviewButton}
+                        onPress={() => { setModalVisible(true); setActionTriggered('ACTION_1');}}>
+                            <AntDesign name="staro" size={26} style={styles.starIcon}/>
+                            <AntDesign name="staro" size={26} style={styles.starIcon} />
+                            <AntDesign name="staro" size={26} style={styles.starIcon} />
+                            <AntDesign name="staro" size={26} style={styles.starIcon} />
+                            <AntDesign name="staro" size={26} style={styles.starIcon} />
+                        </TouchableOpacity>
+                    </View>
+                </View>
+                <View style={styles.commentSection}>
                 
+                        <FlatList
+                        contentContainerStyle={{ paddingBottom: 150 }}
+                            data={allComments}
+                            renderItem={({ item }) => (
+                            <View style={styles.commentBox}>
+                                <Text style={{fontSize: hp(2.6)}}>{item.UserName}</Text>
+                                <Text>Rating: {item.Rating}</Text>
+                                <Text style={{fontSize: hp(2)}}>{item.Comment}</Text>
+                            </View>
+                            )}
+                        />
+                    
+                </View>
+                </View>
+            </View>
+            
         </View>
+        </SafeAreaView>
       );
 }
 
@@ -366,7 +370,6 @@ const styles = StyleSheet.create({
         },
     imgContainer: {
         flex: 1,
-        paddingTop: 70
     },
     imgStyle: {
         flex: 1,
@@ -374,39 +377,52 @@ const styles = StyleSheet.create({
         width: undefined,
         height: undefined
     },
-    middleContainer: {
-        flex: 1,
-        flexDirection:'row',
-        justifyContent:'space-between',
-        paddingTop: 20,
+    starReview: {
+        paddingLeft: wp(5)
     },
-    textContainer:{
-        alignSelf: 'flex-start',
-        paddingLeft: 20,
+    middleContainer: {
+        flex: 2,
+        paddingTop: hp(2),
+    },
+    middleContainerHeader:{
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        flexWrap: 'wrap',
+        paddingLeft: wp(5),
+        paddingRight: wp(5),
+        paddingBottom: hp(3),
     },
     panelTitle: {
-        fontSize: 30,
-        paddingBottom: 10
+        fontSize: hp(3.5),
+        paddingRight: wp(5),
+        paddingRight: wp(5)
+    },
+    titleDir: {
+        flexDirection: 'row'
+    },
+    aboutParkContainer: {
+        paddingLeft: wp(3),
+        paddingRight: wp(2),
+        paddingTop: hp(2),
+        paddingBottom: hp(2)
     },
     aboutPark: {
-        fontSize: 16,
+        fontSize: hp(2.2),
     },
-    rightContainer: {
-        flex: 1,
-        direction: 'rtl',
-        paddingLeft: 20
-    },
+
     reviewComponent: {
-        flex: 1,
-        flexDirection:'row',
-        justifyContent:'space-between',
+        paddingTop: hp(1),
+    },
+    reviewComponentHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between'
     },
     leftReviewComponent: {
         alignSelf: 'flex-start',
-        paddingLeft: 20,
+        paddingLeft: wp(3),
     },
     commentTitle: {
-        fontSize: 25
+        fontSize: hp(3),
     },
     borderLine:{
         borderBottomColor: '#C4C4C4',
@@ -424,14 +440,37 @@ const styles = StyleSheet.create({
         justifyContent:'center',
         flexDirection: 'row',
     },
-    reviewButtonText:{
-        fontSize: 16,
-        color: 'white'
-    },
     starIcon: {
         padding: 1,
         color: 'orange'
     },
+    weather:{
+        width: wp(20),
+        height: hp(8),
+        borderRadius: 20,
+        backgroundColor: '#B9E2F5',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    weatherimage:{
+        width: 100,
+        height: 100,
+    },
+    weatherText:{
+        color: 'black',
+    },
+    commentSection: {
+        paddingLeft: wp(5),
+        paddingRight: wp(10),
+        paddingBottom: hp(10)
+    },
+    commentBox: {
+        borderBottomColor: 'grey',
+        borderBottomWidth: 1,
+        paddingTop: hp(1),
+        paddingBottom: hp(1)
+    },
+
     closeModalView: {
         alignSelf: 'flex-end'
     },
@@ -472,30 +511,30 @@ const styles = StyleSheet.create({
       },
       textStyle: {
         color: 'white',
-        fontSize: 16,
+        fontSize: hp(2),
         textAlign: 'center',
       },
       modalTextHeader: {
         textAlign: 'center',
         fontWeight: 'bold',
-        fontSize: 20
+        fontSize: hp(2.8)
       },
       modalTextName: {
         textAlign: 'center',
         fontWeight: 'bold',
-        fontSize: 20,
+        fontSize: hp(2.8),
         marginBottom: 15
       },
       modalText:{
         textAlign: 'center',
-        fontSize: 15,
+        fontSize: hp(2),
         marginBottom: 15
       },
       confirmmodalText: {
         textAlign: 'center',
-        fontSize: 15,
+        fontSize: hp(2),
         fontWeight: 'bold',
-        marginBottom: 15
+        marginBottom: hp(4)
       },
       customRatingBarStyle: {
           justifyContent: 'center',
@@ -512,27 +551,13 @@ const styles = StyleSheet.create({
         borderColor: '#CCCCCC',
         borderWidth: 1,
         borderRadius: 5,
-        fontSize: 15,
-        paddingLeft: 10,
-        paddingRight: 10,
-        height: 50,
-        width: 240,
-        marginBottom: 30
+        fontSize: hp(2),
+        paddingLeft: wp(4),
+        paddingRight: wp(4),
+        height: hp(8),
+        width: wp(65),
+        marginBottom: hp(4)
       },
-      weather:{
-        width:80,
-        height: 70,
-        borderRadius: 30,
-        backgroundColor: '#44cbe3',
-        alignItems: 'center',
-        justifyContent: 'center',
-      },
-      weatherimage:{
-        width:100,
-        height:100,
-      },
-      weatherText:{
-          color: 'black',
-      }
+     
     
 })
