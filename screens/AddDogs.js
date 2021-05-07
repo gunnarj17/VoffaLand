@@ -135,7 +135,7 @@ const AddDogs = ({ navigation, route }) => {
 
     const submit = async () => {
         if (name == '' || breed == '' || description == '' || photoURL == null) {
-            Alert.alert('fields are empty. Fill the fields.');
+            Alert.alert('Some fields are still empty. Fill the fields.');
         } else {
             setIsFetching(true);
             try {
@@ -278,9 +278,11 @@ const AddDogs = ({ navigation, route }) => {
     return (
         <SafeAreaView style={styles.container}>
             <StatusBar style="dark"  backgroundColor={height > 850 ? '#D7D7D7' : '#FFFFFF'} />
-            <KeyboardAwareScrollView>
-                <View style={styles.container}> 
-
+               
+                   
+        <KeyboardAwareScrollView>
+            <View style={styles.container}> 
+                
                 <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backIcon}>
                     <MaterialCommunityIcons name='keyboard-backspace' size={hp(4)} color='#445975' />
                 </TouchableOpacity>
@@ -353,7 +355,6 @@ const AddDogs = ({ navigation, route }) => {
                                 status={ checked === 'Rakki' ? 'checked' : 'unchecked' }
                                 onPress={() => setChecked('Rakki')}
                             />
-                        :
                         </View>
                     }
                     <Text style={styles.mixText}>
@@ -378,15 +379,15 @@ const AddDogs = ({ navigation, route }) => {
                         Tík
                     </Text>
                 </View>
-            
                 <TouchableOpacity onPress={dogId === undefined ? submit : update} activeOpacity={0.6} style={styles.submitButtonContainer}>
                     <Text style={styles.submitButton}>
                         Staðfesta
                     </Text>
                 </TouchableOpacity>
-
+                
             </View>
         </KeyboardAwareScrollView>
+
             <ActionSheet
                 ref={actionSheet}
                 title={<Text style={styles.actionSheetTitle}>Bæta við mynd</Text>}
@@ -438,7 +439,8 @@ const AddDogs = ({ navigation, route }) => {
                     <ActivityIndicator size='large' color='white' />
                 </View>
             </Modal> 
-        </SafeAreaView>
+         
+         </SafeAreaView>
     );
 };
 
@@ -475,6 +477,7 @@ const styles = StyleSheet.create({
     },
     actionSheetOptions: { 
         fontSize: hp(2.4), 
+        // fontWeight: 'bold', 
         color: 'gray'
     },
     inputStyle: { 

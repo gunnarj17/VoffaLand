@@ -32,7 +32,6 @@ export default function SelectedPark( props ) {
     const [isFetching, setIsFetching] = useState(false);
 
     // Veðrið
-    // console.log(props.route.params)
     const [Latitude, setLatitude] = useState(props.route.params.Lat);
     const [Longitude, setLongitude] = useState(props.route.params.Long);
     let url = 'https://api.openweathermap.org/data/2.5/weather?lat=' + Longitude + '&lon=' + Latitude + '&units=metric&appid=59989a6fa648999ce02375ef2c360678';

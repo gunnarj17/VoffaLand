@@ -25,12 +25,12 @@ const ProfileHeader = ({ username, userphoto, navigation, logout }) => {
     const optionArray = [
         <View style={styles.flexDirectionRow}>
             <Ionicons name="ios-camera" size={hp(3)} color="gray" />
-            <Text style={{ ...styles.actionSheetOptions, marginLeft: wp(1.5) }}>Camera</Text>
+            <Text style={{ ...styles.actionSheetOptions, marginLeft: wp(1.5) }}>Myndvél</Text>
         </View>
         , 
         <View style={styles.flexDirectionRow}>
             <MaterialIcons name="perm-media" size={hp(3)} color="gray" />
-            <Text style={{ ...styles.actionSheetOptions, marginLeft: wp(1.8) }}>Gallery</Text>
+            <Text style={{ ...styles.actionSheetOptions, marginLeft: wp(1.8) }}>Albúm</Text>
         </View>, 
         'Cancel'
     ];
@@ -191,10 +191,10 @@ const ProfileHeader = ({ username, userphoto, navigation, logout }) => {
         <>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                 <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backIcon}>
-                    <MaterialCommunityIcons name='keyboard-backspace' size={hp(5)} color='#445975' />
+                    <MaterialCommunityIcons name='keyboard-backspace' size={hp(4)} color='#445975' />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={logout} style={styles.logout}>
-                    <AntDesign name='logout' size={hp(4)} color='red' />
+                    <AntDesign name='logout' size={hp(3)} color='red' />
                 </TouchableOpacity>
             </View>
             
@@ -225,7 +225,7 @@ const ProfileHeader = ({ username, userphoto, navigation, logout }) => {
             { !nameDisabled && 
                 <TouchableOpacity onPress={updateUserName} style={styles.saveButtonContainer}>
                     <Text style={styles.viewText}>
-                        Save
+                        Vista
                     </Text>
                 </TouchableOpacity>
             }
@@ -239,8 +239,8 @@ const ProfileHeader = ({ username, userphoto, navigation, logout }) => {
                     dogSex: undefined, 
                     dogBirthday: undefined, 
                     dogPhoto: undefined
-                })} style={{...styles.headingView, marginTop: hp(4), borderWidth: 1.8,  borderRadius: 8, borderColor: '#295E73' }}>
-                <Text style={{ ...styles.viewText,color: '#A67A60' }}>
+                })} style={{...styles.headingView, marginTop: hp(4), borderRadius: 20, backgroundColor: '#034B42' }}>
+                <Text style={{ ...styles.viewText,color: 'white' }}>
                     Bæta við hundi
                 </Text>
             </TouchableOpacity>
@@ -253,7 +253,7 @@ const ProfileHeader = ({ username, userphoto, navigation, logout }) => {
 
             <ActionSheet
                 ref={actionSheet}
-                title={<Text style={styles.actionSheetTitle}>Add Profile Photo</Text>}
+                title={<Text style={styles.actionSheetTitle}>Bæta við mynd</Text>}
                 options={optionArray}
                 cancelButtonIndex={2}
                 destructiveButtonIndex={2}
@@ -282,10 +282,10 @@ const styles = StyleSheet.create({
         backgroundColor: 'white'
     },
     backIcon: {
-        marginTop: Platform.OS === 'android' ? hp(7) : hp(4)
+        marginTop: Platform.OS === 'android' ? hp(5) : hp(2)
     },
     logout: {
-        marginTop: Platform.OS === 'android' ? hp(7.5) : hp(4.5)
+        marginTop: Platform.OS === 'android' ? hp(5.5) : hp(2.5)
     },
     img: {
         marginTop: hp(1.8),
@@ -326,7 +326,7 @@ const styles = StyleSheet.create({
         borderWidth: 1.1, 
         width: wp(30), 
         marginBottom: hp(2), 
-        borderRadius: 5, 
+        borderRadius: 15, 
         alignSelf: 'center' 
     },
     viewText: { 
@@ -338,12 +338,12 @@ const styles = StyleSheet.create({
         borderRadius: 30,  
         alignSelf: 'center', 
         width: wp(60),
-        padding: hp(0.5), 
+        padding: hp(0.5),
     },
     headingView2: { 
-        marginTop: hp(5) 
+        marginTop: hp(5),
+        alignSelf: 'flex-start',
     }
 });
 
 export default ProfileHeader;
-
