@@ -21,6 +21,9 @@ export default function SelectedPark( props ) {
     const [loading, setLoading] = useState(true); 
     const [allComments, getComments] = useState([]); // get comments
 
+    const [avgStars, getAvgStars] = useState(); // get avg stars
+    const [sumComments, getsumComments] = useState();
+
     const [actionTriggered, setActionTriggered] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
     const [defaultRating, setdefaultRating] = useState(2);
@@ -178,13 +181,20 @@ export default function SelectedPark( props ) {
             });
 
             const correctPark = [];
+            var countRating = 0; 
+            var avgRating = 0; 
             for (let i = 0; i <= all.length - 1; i++) {
                 // console.log(all[i])
                 if (all[i].ParkId == currentPark) {
+                    countRating += 1;
+                    avgRating += all[i].Rating;
                     correctPark.push(all[i])
                 }
             }
-            
+            avgRating = avgRating/countRating;
+            // console.log("Samtals ratings deilt með fjölda ratings: " + avgRating.toFixed());
+            getAvgStars(avgRating.toFixed());
+            getsumComments(countRating);
             getComments(correctPark);
             setLoading(false);
           });
@@ -196,6 +206,33 @@ export default function SelectedPark( props ) {
             return <ActivityIndicator />;
         }
         
+        const RenderavgRating = () => {
+            var avgRating = avgStars;
+            var missingStars = 5 - avgStars;
+            var uniqueId = 0;
+            let stars = [];
+            let noStars = [];
+            console.log(avgStars);
+
+            for (let i = 1; i <= avgRating; i++) {
+                uniqueId += 1;
+                stars.push(
+                    <AntDesign key={uniqueId} name="star" size={26} style={styles.starIcon}/>
+                )
+            }
+
+            for (let i = 1; i <= missingStars; i++) {
+                uniqueId += 1;
+                noStars.push(
+                    <AntDesign key={uniqueId} name="staro" size={26} style={styles.starIcon}/>
+                )
+            }
+
+            return (
+                <View>{stars}{noStars}<Text>({sumComments})</Text></View>
+            );
+        }
+
     return (
         <SafeAreaView style={{flex: 1}}>
         <View style={styles.parentContainer}>
@@ -281,7 +318,9 @@ export default function SelectedPark( props ) {
             <View style={styles.middleContainer}>
                 <View style={styles.starReview}>
                     {/* Hérna þarf að birta actual stjörnugjöf sem svæðið hefur, þetta eru bara place-holder icons */}
-                    <AntDesign name="staro" size={24} color="black" />
+                    {/* <AntDesign name="staro" size={24} color="black" /> */}
+                    <RenderavgRating/>
+
                 </View>
                 <View style={styles.middleContainerHeader}>
                     <View style={styles.titleDir}>
