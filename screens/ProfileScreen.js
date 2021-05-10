@@ -1,56 +1,60 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, Alert, ActivityIndicator, Dimensions, SafeAreaView } from 'react-native';
-import { StatusBar } from 'expo-status-bar';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import ProfileHeader from '../components/ProfileHeader';
-import PetModal from '../components/PetModal';
-import * as firebase from 'firebase';
-import 'firebase/firestore';
-import 'firebase/auth';
-import PetComponent from '../components/PetComponent';
-
-const { height } = Dimensions.get('window');
-
+import React, { useState, useEffect, useCallback } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  FlatList,
+  Alert,
+  ActivityIndicator,
+  Dimensions,
+  SafeAreaView,
+} from "react-native";
+import { StatusBar } from "expo-status-bar";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
+import ProfileHeader from "../components/ProfileHeader";
+import PetModal from "../components/PetModal";
+import * as firebase from "firebase";
+import "firebase/firestore";
+import "firebase/auth";
+import PetComponent from "../components/PetComponent";
+const { height } = Dimensions.get("window");
 export default function ProfileScreen({ navigation }) {
   const [dogs, setDogs] = useState([]);
   const [dogItem, setDogItems] = useState({});
   const [getUser, setGetUser] = useState({});
-
   const [isModalVisible, setModalVisible] = useState(false);
   const [lines, setLines] = useState(true);
   const [isFetching, setIsFetching] = useState(false);
   const [error, setError] = useState();
-
   const getData = useCallback(async () => {
     setError(null);
     try {
       let transformArray = [];
 
       const user = await firebase.auth().currentUser;
-
       if (user) {
         const userSnapshot = await firebase
           .firestore()
           .collection("users")
           .doc(user.uid)
           .get();
-
         const userdata = userSnapshot.data();
-        console.log(userdata);
         setGetUser({
           username: userdata.name,
           userphoto: userdata.photo,
         });
-
         const dogSnapshot = await firebase
           .firestore()
           .collection("Dogs")
           .where("User", "==", user.uid)
           .get();
-
         dogSnapshot.forEach((res) => {
           const { Name, Breed, About, Sex, User, Birthday, Photo } = res.data();
-
           transformArray.push({
             id: res.id,
             Name,
@@ -61,24 +65,20 @@ export default function ProfileScreen({ navigation }) {
             Birthday,
             Photo,
           });
-
           transformArray.sort((a, b) => b.id > a.id);
         });
-
         setDogs(transformArray);
       }
     } catch (err) {
       setError(true);
     }
   }, [setError]);
-
   useEffect(() => {
     setIsFetching(true);
     getData().then(() => {
       setIsFetching(false);
     });
   }, [getData, setIsFetching]);
-
   if (isFetching) {
     return (
       <View style={styles.indicator}>
@@ -90,7 +90,6 @@ export default function ProfileScreen({ navigation }) {
       </View>
     );
   }
-
   // if (error) {
   //     return (
   //         <View style={styles.indicator}>
@@ -104,17 +103,14 @@ export default function ProfileScreen({ navigation }) {
   //         </View>
   //     );
   // };
-
   const toggleModal = () => {
     setLines(true);
     setModalVisible(!isModalVisible);
   };
-
   const openModal = (item) => {
     setModalVisible(true);
     setDogItems(item);
   };
-
   const deleteDog = async (id) => {
     try {
       toggleModal();
@@ -127,18 +123,16 @@ export default function ProfileScreen({ navigation }) {
       Alert.alert(err.message);
     }
   };
-
   const logout = async () => {
     setIsFetching(true);
     try {
       await firebase.auth().signOut();
-      navigation.replace("Sign In");
+      navigation.push("Initial");
     } catch (err) {
       setIsFetching(false);
       Alert.alert(err.message);
     }
   };
-
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar
@@ -150,26 +144,34 @@ export default function ProfileScreen({ navigation }) {
         data={dogs}
         style={styles.flatList}
         showsVerticalScrollIndicator={false}
-        ListHeaderComponent={() => <ProfileHeader navigation={navigation} logout={logout} username={getUser.username} userphoto={getUser.userphoto} />}
+        ListHeaderComponent={() => (
+          <ProfileHeader
+            navigation={navigation}
+            logout={logout}
+            username={getUser.username}
+            userphoto={getUser.userphoto}
+          />
+        )}
         renderItem={({ item }) => {
-            return (
-              <>
-              <TouchableOpacity 
-                onPress={() => { 
+          return (
+            <>
+              <TouchableOpacity
+                onPress={() => {
                   setModalVisible(true);
-                  openModal(item)
-                }}>
-                  <PetComponent
-                    Name={item.Name}
-                    Breed={item.Breed}
-                    Photo={item.Photo}
-                  />
-                </TouchableOpacity>
-              </>
-            );
-        }} 
+                  openModal(item);
+                }}
+              >
+                <PetComponent
+                  Name={item.Name}
+                  Breed={item.Breed}
+                  Photo={item.Photo}
+                />
+              </TouchableOpacity>
+            </>
+          );
+        }}
       />
-      <PetModal 
+      <PetModal
         Id={dogItem.id}
         Name={dogItem.Name}
         Photo={dogItem.Photo}
@@ -184,35 +186,23 @@ export default function ProfileScreen({ navigation }) {
         setLines={setLines}
         deleteDog={deleteDog}
         navigation={navigation}
-      /> 
+      />
     </SafeAreaView>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
-    flexDirection: 'column',
+    backgroundColor: "white",
+    flexDirection: "column",
   },
   flatList: {
     flex: 1,
-    flexDirection: 'column',
+    flexDirection: "column",
     paddingHorizontal: hp(2),
     marginBottom: hp(2),
   },
-  dogContainer: {
-    height: hp(22.5),
-    backgroundColor: "white",
-    width: wp(42.5),
-    margin: hp(1.2),
-    elevation: 2.8,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.3,
-    shadowRadius: 2,
-    marginBottom: hp(.8),
-  },
+
   dogTitle: {
     marginBottom: hp(2),
     textAlign: "center",

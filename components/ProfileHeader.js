@@ -225,7 +225,7 @@ const ProfileHeader = ({ username, userphoto, navigation, logout }) => {
             { !nameDisabled && 
                 <TouchableOpacity onPress={updateUserName} style={styles.saveButtonContainer}>
                     <Text style={styles.viewText}>
-                        Save
+                        Vista
                     </Text>
                 </TouchableOpacity>
             }
@@ -326,7 +326,7 @@ const styles = StyleSheet.create({
         borderWidth: 1.1, 
         width: wp(30), 
         marginBottom: hp(2), 
-        borderRadius: 5, 
+        borderRadius: 15, 
         alignSelf: 'center' 
     },
     viewText: { 
@@ -347,4 +347,3 @@ const styles = StyleSheet.create({
 });
 
 export default ProfileHeader;
-

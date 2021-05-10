@@ -43,16 +43,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   Icons: {
-    color: "#069380",
+    color: "#56B980",
     marginTop: 40,
   },
   LabelText: {
-    color: "#069380",
+    color: "#56B980",
     fontSize: 20,
   },
 
   InputBox: {
-    color: "#069380",
+    color: "#56B980",
     width: "100%",
   },
 });

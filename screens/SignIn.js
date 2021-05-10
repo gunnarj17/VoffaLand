@@ -1,60 +1,73 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Alert, Keyboard,  TouchableWithoutFeedback, SafeAreaView, Image } from 'react-native';
-import { Container, Form, Button, } from 'native-base';
-import { signIn } from '../API/firebaseMethods';
-import InputBox from './components/InputBox';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import { AntDesign } from '@expo/vector-icons'; 
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  Alert,
+  Keyboard,
+  TouchableWithoutFeedback,
+  Image,
+} from "react-native";
 
-import * as firebase from 'firebase';
+import {
+  Container,
+  Content,
+  Header,
+  From,
+  Input,
+  Item,
+  Label,
+  Form,
+  Button,
+  Icon,
+} from "native-base";
+import * as firebase from "firebase";
 
-import { signInWithEmail } from '../API/firebaseMethods';
+import { signInWithEmail } from "../API/firebaseMethods";
 
-import * as Google from 'expo-auth-session/providers/google';
-import * as Facebook from 'expo-auth-session/providers/facebook';
-import { ResponseType } from 'expo-auth-session';
+import * as Google from "expo-auth-session/providers/google";
+import * as Facebook from "expo-auth-session/providers/facebook";
+import { ResponseType } from "expo-auth-session";
 
-import apiKeys from '../config/keys';
-
+import apiKeys from "../config/keys";
 
 export default function SignIn({ navigation }) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [passwordError, setPasswordError] = useState("");
+  console.log("SignIN Screen");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const [request, response, ggPromptAsync] = Google.useIdTokenAuthRequest(
-    {
-      clientId: apiKeys.extra.clientId
-    },
-  );
+  const [request, response, ggPromptAsync] = Google.useIdTokenAuthRequest({
+    clientId: apiKeys.extra.clientId,
+  });
 
   // Method to handle register if user is not registered yet.
   registerAccount = async (currentUser) => {
     const db = firebase.firestore();
-    const savedUser = await db.collection('users')
-      .doc(currentUser.uid)
-      .get()
+    const savedUser = await db.collection("users").doc(currentUser.uid).get();
     if (!savedUser.data()) {
-      db.collection('users')
+      db.collection("users")
         .doc(currentUser.uid)
         .set({
           email: currentUser.email,
           name: currentUser.name || currentUser.displayName,
         });
     }
-  }
+  };
 
-  // Hook for Google SignIn 
+  // Hook for Google SignIn
   React.useEffect(() => {
     async function signInWithGoogle() {
-      if (response?.type === 'success') {
+      if (response?.type === "success") {
         const { id_token } = response.params;
-        const credential = firebase.auth.GoogleAuthProvider.credential(id_token);
+        const credential = firebase.auth.GoogleAuthProvider.credential(
+          id_token
+        );
         await firebase.auth().signInWithCredential(credential);
         const currentUser = firebase.auth().currentUser;
         await registerAccount(currentUser);
       } else if (response?.error) {
-        Alert.alert('Google Login Error:', response.error);
+        Alert.alert("Google Login Error:", response.error);
       }
     }
     signInWithGoogle();
@@ -67,15 +80,17 @@ export default function SignIn({ navigation }) {
 
   React.useEffect(() => {
     async function signInWithFacebook() {
-      if (fbResponse?.type === 'success') {
+      if (fbResponse?.type === "success") {
         const { access_token } = fbResponse.params;
-        const credential = firebase.auth.FacebookAuthProvider.credential(access_token);
+        const credential = firebase.auth.FacebookAuthProvider.credential(
+          access_token
+        );
         // Sign in with the credential from the Facebook user.
         await firebase.auth().signInWithCredential(credential);
         const currentUser = firebase.auth().currentUser;
         await registerAccount(currentUser);
       } else if (response?.error) {
-        Alert.alert('Facebook Login Error:', response.error);
+        Alert.alert("Facebook Login Error:", response.error);
       }
     }
     signInWithFacebook();
@@ -83,185 +98,210 @@ export default function SignIn({ navigation }) {
 
   const handlePress = () => {
     if (!email) {
-      Alert.alert('Vantar að slá inn rétt netfang');
+      Alert.alert("Vantar að slá inn rétt netfang");
     }
 
     if (!password) {
-      Alert.alert('Vantar að slá inn rétt lykilorð');
+      Alert.alert("Vantar að slá inn rétt lykilorð");
     }
 
     signInWithEmail(email, password);
-    setEmail('');
-    setPassword('');
+    setEmail("");
+    setPassword("");
   };
 
-
+  // const DismissKeyboard = ({ children }) => (
+  //   <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+  //   {children}
+  //   </TouchableWithoutFeedback>
+  //   );
 
   return (
-  <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}> 
-    <SafeAreaView style={styles.safeContainer}>
-      <View style={styles.container}>
-        <Container style={styles.LoginContainer}>
-          <Text style={styles.HeaderText}>Innskráning</Text>
+    <View style={styles.container}>
+      <Container style={styles.LoginContainer}>
+        <Text style={styles.HeaderText}>Innskráning</Text>
 
-          <Form>
-            <View>
-            <InputBox
-                icon="mail-outline"
-                label="Netfang"
-                errorText=""
-                isPassword={false}
-                inputValue={(email) => setEmail(email)}
+        <Form>
+          <View style={styles.EmailForm}>
+            <Icon style={styles.Icons} name="mail-outline" />
+            <Item floatingLabel>
+              <Label style={styles.LabelText}>Netfang</Label>
+
+              <Input
+                style={styles.InputBox}
+                autoCorrect={false}
+                autoCapitalize="none"
+                value={email}
+                onChangeText={(email) => setEmail(email)} // setur þennan input sem email
               />
+            </Item>
+          </View>
 
-              <InputBox
-                icon="lock-closed-outline"
-                label="Lykilorð"
-                isPassword={true}
-                errorText={passwordError}
-                inputValue={(password) => setPassword(password)}
+          <View style={styles.EmailForm}>
+            <Icon style={styles.Icons} name="lock-closed-outline" />
+            <Item floatingLabel>
+              <Label style={styles.LabelText}>Lykilorð</Label>
+              <Input
+                style={styles.InputBox}
+                secureTextEntry={true}
+                autoCorrect={false}
+                value={password}
+                autoCapitalize="none"
+                onChangeText={(password) => setPassword(password)} // setur þennan input sem password
               />
-            
-            <View style={styles.ExtraOptions}>
-              <Text style={styles.ForgotPassword}>Gleymt lykilorð?</Text>
-            </View>
+            </Item>
+          </View>
 
-            <View style={styles.LoginButtons}>
-              <Button style={styles.LoginButton}
-                full
-                onPress={handlePress}>
-                {/* // þegar ýtt er á Innskráning (login) þá fer hann í loginUser fallið og ath með email og password  */}
-                <Text style={styles.text}>Skrá inn</Text>
-              </Button>
-            </View>
+          <View style={styles.ExtraOptions}>
+            <Text style={styles.ForgotPassword}>Gleymt lykilorð?</Text>
+          </View>
 
-            <View style={styles.SocialButtons}>
-            <Button
-              style={styles.SocialBtn}
-              onPress={() => fbPromptAsync()}
-            >
-               <Image
-                source={require("../assets/f-logo.png")}
+          <View style={styles.LoginButtons}>
+            <Button style={styles.LoginButton} full onPress={handlePress}>
+              {/* // þegar ýtt er á Innskráning (login) þá fer hann í loginUser fallið og ath með email og password  */}
+              <Text style={styles.text}>Skrá inn</Text>
+            </Button>
+          </View>
+
+          <View style={styles.SocialButtons}>
+            <Button style={styles.SocialBtn} onPress={() => fbPromptAsync()}>
+              <Image
+                source={require("../assets/facebook.png")}
                 style={styles.SocialBtnImg}
               />
             </Button>
-            <Button
-              style={styles.SocialBtn}
-              onPress={() => ggPromptAsync()}
-            >
+            <Button style={styles.SocialBtn} onPress={() => ggPromptAsync()}>
               <Image
-                source={require("../assets/g-logo.png")}
+                source={require("../assets/google.png")}
                 style={styles.SocialBtnImg}
               />
             </Button>
           </View>
 
-            <View style={styles.BottomContainer}>
-              <Text style={styles.ContinueText}>Ekki með aðgang? </Text>
-              <Button
-                style={styles.ContinueButton}
-                full
-                success
-                onPress={() => navigation.navigate("Sign Up")}>
-                <Text style={styles.ContinueTextBold}> Nýskrá</Text>
-              </Button>
-            </View>
-            </View>
-          </Form>
-        </Container>
-      </View>
-    </SafeAreaView>
-  </TouchableWithoutFeedback>
+          <View style={styles.BottomContainer}>
+            <Text style={styles.ContinueText}>Ekki með aðgang? </Text>
+            <Button
+              style={styles.ContinueButton}
+              full
+              success
+              onPress={() => navigation.navigate("Sign Up")}
+            >
+              <Text style={styles.ContinueTextBold}> Nýskrá</Text>
+            </Button>
+          </View>
+        </Form>
+      </Container>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  safeContainer: {
-    backgroundColor: 'white',
-    flex: 1
-  },
   container: {
     flex: 1,
     paddingTop: 50,
-    backgroundColor: 'white',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    alignContent: 'space-around',
+    backgroundColor: "#F2F9F4",
+    justifyContent: "space-around",
+    alignItems: "center",
+    alignContent: "space-around",
   },
 
   HeaderText: {
-    color: '#069380',
-    fontSize: hp(5),
-    fontWeight: "300",
+    color: "#56B980",
+    fontSize: 40,
+    fontWeight: "bold",
   },
   text: {
-    color: '#fff',
-    fontSize: hp(2.5),
+    color: "#fff",
+    fontSize: 20,
     // fontFamily: Lato-Regular
   },
   LoginContainer: {
     flex: 2,
-    width: wp(75),
-    height: hp(80),
-    paddingTop: hp(10),
-    backgroundColor: 'white',
-    alignItems: 'center',
-    justifyContent: 'center',
+    width: 300,
+    height: 200,
+    margin: 40,
+    marginTop: 100,
+    backgroundColor: "#F2F9F4",
+    alignItems: "center",
+    justifyContent: "center",
+    alignSelf: "center",
   },
+  LabelText: {
+    color: "#56B980",
+    fontSize: 20,
+  },
+
   LoginButtons: {
-    marginTop: hp(5)
+    marginTop: 30,
+    marginBottom: 30,
   },
 
   LoginButton: {
-    marginHorizontal: wp(10),
-    backgroundColor: '#069380',
+    margin: 15,
+    backgroundColor: "#56B980",
     borderRadius: 20,
+    height: 55,
   },
   BottomContainer: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    paddingBottom: hp(5)
+    alignItems: "center",
+    alignContent: "space-around",
+    justifyContent: "flex-end",
+    marginBottom: 36,
   },
   ContinueText: {
-    color: '#069380',
-    fontSize: hp(2.5),
-    paddingBottom: hp(1)
+    color: "#56B980",
+    fontSize: 20,
   },
   ContinueTextBold: {
-    color: '#069380',
-    fontSize: hp(2.5),
-    fontWeight: 'bold'
+    color: "#56B980",
+    fontSize: 20,
+    fontWeight: "bold",
   },
   ContinueButton: {
-    backgroundColor: 'white',
+    backgroundColor: "#F2F9F4",
+    marginBottom: 10,
+  },
+  EmailForm: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginLeft: 10,
+    marginRight: 10,
+  },
+  Icons: {
+    color: "#56B980",
+    paddingTop: 40,
+  },
+  InputBox: {
+    color: "#56B980",
+    alignSelf: "center",
+    margin: 2,
   },
   ExtraOptions: {
-    padding: hp(1)
+    padding: 10,
   },
   ForgotPassword: {
-    alignSelf: 'flex-end',
-    color: '#069380',
-    fontSize: hp(2),
-    fontWeight: 'bold'
+    alignSelf: "flex-end",
+    color: "#56B980",
+    fontSize: 15,
+    fontWeight: "bold",
   },
   SocialButtons: {
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
   },
   SocialBtn: {
-    backgroundColor: 'white',
-    height: hp(10),
-    width: wp(20),
-    alignSelf: 'center',
-    paddingLeft: wp(3)
+    marginLeft: 15,
+    marginRight: 15,
+    width: 50,
+    height: 50,
+    backgroundColor: "white",
   },
   SocialBtnImg: {
-    alignSelf: 'center',
-    height: hp(7),
-    width: wp(15),
-  }
+    width: 50,
+    height: 50,
+  },
 });

@@ -1,539 +1,697 @@
-import React,{useState,useEffect, useCallback} from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, Alert, Modal, TextInput, Keyboard, KeyboardAvoidingView, FlatList, ActivityIndicator} from "react-native";
-import park_img from '../assets/place_holder.png';
-import star_outline from '../assets/star_outline.png';
-import star_filled from '../assets/star_filled.png';
-import { FontAwesome5 } from '@expo/vector-icons';
-import { AntDesign } from '@expo/vector-icons'; 
-
-import * as firebase from 'firebase';
-import 'firebase/firestore';
-import 'firebase/auth';
-
+import React, { useState, useEffect, useCallback } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  Alert,
+  Modal,
+  TextInput,
+  Keyboard,
+  KeyboardAvoidingView,
+  FlatList,
+  ActivityIndicator,
+  SafeAreaView,
+} from "react-native";
+import park_img from "../assets/place_holder.png";
+import star_outline from "../assets/star_outline.png";
+import star_filled from "../assets/star_filled.png";
+import { FontAwesome5 } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
+import * as firebase from "firebase";
+import "firebase/firestore";
+import "firebase/auth";
 
 // import Weather from '../components/GetWeather'
-import API_KEY from '../API/Weather'
+import API_KEY from "../API/Weather";
+import { ScrollView } from "react-native-gesture-handler";
 
-export default function SelectedPark( props ) {
-    const [comments, setComments] = useState([]); // set/add comments
+export default function SelectedPark(props, { navigation }) {
+  const [comments, setComments] = useState([]); // set/add comments
 
-    const [loading, setLoading] = useState(true); 
-    const [allComments, getComments] = useState([]); // get comments
+  const [loading, setLoading] = useState(true);
+  const [allComments, getComments] = useState([]); // get comments
 
-    const [actionTriggered, setActionTriggered] = useState('');
-    const [modalVisible, setModalVisible] = useState(false);
-    const [defaultRating, setdefaultRating] = useState(2);
-    const [maxRating, setmaxRating] = useState([1,2,3,4,5]);
-    const [userComment, setuserComment] = useState(null);
-    // const [parkId, setparkId] = useState([''])
-    
-    const [getUser, setGetUser] = useState({});
-    const [error, setError] = useState();
-    const [isFetching, setIsFetching] = useState(false);
+  const [avgStars, getAvgStars] = useState(); // get avg stars
+  const [sumComments, getsumComments] = useState();
 
-    // Veðrið
-    // console.log(props.route.params)
-    const [Latitude, setLatitude] = useState(props.route.params.Lat);
-    const [Longitude, setLongitude] = useState(props.route.params.Long);
-    let url = 'https://api.openweathermap.org/data/2.5/weather?lat=' + Longitude + '&lon=' + Latitude + '&units=metric&appid=59989a6fa648999ce02375ef2c360678';
+  const [actionTriggered, setActionTriggered] = useState("");
+  const [modalVisible, setModalVisible] = useState(false);
+  const [defaultRating, setdefaultRating] = useState(2);
+  const [maxRating, setmaxRating] = useState([1, 2, 3, 4, 5]);
+  const [userComment, setuserComment] = useState(null);
+  // const [parkId, setparkId] = useState([''])
 
-    // console.log(Latitude);
-    // console.log(Longitude);
+  const [getUser, setGetUser] = useState({});
+  const [error, setError] = useState();
+  const [isFetching, setIsFetching] = useState(false);
 
-    const [info,setInfo] = useState ({
-        name:"Villa!",
-        temp:"Villa!",
-        icon:"Villa!",
-    })
-    useEffect(()=>{
-        getWeather()
-    },[])
-    const getWeather = (Latitude, Longitude) => {
-        // console.log(url)
-        fetch(url)
-        .then(data=>data.json())
-        .then(results=>{
-            // console.log(results)
-            setInfo({
-                temp:results.main.temp,
-                icon:results.weather[0].icon
-            })
-            // console.log(info.icon)
-        })
-    }
-    // ----- Endir á Veður kóðanum
+  // Veðrið
+  const [Latitude, setLatitude] = useState(props.route.params.park.GPS._lat);
+  const [Longitude, setLongitude] = useState(props.route.params.park.GPS._long);
+  let url =
+    "https://api.openweathermap.org/data/2.5/weather?lat=" +
+    Longitude +
+    "&lon=" +
+    Latitude +
+    "&units=metric&appid=59989a6fa648999ce02375ef2c360678";
 
-    // Ná í nafn á user og UserId
-    const getName = useCallback(async () => {
-        setError(null);
-        try {
-    
-          const user = await firebase.auth().currentUser;
-        //   console.log(user.uid);
-    
-          if (user) {
-            const userSnapshot = await firebase
-              .firestore()
-              .collection("users")
-              .doc(user.uid)
-              .get();
-    
-            const userdata = userSnapshot.data();
-            // console.log(userdata.name);
-            setGetUser({
-              username: userdata.name,
-              userId: user.uid,
-            });
-          }
-        } catch (err) {
-          setError(true);
-        }
-      }, [setError]);
-      
-      useEffect(() => {
-        setIsFetching(true);
-        getName().then(() => {
-          setIsFetching(false);
+  // console.log(Latitude);
+  // console.log(Longitude);
+
+  const [info, setInfo] = useState({
+    name: "Villa!",
+    temp: "Villa!",
+    icon: "Villa!",
+  });
+  useEffect(() => {
+    getWeather();
+  }, []);
+  const getWeather = (Latitude, Longitude) => {
+    // console.log(url)
+    fetch(url)
+      .then((data) => data.json())
+      .then((results) => {
+        // console.log(results)
+        setInfo({
+          temp: results.main.temp,
+          icon: results.weather[0].icon,
         });
-      }, [getName, setIsFetching]);
+        // console.log(info.icon)
+      });
+  };
+  // ----- Endir á Veður kóðanum
 
-    //   console.log(getUser.username);
-    //   console.log(getUser);
-    // console.log(props.route.params.ID);
+  // Ná í nafn á user og UserId
+  const getName = useCallback(async () => {
+    setError(null);
+    try {
+      const user = await firebase.auth().currentUser;
+      //   console.log(user.uid);
 
+      if (user) {
+        const userSnapshot = await firebase
+          .firestore()
+          .collection("users")
+          .doc(user.uid)
+          .get();
 
-    // Vista comments, stjörnugjöf og annað tengt userinum í firestore
-
-    const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-    let autoId = ''
-
-    const submitComment = async () => {
-    for (let i = 0; i < 20; i++) {
-        autoId += CHARS.charAt(
-        Math.floor(Math.random() * CHARS.length)
-        )
-    }
-
-        firebase.
-        firestore()
-        .collection('comments')
-        .add({
-            key: autoId,
-            UserId: getUser.userId,
-            UserName: getUser.username,
-            Comment: userComment,
-            Rating: defaultRating,
-            ParkId: props.route.params.ID,
-            date: firebase.firestore.Timestamp.fromDate(new Date()),
-        })
-        .then(() => {
-            console.log("Það virkaði að setja inn comment");
-        })
-        .catch((error) => {
-            console.log("Eitthvað fór úrskeiðis við að gefa endurgjöf", error);
+        const userdata = userSnapshot.data();
+        // console.log(userdata.name);
+        setGetUser({
+          username: userdata.name,
+          userId: user.uid,
         });
       }
+    } catch (err) {
+      setError(true);
+    }
+  }, [setError]);
 
-    // Þetta er stjörnugjafar gæjinn
-    const CustomRatingBar = () => {
-        return (
-            <View style={styles.customRatingBarStyle}>
-                {
-                    maxRating.map((item, key) => {
-                        return (
-                            <TouchableOpacity
-                            activeOpacity={0.7}
-                            key={item}
-                            onPress={() => setdefaultRating(item)}>
-                                <Image style={styles.starImg} 
-                                    source={
-                                    item <= defaultRating
-                                        ? star_filled
-                                        : star_outline
-                                }  />
-                            </TouchableOpacity>
-                        )
-                    })
-                }
-            </View>
-        )
+  useEffect(() => {
+    setIsFetching(true);
+    getName().then(() => {
+      setIsFetching(false);
+    });
+  }, [getName, setIsFetching]);
+
+  //   console.log(getUser.username);
+  //   console.log(getUser);
+  // console.log(props.route.params.ID);
+
+  // Vista comments, stjörnugjöf og annað tengt userinum í firestore
+
+  const CHARS =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let autoId = "";
+
+  const submitComment = async () => {
+    for (let i = 0; i < 20; i++) {
+      autoId += CHARS.charAt(Math.floor(Math.random() * CHARS.length));
     }
 
-    
+    firebase
+      .firestore()
+      .collection("comments")
+      .add({
+        key: autoId,
+        UserId: getUser.userId,
+        UserName: getUser.username,
+        Comment: userComment,
+        Rating: defaultRating,
+        ParkId: props.route.params.park.ID,
+        date: firebase.firestore.Timestamp.fromDate(new Date()),
+      })
+      .then(() => {
+        console.log("Það virkaði að setja inn comment");
+      })
+      .catch((error) => {
+        console.log("Eitthvað fór úrskeiðis við að gefa endurgjöf", error);
+      });
+  };
 
-    // ná í comments
-    useEffect(() => {
-        const currentPark = props.route.params.ID;
-        const commenters = firebase.firestore()
-          .collection('comments')
-          .onSnapshot(querySnapshot => {
-            const all = [];
-      
-            querySnapshot.forEach(documentSnapshot => {
-                all.push({
-                ...documentSnapshot.data(),
-                key: documentSnapshot.id,
-              });
-            });
-
-            const correctPark = [];
-            for (let i = 0; i <= all.length - 1; i++) {
-                // console.log(all[i])
-                if (all[i].ParkId == currentPark) {
-                    // console.log("Park number: " + [i])
-                    // console.log("Park inside array: " + all[i].ParkId)
-                    // console.log(all[i])
-                    correctPark.push(all[i])
-                }
-            }
-            console.log(correctPark);
-            // console.log(currentPark)
-            getComments(correctPark);
-            setLoading(false);
-          });
-          console.log()
-        // Unsubscribe from events when no longer in use
-        return () => commenters();
-      }, []);
-        if (loading) {
-            return <ActivityIndicator />;
-        }
-        
+  // Þetta er stjörnugjafar gæjinn
+  const CustomRatingBar = () => {
     return (
-        <View style={styles.parentContainer}>
-            {/* Hér er einkunnar módalinn */}
-            <Modal
-            animationType="slide"
-            transparent={true}
-            visible={modalVisible}
-            onRequestClose={() => {Alert.alert('Modal has been closed. ');}} //OnRequest close is called when the user taps the hardware back button on Android. Required for Android users
-            > 
-            {/* ACTION_1 er aðal módalinn, þegar smellt er á 'Staðfesta' opnast nýr módall sem segir "umsögn þín hefur verið skráð" */}
-            {actionTriggered === 'ACTION_1' ?
-                <KeyboardAvoidingView 
-                    style ={styles.centeredView}  
-                    behavior="padding">
-                        {/* Til að loka modal-num án þess að senda gögn áfram (x takkinn í efra horni) */}
-                        <View style={styles.modalView}>
-                            <View style={styles.closeModalView}> 
-                                <TouchableOpacity  onPress={() => {setModalVisible(!modalVisible)}}>
-                                    <AntDesign name="closecircleo" size={26} style={styles.closeIcon} />
-                                </TouchableOpacity>
-                            </View>
+      <View style={styles.customRatingBarStyle}>
+        {maxRating.map((item, key) => {
+          return (
+            <TouchableOpacity
+              activeOpacity={0.7}
+              key={item}
+              onPress={() => setdefaultRating(item)}
+            >
+              <Image
+                style={styles.starImg}
+                source={item <= defaultRating ? star_filled : star_outline}
+              />
+            </TouchableOpacity>
+          );
+        })}
+      </View>
+    );
+  };
 
-                            <View style={styles.modalViewHeader}>
-                                <Text style={styles.modalTextHeader}>Endurgjöf fyrir</Text>
-                                <Text style={styles.modalTextName}>{props.route.params.Name}</Text>
-                            </View>
+  // ná í comments
+  useEffect(() => {
+    const currentPark = props.route.params.park.ID;
+    const commenters = firebase
+      .firestore()
+      .collection("comments")
+      .onSnapshot((querySnapshot) => {
+        const all = [];
 
-                            {/* Hérna kalla ég á stjörnugjafa gæjan sem ég gerði efst í skjalinu */}
-                            <View style={styles.modalViewStars}>
-                                <Text style={styles.modalText}>Hversu margar stjörnur gefur þú svæðinu?</Text>
-                                <CustomRatingBar/>
-                            </View>
+        querySnapshot.forEach((documentSnapshot) => {
+          all.push({
+            ...documentSnapshot.data(),
+            key: documentSnapshot.id,
+          });
+        });
 
-                        {/* Comment text box-ið. Kann ekki að sækja upplýsingar úr því, kannski hægt að endurtaka það sem er á SignIn og SignUp? */}
-                            <View>
-                                <Text style={styles.modalText}>Hvaða ummælum viltu koma á framfæri?</Text>
-                                <TextInput
-                                style={styles.inputBox}
-                                placeholder="Hámark 120 stafir"
-                                maxLength={120}
-                                onChangeText = {(content) => setuserComment(content)} //update-ar comment state með því sem er skrifað í comment textaboxið
-                                multiline={true} //þetta þarf að vera true svo að línurnar wrap-ist
-                                numberOfLines={4} //held að þetta geri ekkert, en virkar kannski betur i android
-                                onBlur={Keyboard.dismiss}/>
-                            </View>
+        const correctPark = [];
+        var countRating = 0;
+        var avgRating = 0;
+        for (let i = 0; i <= all.length - 1; i++) {
+          // console.log(all[i])
+          if (all[i].ParkId == currentPark) {
+            countRating += 1;
+            avgRating += all[i].Rating;
+            correctPark.push(all[i]);
+          }
+        }
+        avgRating = avgRating / countRating;
+        // console.log("Samtals ratings deilt með fjölda ratings: " + avgRating.toFixed());
+        getAvgStars(avgRating.toFixed());
+        getsumComments(countRating);
+        getComments(correctPark);
+        setLoading(false);
+      });
 
-                        {/* Hér þarf að senda gögnin í Firebase. 
+    // Unsubscribe from events when no longer in use
+    return () => commenters();
+  }, []);
+  if (loading) {
+    return <ActivityIndicator />;
+  }
+
+  const RenderavgRating = () => {
+    var avgRating = avgStars;
+    var missingStars = 5 - avgStars;
+    var uniqueId = 0;
+    let stars = [];
+    let noStars = [];
+    console.log("AverageStar", avgStars);
+
+    for (let i = 1; i <= avgRating; i++) {
+      uniqueId += 1;
+      stars.push(
+        <AntDesign
+          key={uniqueId}
+          name="star"
+          size={26}
+          style={styles.starIcon}
+        />
+      );
+    }
+
+    for (let i = 1; i <= missingStars; i++) {
+      uniqueId += 1;
+      noStars.push(
+        <AntDesign
+          key={uniqueId}
+          name="staro"
+          size={26}
+          style={styles.starIcon}
+        />
+      );
+    }
+
+    return (
+      <View style={{}}>
+        {stars}
+        {noStars}
+        <Text>({sumComments})</Text>
+      </View>
+    );
+  };
+
+  return (
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={styles.parentContainer}>
+        {/* Hér er einkunnar módalinn */}
+        <TouchableOpacity onPress={() => navigation.navigate("Parks")}>
+          <AntDesign name="arrowleft" size={26} style={styles.closeIcon} />
+        </TouchableOpacity>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            Alert.alert("Modal has been closed. ");
+          }} //OnRequest close is called when the user taps the hardware back button on Android. Required for Android users
+        >
+          {/* ACTION_1 er aðal módalinn, þegar smellt er á 'Staðfesta' opnast nýr módall sem segir "umsögn þín hefur verið skráð" */}
+          {actionTriggered === "ACTION_1" ? (
+            <KeyboardAvoidingView
+              style={styles.centeredView}
+              behavior="padding"
+            >
+              {/* Til að loka modal-num án þess að senda gögn áfram (x takkinn í efra horni) */}
+              <View style={styles.modalView}>
+                <View style={styles.closeModalView}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setModalVisible(!modalVisible);
+                    }}
+                  >
+                    <AntDesign
+                      name="closecircleo"
+                      size={26}
+                      style={styles.closeIcon}
+                    />
+                  </TouchableOpacity>
+                </View>
+
+                <View style={styles.modalViewHeader}>
+                  <Text style={styles.modalTextHeader}>Endurgjöf fyrir</Text>
+                  <Text style={styles.modalTextName}>
+                    {props.route.params.park.Name}
+                  </Text>
+                </View>
+
+                {/* Hérna kalla ég á stjörnugjafa gæjan sem ég gerði efst í skjalinu */}
+                <View style={styles.modalViewStars}>
+                  <Text style={styles.modalText}>
+                    Hversu margar stjörnur gefur þú svæðinu?
+                  </Text>
+                  <CustomRatingBar />
+                </View>
+
+                {/* Comment text box-ið */}
+                <View>
+                  <Text style={styles.modalText}>
+                    Hvaða ummælum viltu koma á framfæri?
+                  </Text>
+                  <TextInput
+                    style={styles.inputBox}
+                    placeholder="Hámark 120 stafir"
+                    maxLength={120}
+                    onChangeText={(content) => setuserComment(content)} //update-ar comment state með því sem er skrifað í comment textaboxið
+                    multiline={true} //þetta þarf að vera true svo að línurnar wrap-ist
+                    numberOfLines={4} //held að þetta geri ekkert, en virkar kannski betur i android
+                    onBlur={Keyboard.dismiss}
+                  />
+                </View>
+
+                {/* Hér þarf að senda gögnin í Firebase. 
                         - setActionTrigger opnar hinn modalinn sem sést fyrir neðan
                         - á eftir að sækja gögnin út text input-inu og senda þau hér líka
                         - defaultRating skilar stjörnu magni sem notandi sláði inn */}
-                            <TouchableOpacity
-                            style={styles.closeModalButton}
-                            onPress={() => { submitComment(); setActionTriggered('ACTION_2');}}>
-                                <Text style={styles.textStyle}>Staðfesta</Text>
-                            </TouchableOpacity>
-                        </View>
-                </KeyboardAvoidingView> :
-                
-                actionTriggered === 'ACTION_2' ?
-                
-                    <View style={styles.centeredView}>
-                        <View style={styles.modalView}>
-                            <Text style={styles.confirmmodalText}>Endurgjöfin þín hefur verið skráð</Text>
-                            <TouchableOpacity
-                            style={styles.closeModalButton}
-                            onPress={() => {setModalVisible(!modalVisible)}}>
-                                <Text style={styles.textStyle}>Loka</Text>
-                            </TouchableOpacity>
-                        </View> 
-                    </View>:
-                null}
-            </Modal>
-            
-
-            {/* Hér er það sem er á skjánum, sem er ekki einkunnargjöf modal-inn */}
-
-            <View style={styles.imgContainer}>
-                <Image source={park_img}  style={styles.imgStyle}/>
+                <TouchableOpacity
+                  style={styles.closeModalButton}
+                  onPress={() => {
+                    submitComment();
+                    setActionTriggered("ACTION_2");
+                  }}
+                >
+                  <Text style={styles.textStyle}>Staðfesta</Text>
+                </TouchableOpacity>
+              </View>
+            </KeyboardAvoidingView>
+          ) : actionTriggered === "ACTION_2" ? (
+            <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+                <Text style={styles.confirmmodalText}>
+                  Endurgjöfin þín hefur verið skráð
+                </Text>
+                <TouchableOpacity
+                  style={styles.closeModalButton}
+                  onPress={() => {
+                    setModalVisible(!modalVisible);
+                  }}
+                >
+                  <Text style={styles.textStyle}>Loka</Text>
+                </TouchableOpacity>
+              </View>
             </View>
+          ) : null}
+        </Modal>
 
-            {/* Parturinn af skjánum sem inniheldur nafn, lýsingu og directions takka, vantar veðurspá */}
-            <View style={styles.middleContainer}>
-                <View style={styles.textContainer}>
-                    <Text style={styles.panelTitle}>{props.route.params && props.route.params.Name ? props.route.params.Name : "Vantar nafn"}</Text>
-                    
-                    {/* Hérna kemur veðurspáin*/}
-                    <View style={styles.weather}>
-                        <Image style={styles.weatherimage}
-                        
-                        source={{uri:"http://openweathermap.org/img/wn/"+info.icon+"@2x.png"}}
-                        />
-                        <Text style={styles.weatherText}>Hiti: {info.temp}°</Text>
-                    </View>
-                    
+        {/* Hér er það sem er á skjánum, sem er ekki einkunnargjöf modal-inn */}
 
-                    {/* <Weather></Weather> */}
-
-                    {/* Hérna þarf að birta actual stjörnugjöf sem svæðið hefur, þetta eru bara place-holder icons */}
-                        <AntDesign name="staro" size={24} color="black" />
-                    <Text style={styles.aboutPark}>{props.route.params.Information}</Text>
-                    {/* Hérna þarf líka að birta tögg-in sem svæðið hefur :) */}
-                </View>
-                <View style={styles.rightContainer}>
-                    {/* Hérna er Directions takkinn. Vantar virkni í hann */}
-                    <TouchableOpacity 
-                    style={styles.iconButton}
-                    onPress={() => console.log("Vantar virkni")}
-                    >
-                        <FontAwesome5 name="directions" size={26} color="white" />
-                    </TouchableOpacity>
-                </View>
-            </View>
-
-            {/* Parturinn af skjánum fyrir comment og stjörnugjafir. Hér vantar virkni til að birta ummæli */}
-            <View style={styles.reviewComponent}>
-                <View style={styles.leftReviewComponent}>
-                    <Text style={styles.commentTitle}>Ummæli</Text>
-                    <View style={styles.borderLine}/>
-                </View>
-                <View style={styles.rightReviewComponent}>
-                    {/* Takki sem er fimm gular stjörnur. Opnar review modal-inn */}
-                    <TouchableOpacity 
-                    style={styles.reviewButton}
-                    onPress={() => { setModalVisible(true); setActionTriggered('ACTION_1');}}>
-                        <AntDesign name="staro" size={26} style={styles.starIcon}/>
-                        <AntDesign name="staro" size={26} style={styles.starIcon} />
-                        <AntDesign name="staro" size={26} style={styles.starIcon} />
-                        <AntDesign name="staro" size={26} style={styles.starIcon} />
-                        <AntDesign name="staro" size={26} style={styles.starIcon} />
-                    </TouchableOpacity>
-                </View>
-                
-            </View>
-                <FlatList
-                    data={allComments}
-                    renderItem={({ item }) => (
-                    <View>
-                        <Text>User Name: {item.UserName}</Text>
-                        <Text>Rating: {item.Rating}</Text>
-                        <Text>Comment: {item.Comment}</Text>
-                        <Text>Staður: {item.ParkId}</Text>
-                    </View>
-                    )}
-                />
-                
+        <View style={styles.imgContainer}>
+          <Image source={park_img} style={styles.imgStyle} />
         </View>
-      );
+
+        {/* Parturinn af skjánum sem inniheldur nafn, lýsingu og directions takka, veðurspá */}
+        <View style={styles.middleContainer}>
+          <View style={styles.middleContainerHeader}>
+            <View style={styles.titleDir}>
+              <Text style={styles.panelTitle}>
+                {props.route.params && props.route.params.park.Name
+                  ? props.route.params.park.Name
+                  : "Vantar nafn"}
+              </Text>
+              <View style={styles.starReview}>
+                {/* Hérna þarf að birta actual stjörnugjöf sem svæðið hefur, þetta eru bara place-holder icons */}
+                {/* <AntDesign name="staro" size={24} color="black" /> */}
+                <RenderavgRating />
+              </View>
+              <View style={{ position: "absolute", zIndex: 1, left: 290 }}>
+                <TouchableOpacity
+                  style={styles.iconButton}
+                  onPress={() => Alert.alert("Can not set destination")}
+                >
+                  <FontAwesome5 name="directions" size={26} color="white" />
+                </TouchableOpacity>
+              </View>
+            </View>
+            {/* Hérna kemur veðurspáin*/}
+          </View>
+          <View style={styles.aboutParkContainer}>
+            <Text style={styles.aboutPark}>
+              {props.route.params.park.Information}
+            </Text>
+            {/* Hérna þarf líka að birta tögg-in sem svæðið hefur :) */}
+          </View>
+          <View style={{ paddingRight: 20, paddingTop: 10 }}>
+            <View style={styles.weather}>
+              <Image
+                style={styles.weatherimage}
+                source={{
+                  uri:
+                    "http://openweathermap.org/img/wn/" + info.icon + "@2x.png",
+                }}
+              />
+              <Text style={styles.weatherText}>Hiti: {info.temp}°</Text>
+            </View>
+          </View>
+          <View style={styles.rightReviewComponent}>
+            {/* Takki sem er fimm gular stjörnur. Opnar review modal-inn */}
+            <TouchableOpacity
+              style={styles.reviewButton}
+              onPress={() => {
+                setModalVisible(true);
+                setActionTriggered("ACTION_1");
+              }}
+            >
+              <AntDesign name="staro" size={26} style={styles.starIcon} />
+              <AntDesign name="staro" size={26} style={styles.starIcon} />
+              <AntDesign name="staro" size={26} style={styles.starIcon} />
+              <AntDesign name="staro" size={26} style={styles.starIcon} />
+              <AntDesign name="staro" size={26} style={styles.starIcon} />
+            </TouchableOpacity>
+          </View>
+
+          {/* Parturinn af skjánum fyrir comment og stjörnugjafir. Hér vantar virkni til að birta ummæli */}
+          <View style={{ paddingHorizontal: 10, paddingTop: 10 }}>
+            <View style={styles.reviewComponent}>
+              <TouchableOpacity
+                style={styles.SeeMoreButton}
+                onPress={() => {
+                  this.props.navigation.navigate(
+                    "SelectedPark",
+                    this.state.park
+                  );
+                }}
+              >
+                <Text style={styles.ButtonText}>Skrifa Ummæli</Text>
+              </TouchableOpacity>
+              <Text style={styles.commentTitle}>Ummæli</Text>
+              <View style={styles.borderLine} />
+            </View>
+            <View style={styles.commentSection}>
+              <FlatList
+                contentContainerStyle={{ paddingBottom: 150 }}
+                data={allComments}
+                renderItem={({ item }) => (
+                  <View style={styles.commentBox}>
+                    <Text style={{ fontSize: hp(2.6) }}>{item.UserName}</Text>
+                    <Text>Rating: {item.Rating}</Text>
+                    <Text style={{ fontSize: hp(2) }}>{item.Comment}</Text>
+                  </View>
+                )}
+              />
+            </View>
+          </View>
+        </View>
+      </View>
+    </SafeAreaView>
+  );
 }
 
 const styles = StyleSheet.create({
-    parentContainer: {
-        flex: 1,
-        backgroundColor: "#F7F5F4"
-    },
-    iconStyle:{
-        color: 'white',
-        borderRadius: 100,
-    },
-    iconButton: {
-        alignItems:'center',
-        justifyContent:'center',
-        width:40,
-        height:40,
-        backgroundColor: "#034B42",
-        borderRadius:50,
-        },
-    imgContainer: {
-        flex: 1,
-        paddingTop: 70
-    },
-    imgStyle: {
-        flex: 1,
-        alignSelf: 'stretch',
-        width: undefined,
-        height: undefined
-    },
-    middleContainer: {
-        flex: 1,
-        flexDirection:'row',
-        justifyContent:'space-between',
-        paddingTop: 20,
-    },
-    textContainer:{
-        alignSelf: 'flex-start',
-        paddingLeft: 20,
-    },
-    panelTitle: {
-        fontSize: 30,
-        paddingBottom: 10
-    },
-    aboutPark: {
-        fontSize: 16,
-    },
-    rightContainer: {
-        flex: 1,
-        direction: 'rtl',
-        paddingLeft: 20
-    },
-    reviewComponent: {
-        flex: 1,
-        flexDirection:'row',
-        justifyContent:'space-between',
-    },
-    leftReviewComponent: {
-        alignSelf: 'flex-start',
-        paddingLeft: 20,
-    },
-    commentTitle: {
-        fontSize: 25
-    },
-    borderLine:{
-        borderBottomColor: '#C4C4C4',
-        borderBottomWidth: 1,
-        paddingTop: 5,
-        width: 150,
-        paddingRight: 20
-    },
-    rightReviewComponent: {
-        direction: 'rtl',
-        paddingLeft: 20,
-    },
-    reviewButton:{
-        alignItems:'center',
-        justifyContent:'center',
-        flexDirection: 'row',
-    },
-    reviewButtonText:{
-        fontSize: 16,
-        color: 'white'
-    },
-    starIcon: {
-        padding: 1,
-        color: 'orange'
-    },
-    closeModalView: {
-        alignSelf: 'flex-end'
-    },
-    closeIcon: {
-        color: 'grey',
-        paddingBottom: 15
-    },
-    centeredView: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: 22,
-      },
-      modalView: {
-        margin: 20,
-        backgroundColor: 'white',
-        borderRadius: 20,
-        padding: 35,
-        alignItems: 'center',
-        shadowColor: '#000',
-        shadowOffset: {
-          width: 0,
-          height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        elevation: 5,
-      },
+  parentContainer: {
+    flex: 1,
+    backgroundColor: "#F7F5F4",
+  },
+  iconStyle: {
+    color: "white",
+    borderRadius: 100,
+  },
+  iconButton: {
+    alignItems: "center",
+    justifyContent: "center",
+    width: 40,
+    height: 40,
+    backgroundColor: "#034B42",
+    borderRadius: 50,
+    alignSelf: "flex-end",
+  },
+  imgContainer: {
+    flex: 1,
+  },
+  imgStyle: {
+    flex: 1,
+    alignSelf: "stretch",
+    width: undefined,
+    height: undefined,
+  },
+  starReview: {
+    paddingTop: 20,
+  },
+  middleContainer: {
+    flex: 2,
+    paddingTop: hp(2),
+  },
+  middleContainerHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    flexWrap: "wrap",
+    paddingLeft: wp(5),
+    paddingRight: wp(5),
+    paddingBottom: hp(3),
+  },
+  panelTitle: {
+    fontSize: hp(3.5),
+    paddingRight: wp(5),
+    paddingRight: wp(5),
+  },
+  titleDir: {
+    flexDirection: "row",
+  },
+  aboutParkContainer: {
+    paddingLeft: wp(3),
+    paddingRight: wp(2),
+    paddingTop: hp(3),
+    paddingBottom: hp(2),
+  },
+  aboutPark: {
+    fontSize: hp(2.2),
+  },
 
-      closeModalButton: {
-        backgroundColor: '#034B42',
-        borderRadius: 20,
-        paddingTop: 10,
-        paddingBottom: 10,
-        paddingRight: 60,
-        paddingLeft: 60,
-        elevation: 2,
-      },
-      textStyle: {
-        color: 'white',
-        fontSize: 16,
-        textAlign: 'center',
-      },
-      modalTextHeader: {
-        textAlign: 'center',
-        fontWeight: 'bold',
-        fontSize: 20
-      },
-      modalTextName: {
-        textAlign: 'center',
-        fontWeight: 'bold',
-        fontSize: 20,
-        marginBottom: 15
-      },
-      modalText:{
-        textAlign: 'center',
-        fontSize: 15,
-        marginBottom: 15
-      },
-      confirmmodalText: {
-        textAlign: 'center',
-        fontSize: 15,
-        fontWeight: 'bold',
-        marginBottom: 15
-      },
-      customRatingBarStyle: {
-          justifyContent: 'center',
-          flexDirection: 'row',
-         
-      },
-      starImg: {
-          width: 30,
-          height: 30,
-          resizeMode: 'cover',
-          marginBottom: 15
-      },
-      inputBox:{
-        borderColor: '#CCCCCC',
-        borderWidth: 1,
-        borderRadius: 5,
-        fontSize: 15,
-        paddingLeft: 10,
-        paddingRight: 10,
-        height: 50,
-        width: 240,
-        marginBottom: 30
-      },
-      weather:{
-        width:80,
-        height: 70,
-        borderRadius: 30,
-        backgroundColor: '#44cbe3',
-        alignItems: 'center',
-        justifyContent: 'center',
-      },
-      weatherimage:{
-        width:100,
-        height:100,
-      },
-      weatherText:{
-          color: 'black',
-      }
-    
-})
+  reviewComponent: {
+    paddingTop: hp(1),
+  },
+  reviewComponentHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  leftReviewComponent: {
+    alignSelf: "flex-start",
+    paddingLeft: wp(3),
+  },
+  commentTitle: {
+    fontSize: hp(3),
+  },
+  borderLine: {
+    borderBottomColor: "#C4C4C4",
+    borderBottomWidth: 1,
+    paddingTop: 5,
+    width: 150,
+    paddingRight: 20,
+  },
+
+  rightReviewComponent: {
+    paddingLeft: 10,
+    flexDirection: "row-reverse",
+    direction: "rtl",
+  },
+  reviewButton: {
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row",
+  },
+  starIcon: {
+    padding: 1,
+    color: "orange",
+  },
+  weather: {
+    width: wp(20),
+    height: hp(8),
+    borderRadius: 20,
+    backgroundColor: "#B9E2F5",
+    alignItems: "center",
+    justifyContent: "center",
+    alignSelf: "flex-end",
+  },
+  weatherimage: {
+    width: 100,
+    height: 100,
+  },
+  weatherText: {
+    color: "black",
+  },
+  commentSection: {
+    paddingLeft: wp(5),
+    paddingRight: wp(10),
+    paddingBottom: hp(10),
+  },
+  commentBox: {
+    borderBottomColor: "grey",
+    borderBottomWidth: 1,
+    paddingTop: hp(1),
+    paddingBottom: hp(1),
+  },
+
+  closeModalView: {
+    alignSelf: "flex-end",
+  },
+  closeIcon: {
+    position: "absolute",
+    color: "red",
+    paddingBottom: 15,
+    top: 50,
+    left: 10,
+    zIndex: 0,
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+
+  closeModalButton: {
+    backgroundColor: "#034B42",
+    borderRadius: 20,
+    paddingTop: 10,
+    paddingBottom: 10,
+    paddingRight: 60,
+    paddingLeft: 60,
+    elevation: 2,
+  },
+  textStyle: {
+    color: "white",
+    fontSize: hp(2),
+    textAlign: "center",
+  },
+  modalTextHeader: {
+    textAlign: "center",
+    fontWeight: "bold",
+    fontSize: hp(2.8),
+  },
+  modalTextName: {
+    textAlign: "center",
+    fontWeight: "bold",
+    fontSize: hp(2.8),
+    marginBottom: 15,
+  },
+  modalText: {
+    textAlign: "center",
+    fontSize: hp(2),
+    marginBottom: 15,
+  },
+  confirmmodalText: {
+    textAlign: "center",
+    fontSize: hp(2),
+    fontWeight: "bold",
+    marginBottom: hp(4),
+  },
+  customRatingBarStyle: {
+    justifyContent: "center",
+    flexDirection: "row",
+  },
+  starImg: {
+    width: 30,
+    height: 30,
+    resizeMode: "cover",
+    marginBottom: 15,
+  },
+  inputBox: {
+    borderColor: "#CCCCCC",
+    borderWidth: 1,
+    borderRadius: 5,
+    fontSize: hp(2),
+    paddingLeft: wp(4),
+    paddingRight: wp(4),
+    height: hp(8),
+    width: wp(65),
+    marginBottom: hp(4),
+  },
+  SeeMoreButton: {
+    position: "absolute",
+    backgroundColor: "#069380",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 20,
+    width: 140,
+    height: 30,
+    flexDirection: "row",
+    alignSelf: "flex-end",
+  },
+  ButtonText: {
+    color: "white",
+    fontSize: 18,
+  },
+});

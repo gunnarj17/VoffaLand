@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Platform, Dimensions, ScrollView, } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Platform, Dimensions, ScrollView } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Avatar } from 'react-native-elements';
 import { AntDesign } from '@expo/vector-icons';
@@ -84,7 +84,7 @@ const PetModal = ({
         else if ( (age.years == 0) && (age.months > 0) && (age.days > 0) )  
            ageString = age.months + " mánaða " + age.days + " daga";  
         else if ( (age.years > 0) && (age.months == 0) && (age.days > 0) )  
-           ageString = age.years + " ára, og " + age.days + " daga";  
+           ageString = age.years + " ára, og" + age.days + " daga";  
         else if ( (age.years == 0) && (age.months > 0) && (age.days == 0) )  
            ageString = age.months + " mánaða";  
         else ageString = "Þetta er fyrsti dagurinn";   
@@ -135,13 +135,12 @@ const PetModal = ({
                             style={styles.editButtonContainer}
                         >
                             <AntDesign name="edit" size={hp(2.5)} color="white" />
-                            
+
                         </TouchableOpacity>
-                    <TouchableOpacity onPress={() => deleteDog(Id)} style={styles.deleteButtonContainer}>
+                        <TouchableOpacity onPress={() => deleteDog(Id)} style={styles.deleteButtonContainer}>
                             <AntDesign name="delete" size={hp(2.5)} color="white" />
-                            
                         </TouchableOpacity>
-                        </View>
+                    </View>
                     <View style={styles.detailContainer}>
                         <Text style={styles.fontSizes}>
                             Tegund:
@@ -178,10 +177,6 @@ const PetModal = ({
                                 { lines ? 'See more' : 'Hide' }
                             </Text>
                         </TouchableOpacity>
-                    </View>
-                    <View style={styles.buttonViewContainer}>
-                        
-                        
                     </View>
                 </ScrollView>
             </View>
@@ -223,12 +218,13 @@ const styles = StyleSheet.create({
         color: '#03738C', 
         fontSize: hp(4), 
     },
+
     fontSizes: { 
         fontSize: hp(2.4),
         fontWeight: '500',
-        color: '#03738C',
-        
+        color: '#03738C'
     },
+
     detailContainer: { 
         marginLeft: wp(3),
         marginTop: hp(2) 
@@ -262,9 +258,9 @@ const styles = StyleSheet.create({
     },
     deleteButtonContainer: { 
         flexDirection: 'row', 
+        paddingHorizontal: 15, 
         backgroundColor: '#F56A6D', 
         borderRadius: 50, 
-        paddingHorizontal: 15, 
         alignItems: 'center',
         marginLeft: wp(2),
         padding: wp(3.5)
@@ -274,6 +270,7 @@ const styles = StyleSheet.create({
         padding: wp(2),
         flexDirection: 'row'
     }
+   
 });
 
 export default PetModal

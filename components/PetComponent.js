@@ -6,29 +6,14 @@ import { AntDesign } from '@expo/vector-icons';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import PetModal from '../components/PetModal';
 
-
 const { height } = Dimensions.get('window');
-
-// const [isModalVisible, setModalVisible] = useState(false);
-// const toggleModal = () => {
-//     setLines(true);
-//     setModalVisible(!isModalVisible);
-//   };
-
-//   const openModal = (item) => {
-//     setModalVisible(true);
-//     setDogItems(item);
-//   }
 
 const PetComponent = ({ 
     Name, 
     Breed, 
     Photo,
 }) => {
-
-    
     return (
-
         <View style={styles.parent}>
             <View style={styles.container}>
                 <View style={styles.leftmost}>
@@ -55,7 +40,6 @@ const styles = StyleSheet.create({
     },
     container: { 
         flexDirection: 'row',
-        // marginHorizontal: wp(1),
         marginVertical: wp(2),
         borderRadius: 15,
         backgroundColor: '#81A5A1',
@@ -91,7 +75,5 @@ const styles = StyleSheet.create({
         textAlign: 'right',
         paddingBottom: hp(1)
     }
-});
-
+})
 export default PetComponent
-    
