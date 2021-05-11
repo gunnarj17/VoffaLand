@@ -5,6 +5,7 @@ import star_outline from '../assets/star_outline.png';
 import star_filled from '../assets/star_filled.png';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons'; 
+import { Chip } from 'react-native-paper';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import * as firebase from 'firebase';
 import 'firebase/firestore';
@@ -14,6 +15,7 @@ import 'firebase/auth';
 // import Weather from '../components/GetWeather'
 import API_KEY from '../API/Weather'
 import { ScrollView } from 'react-native-gesture-handler';
+import { color } from 'react-native-elements/dist/helpers';
 
 export default function SelectedPark( props ) {
     const [comments, setComments] = useState([]); // set/add comments
@@ -34,6 +36,79 @@ export default function SelectedPark( props ) {
     const [getUser, setGetUser] = useState({});
     const [error, setError] = useState();
     const [isFetching, setIsFetching] = useState(false);
+
+    const [environments,setEnvironments]=useState([]);
+
+    const fetchEnvironments=async()=>{
+        const currentPark = props.route.params.ID;
+        const response = firebase.firestore().collection('Parks').doc(currentPark);
+        const data=await response.get();
+        const userdata = data.data();
+        setEnvironments(userdata);
+        // console.log(environments.isMol);
+    }
+    useEffect(() => {
+        fetchEnvironments();
+      }, [])
+
+    const RenderEnvironmet = () => {
+        let showEnvo = [];
+        var uniqueId = 0;
+        if (environments.isBrottganga == true) {
+            uniqueId += 1;
+            showEnvo.push(
+                <Chip style={styles.Chip} key={uniqueId} textStyle={{ color: "white"}}>Brött Ganga</Chip>
+            )
+        }
+        if (environments.isGraslendi == true) {
+            uniqueId += 1;
+            showEnvo.push(
+                <Chip style={styles.Chip} key={uniqueId} textStyle={{ color: "white"}}>Graslendi</Chip>
+            )
+        }
+        if (environments.isMoi == true) {
+            uniqueId += 1;
+            showEnvo.push(
+                <Chip style={styles.Chip} key={uniqueId} textStyle={{ color: "white"}}>Mói</Chip>
+            )
+        }
+        if (environments.isMol == true) {
+            uniqueId += 1;
+            showEnvo.push(
+                <Chip style={styles.Chip} key={uniqueId} textStyle={{ color: "white"}}>Möl</Chip>
+            )
+        }
+        if (environments.isSjor == true) {
+            uniqueId += 1;
+            showEnvo.push(
+                <Chip style={styles.Chip} key={uniqueId} textStyle={{ color: "white"}}>Sjór</Chip>
+            )
+        }
+        if (environments.isSkogur == true) {
+            uniqueId += 1;
+            showEnvo.push(
+                <Chip style={styles.Chip} key={uniqueId} textStyle={{ color: "white"}}>Skógur</Chip>
+            )
+        }
+        if (environments.isTraut == true) {
+            uniqueId += 1;
+            showEnvo.push(
+                <Chip style={styles.Chip} key={uniqueId} textStyle={{ color: "white"}}>Þraut</Chip>
+            )
+        }
+        if (environments.isVatn == true) {
+            uniqueId += 1;
+            showEnvo.push(
+                <Chip style={styles.Chip} key={uniqueId} textStyle={{ color: "white"}}>Vatn</Chip>
+            )
+        }
+
+        return (
+            <View style={styles.umhverfiChips}>
+                {showEnvo}
+            </View>
+        )
+    }
 
     // Veðrið
     const [Latitude, setLatitude] = useState(props.route.params.Lat);
@@ -212,7 +287,6 @@ export default function SelectedPark( props ) {
             var uniqueId = 0;
             let stars = [];
             let noStars = [];
-            // console.log(avgStars);
 
             for (let i = 1; i <= avgRating; i++) {
                 uniqueId += 1;
@@ -229,7 +303,7 @@ export default function SelectedPark( props ) {
             }
 
             return (
-                <View>{stars}{noStars}<Text>({sumComments})</Text></View>
+                <View style={styles.topStar}>{stars}{noStars}<Text style={styles.modalText}>({sumComments})</Text></View>
             );
         }
 
@@ -317,10 +391,7 @@ export default function SelectedPark( props ) {
             {/* Parturinn af skjánum sem inniheldur nafn, lýsingu og directions takka, veðurspá */}
             <View style={styles.middleContainer}>
                 <View style={styles.starReview}>
-                    {/* Hérna þarf að birta actual stjörnugjöf sem svæðið hefur, þetta eru bara place-holder icons */}
-                    {/* <AntDesign name="staro" size={24} color="black" /> */}
-                    <RenderavgRating style={styles.starReview}/>
-
+                    <RenderavgRating/>
                 </View>
                 <View style={styles.middleContainerHeader}>
                     <View style={styles.titleDir}>
@@ -332,6 +403,7 @@ export default function SelectedPark( props ) {
                             <FontAwesome5 name="directions" size={26} color="white" />
                         </TouchableOpacity>
                     </View>
+                    
                     {/* Hérna kemur veðurspáin*/}
                     <View style={styles.weather}>
                         <Image style={styles.weatherimage}
@@ -341,10 +413,12 @@ export default function SelectedPark( props ) {
                     </View>
                     
                 </View>
+                <RenderEnvironmet/>
                 <View style={styles.aboutParkContainer}>
-                    
+                
                     <Text style={styles.aboutPark}>{props.route.params.Information}</Text>
-                    {/* Hérna þarf líka að birta tögg-in sem svæðið hefur :) */}
+                    {/* <RenderEnvironmet/> */}
+                    {/* <RenderEnvironmet/> */}
                 </View>
 
                 {/* Parturinn af skjánum fyrir comment og stjörnugjafir. Hér vantar virkni til að birta ummæli */}
@@ -359,11 +433,7 @@ export default function SelectedPark( props ) {
                         <TouchableOpacity 
                         style={styles.reviewButton}
                         onPress={() => { setModalVisible(true); setActionTriggered('ACTION_1');}}>
-                            <AntDesign name="staro" size={26} style={styles.starIcon}/>
-                            <AntDesign name="staro" size={26} style={styles.starIcon} />
-                            <AntDesign name="staro" size={26} style={styles.starIcon} />
-                            <AntDesign name="staro" size={26} style={styles.starIcon} />
-                            <AntDesign name="staro" size={26} style={styles.starIcon} />
+                            <Text style={styles.buttonText}>Skrifa ummæli</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -416,9 +486,14 @@ const styles = StyleSheet.create({
         width: undefined,
         height: undefined
     },
+    topStar: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
     starReview: {
+        // flexDirection: 'row',
         paddingLeft: wp(5),
-        flexDirection: "row"
+        flexWrap: 'nowrap',
     },
     middleContainer: {
         flex: 2,
@@ -479,10 +554,18 @@ const styles = StyleSheet.create({
         alignItems:'center',
         justifyContent:'center',
         flexDirection: 'row',
+        backgroundColor: "#034B42",
+        padding: wp(3),
+        borderRadius: 20,
+    },
+    buttonText: {
+        color: 'white',
+        fontSize: hp(2)
     },
     starIcon: {
         padding: 1,
-        color: 'orange'
+        color: 'orange',
+        flexWrap: 'nowrap'
     },
     weather:{
         width: wp(20),
@@ -598,6 +681,12 @@ const styles = StyleSheet.create({
         width: wp(65),
         marginBottom: hp(4)
       },
-     
+      umhverfiChips:{
+          flexWrap: 'wrap',
+      },
+      Chip: {
+          backgroundColor: '#79BE66',
+          margin: 2
+      }
     
 })

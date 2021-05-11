@@ -5,6 +5,7 @@ import { StyleSheet, Alert, Text, LogBox, View, Dimensions, Image, TouchableOpac
 import * as Location from 'expo-location';
 import * as firebase from 'firebase';
 import 'firebase/firestore';
+import { MaterialIcons } from '@expo/vector-icons'; 
 import {
   Container,
   Item,
@@ -255,17 +256,18 @@ export default class Parks extends Component {
     }
     this.setState({ filteredParks });
   }
-
+// LookHere
   renderFilterModal = () => {
     const { filterOption, filterTowns } = this.state;
     return (
       <View style={styles.filterModalArea}>
         <View style={styles.closeFilterButtonArea}>
           <Button style={styles.closeFilterButton} onPress={this.hideFilterModal}>
-            <Image
+            {/* <Image
               style={styles.filterIcon}
               source={require("../assets/filter.png")}
-            />
+            /> */}
+            <MaterialIcons name="tune" size={24} color="white" style={{paddingLeft: 7}} />
           </Button>
         </View>
         <View style={styles.modalContent}>
@@ -396,12 +398,13 @@ export default class Parks extends Component {
                 this._renderResultList()
               }
             </View>
-
+{/* LookHere */}
             <Button style={styles.filterButton} onPress={this.showFilterModal}>
-              <Image
+              {/* <Image
                 style={styles.filterIcon}
                 source={require("../assets/filter.png")}
-              />
+              /> */}
+              <MaterialIcons name="tune" size={24} color="white" style={{paddingLeft: 7}} />
             </Button>
           </View>
         }
@@ -617,7 +620,8 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    marginTop: 5
+    marginTop: 5,
+    backgroundColor: '#034B42'
   },
   filterIcon: {
     width: 40,
@@ -644,7 +648,9 @@ const styles = StyleSheet.create({
     right: 0,
     width: 40,
     height: 40,
-    borderRadius: 20
+    borderRadius: 20,
+    backgroundColor: '#034B42',
+    alignContent: 'center'
   },
   optionContainer: {
     display: 'flex',
