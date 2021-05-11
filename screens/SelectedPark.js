@@ -212,7 +212,6 @@ export default function SelectedPark( props ) {
             var uniqueId = 0;
             let stars = [];
             let noStars = [];
-            console.log(avgStars);
 
             for (let i = 1; i <= avgRating; i++) {
                 uniqueId += 1;
@@ -229,7 +228,7 @@ export default function SelectedPark( props ) {
             }
 
             return (
-                <View>{stars}{noStars}<Text>({sumComments})</Text></View>
+                <View style={styles.topStar}>{stars}{noStars}<Text style={styles.modalText}>({sumComments})</Text></View>
             );
         }
 
@@ -317,10 +316,7 @@ export default function SelectedPark( props ) {
             {/* Parturinn af skjánum sem inniheldur nafn, lýsingu og directions takka, veðurspá */}
             <View style={styles.middleContainer}>
                 <View style={styles.starReview}>
-                    {/* Hérna þarf að birta actual stjörnugjöf sem svæðið hefur, þetta eru bara place-holder icons */}
-                    {/* <AntDesign name="staro" size={24} color="black" /> */}
                     <RenderavgRating/>
-
                 </View>
                 <View style={styles.middleContainerHeader}>
                     <View style={styles.titleDir}>
@@ -359,11 +355,7 @@ export default function SelectedPark( props ) {
                         <TouchableOpacity 
                         style={styles.reviewButton}
                         onPress={() => { setModalVisible(true); setActionTriggered('ACTION_1');}}>
-                            <AntDesign name="staro" size={26} style={styles.starIcon}/>
-                            <AntDesign name="staro" size={26} style={styles.starIcon} />
-                            <AntDesign name="staro" size={26} style={styles.starIcon} />
-                            <AntDesign name="staro" size={26} style={styles.starIcon} />
-                            <AntDesign name="staro" size={26} style={styles.starIcon} />
+                            <Text style={styles.buttonText}>Skrifa ummæli</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -416,8 +408,14 @@ const styles = StyleSheet.create({
         width: undefined,
         height: undefined
     },
+    topStar: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
     starReview: {
-        paddingLeft: wp(5)
+        // flexDirection: 'row',
+        paddingLeft: wp(5),
+        flexWrap: 'nowrap',
     },
     middleContainer: {
         flex: 2,
@@ -478,10 +476,18 @@ const styles = StyleSheet.create({
         alignItems:'center',
         justifyContent:'center',
         flexDirection: 'row',
+        backgroundColor: "#034B42",
+        padding: wp(3),
+        borderRadius: 20,
+    },
+    buttonText: {
+        color: 'white',
+        fontSize: hp(2)
     },
     starIcon: {
         padding: 1,
-        color: 'orange'
+        color: 'orange',
+        flexWrap: 'nowrap'
     },
     weather:{
         width: wp(20),

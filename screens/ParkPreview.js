@@ -10,7 +10,6 @@ import { useNavigation } from '@react-navigation/native';
 
 const ParkPreview = React.forwardRef(({ props }, ref) => {
   const navigation = useNavigation();
-
   const renderInner = () => (
     <View style={styles.panel}>
       <View style={styles.panelTop}>
@@ -20,7 +19,7 @@ const ParkPreview = React.forwardRef(({ props }, ref) => {
         <View style={styles.panelLeft}>
           <View style={styles.iconView}>
             {/* Hérna þarf að birta actual stjörnugjöf sem svæðið hefur, þetta eru bara place-holder icons */}
-            <Icon style={styles.Icons} name='star'/><Icon style={styles.Icons} name='star'/><Icon style={styles.Icons} name='star'/>
+            {/* <Icon style={styles.Icons} name='star'/><Icon style={styles.Icons} name='star'/><Icon style={styles.Icons} name='star'/> */}
             {/* Hérna vantar líka að birta tögg-in sem svæðið hefur :) */}
           </View>
           <Text style={styles.leftText}> </Text>
