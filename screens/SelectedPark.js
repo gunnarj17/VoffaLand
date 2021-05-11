@@ -212,7 +212,7 @@ export default function SelectedPark( props ) {
             var uniqueId = 0;
             let stars = [];
             let noStars = [];
-            console.log(avgStars);
+            // console.log(avgStars);
 
             for (let i = 1; i <= avgRating; i++) {
                 uniqueId += 1;
@@ -319,7 +319,7 @@ export default function SelectedPark( props ) {
                 <View style={styles.starReview}>
                     {/* Hérna þarf að birta actual stjörnugjöf sem svæðið hefur, þetta eru bara place-holder icons */}
                     {/* <AntDesign name="staro" size={24} color="black" /> */}
-                    <RenderavgRating/>
+                    <RenderavgRating style={styles.starReview}/>
 
                 </View>
                 <View style={styles.middleContainerHeader}>
@@ -417,7 +417,8 @@ const styles = StyleSheet.create({
         height: undefined
     },
     starReview: {
-        paddingLeft: wp(5)
+        paddingLeft: wp(5),
+        flexDirection: "row"
     },
     middleContainer: {
         flex: 2,
