@@ -1,4 +1,3 @@
-  
 import React, { Component, useEffect } from "react";
 import MapView, { PROVIDER_GOOGLE, Polyline, Marker } from "react-native-maps";
 import { StyleSheet, Alert, Text, LogBox, View, Dimensions, Image, TouchableOpacity, ScrollView, TextInput } from "react-native";

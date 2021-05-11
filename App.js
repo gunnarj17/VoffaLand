@@ -25,6 +25,7 @@ import Profile from './screens/ProfileScreen';
 import AddDogs from './screens/AddDogs';
 import Parks from './screens/ParksScreen';
 import Events from './screens/EventsScreen';
+import ViewEventScreen from "./screens/ViewEventScreen";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -44,6 +45,7 @@ export default function App() {
           <Stack.Screen name='Sign Up' component={SignUp} options={{ headerShown: false }} />
           <Stack.Screen name='Sign In' component={SignIn} options={{ headerShown: false }} />
           <Stack.Screen name='Selected Park' component={SelectedPark} options={{ headerShown: false }} />
+          <Stack.Screen name='ViewEventScreen' component={ViewEventScreen} options={{ headerShown: false }} />
           <Stack.Screen name='addDogs' component={AddDogs} options={{ headerShown: false }} />
           <Stack.Screen name={'Parks'} options={{ headerShown: false }} >{() => (
             <Tab.Navigator
