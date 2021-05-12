@@ -307,6 +307,32 @@ export default function SelectedPark( props ) {
             );
         }
 
+        const RenderRating = (rating) => {
+            var theRating = rating;
+            var missingStars = 5 - theRating;
+            var uniqueId = 0;
+            let stars = [];
+            let noStars = [];
+            // console.log(rating);
+            for (let i = 1; i <= rating; i++) {
+                uniqueId += 1;
+                stars.push(
+                    <AntDesign key={uniqueId} name="star" size={12} style={styles.starIcon}/>
+                )
+            }
+
+            for (let i = 1; i <= missingStars; i++) {
+                uniqueId += 1;
+                noStars.push(
+                    <AntDesign key={uniqueId} name="staro" size={12} style={styles.starIcon}/>
+                )
+            }
+
+            return (
+                <View style={styles.topStar}>{stars}{noStars}</View>
+            );
+        }
+
     return (
         <SafeAreaView style={{flex: 1}}>
         <View style={styles.parentContainer}>
@@ -387,7 +413,7 @@ export default function SelectedPark( props ) {
             <View style={styles.imgContainer}>
                 <Image source={park_img}  style={styles.imgStyle}/>
             </View>
-
+            
             {/* Parturinn af skjánum sem inniheldur nafn, lýsingu og directions takka, veðurspá */}
             <View style={styles.middleContainer}>
                 <View style={styles.starReview}>
@@ -417,17 +443,16 @@ export default function SelectedPark( props ) {
                 <View style={styles.aboutParkContainer}>
                 
                     <Text style={styles.aboutPark}>{props.route.params.Information}</Text>
-                    {/* <RenderEnvironmet/> */}
-                    {/* <RenderEnvironmet/> */}
                 </View>
 
                 {/* Parturinn af skjánum fyrir comment og stjörnugjafir. Hér vantar virkni til að birta ummæli */}
-                <View style={styles.reviewComponent}>
-                <View style={styles.reviewComponentHeader}>
+                <View style={styles.reviewComponent} style={{flex: 1}}>
+                <View style={styles.reviewComponentHeader} >
                     <View style={styles.leftReviewComponent}>
                         <Text style={styles.commentTitle}>Ummæli</Text>
                         <View style={styles.borderLine}/>
                     </View>
+
                     <View style={styles.rightReviewComponent}>
                         {/* Takki sem er fimm gular stjörnur. Opnar review modal-inn */}
                         <TouchableOpacity 
@@ -437,20 +462,18 @@ export default function SelectedPark( props ) {
                         </TouchableOpacity>
                     </View>
                 </View>
-                <View style={styles.commentSection}>
-                
+                <View style={styles.commentSection} >
                         <FlatList
-                        contentContainerStyle={{ paddingBottom: 150 }}
+                        // contentContainerStyle={{ paddingBottom: 150 }}
                             data={allComments}
                             renderItem={({ item }) => (
                             <View style={styles.commentBox}>
                                 <Text style={{fontSize: hp(2.6)}}>{item.UserName}</Text>
-                                <Text>Rating: {item.Rating}</Text>
+                                <Text>{RenderRating(item.Rating)}</Text>
                                 <Text style={{fontSize: hp(2)}}>{item.Comment}</Text>
                             </View>
                             )}
                         />
-                    
                 </View>
                 </View>
             </View>
@@ -462,8 +485,8 @@ export default function SelectedPark( props ) {
 
 const styles = StyleSheet.create({
     parentContainer: {
-        flex: 1,
-        backgroundColor: "#F7F5F4"
+        flexGrow: 1,
+        backgroundColor: "#F7F5F4",
     },
     iconStyle:{
         color: 'white',
@@ -578,6 +601,7 @@ const styles = StyleSheet.create({
     weatherimage:{
         width: 100,
         height: 100,
+        
     },
     weatherText:{
         color: 'black',
@@ -681,12 +705,15 @@ const styles = StyleSheet.create({
         width: wp(65),
         marginBottom: hp(4)
       },
-      umhverfiChips:{
-          flexWrap: 'wrap',
+      umhverfiChips: {
+        flexWrap: 'wrap',
+        flexDirection: "row",
+        // alignItems: 'center',
+        // justifyContent: 'center',
       },
       Chip: {
-          backgroundColor: '#79BE66',
-          margin: 2
+        backgroundColor: '#79BE66',
+        margin: 2,
       }
     
 })
