@@ -708,6 +708,8 @@ const styles = StyleSheet.create({
       umhverfiChips: {
         flexWrap: 'wrap',
         flexDirection: "row",
+        paddingLeft: wp(3),
+        paddingRight: wp(3),
         // alignItems: 'center',
         // justifyContent: 'center',
       },
