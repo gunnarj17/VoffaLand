@@ -1,5 +1,5 @@
 import React,{useState,useEffect, useCallback} from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, Alert, Modal, TextInput, Keyboard, KeyboardAvoidingView, FlatList, ActivityIndicator, SafeAreaView} from "react-native";
+import { ScrollView, StyleSheet, Text, View, Image, TouchableOpacity, Alert, Modal, TextInput, Keyboard, KeyboardAvoidingView, FlatList, ActivityIndicator, SafeAreaView} from "react-native";
 import park_img from '../assets/place_holder.png';
 import star_outline from '../assets/star_outline.png';
 import star_filled from '../assets/star_filled.png';
@@ -14,7 +14,7 @@ import 'firebase/auth';
 
 // import Weather from '../components/GetWeather'
 import API_KEY from '../API/Weather'
-import { ScrollView } from 'react-native-gesture-handler';
+// import { ScrollView } from 'react-native-gesture-handler';
 import { color } from 'react-native-elements/dist/helpers';
 
 export default function SelectedPark( props ) {
@@ -440,13 +440,13 @@ export default function SelectedPark( props ) {
                     
                 </View>
                 <RenderEnvironmet/>
-                <View style={styles.aboutParkContainer}>
+                <View style={styles.aboutParkContainer} >
                 
                     <Text style={styles.aboutPark}>{props.route.params.Information}</Text>
                 </View>
 
                 {/* Parturinn af skjánum fyrir comment og stjörnugjafir. Hér vantar virkni til að birta ummæli */}
-                <View style={styles.reviewComponent} style={{flex: 1}}>
+                <View style={styles.reviewComponent} >
                 <View style={styles.reviewComponentHeader} >
                     <View style={styles.leftReviewComponent}>
                         <Text style={styles.commentTitle}>Ummæli</Text>
@@ -477,7 +477,6 @@ export default function SelectedPark( props ) {
                 </View>
                 </View>
             </View>
-            
         </View>
         </SafeAreaView>
       );
