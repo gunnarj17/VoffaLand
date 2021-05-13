@@ -14,7 +14,6 @@ import {
 } from "react-native-safe-area-context";
 
 import { View } from "react-native";
-
 // stack screens
 import WelcomeScreen from "./screens/WelcomeScreen";
 import SignUp from "./screens/SignUp";
@@ -23,22 +22,12 @@ import LoadingScreen from "./screens/LoadingScreen";
 import SelectedPark from "./screens/SelectedPark";
 
 // Tab Screens
-<<<<<<< HEAD
-import Info from "./screens/InfoScreen";
-import Profile from "./screens/ProfileScreen";
-import Parks from "./screens/ParksScreen";
-import Events from "./screens/EventsScreen";
-import AddEventScreen from "./screens/AddEventScreen";
-import ViewEventScreen from "./screens/ViewEventScreen";
-import AddDogs from "./screens/AddDogs";
-=======
 import Info from './screens/InfoScreen';
 import Profile from './screens/ProfileScreen';
 import AddDogs from './screens/AddDogs';
 import Parks from './screens/ParksScreen';
 import Events from './screens/EventsScreen';
 import ViewEventScreen from "./screens/ViewEventScreen";
->>>>>>> 817c503081a607add6bdd27f683024e9854b0388
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -53,33 +42,6 @@ export default function App() {
     <SafeAreaProvider>
       <NavigationContainer>
         <Stack.Navigator>
-<<<<<<< HEAD
-          <Stack.Screen
-            name={"Loading"}
-            component={LoadingScreen}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Home"
-            component={WelcomeScreen}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Sign Up"
-            component={SignUp}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="SignIn"
-            component={SignIn}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="SelectedPark"
-            component={SelectedPark}
-            options={{ headerShown: false }}
-          />
-=======
           <Stack.Screen name={'Loading'} component={LoadingScreen} options={{ headerShown: false }} />
           <Stack.Screen name='Home' component={WelcomeScreen} options={{ headerShown: false }} />
           <Stack.Screen name='Sign Up' component={SignUp} options={{ headerShown: false }} />
@@ -106,7 +68,6 @@ export default function App() {
                   bottom: 15
                 },
               }}>
->>>>>>> 817c503081a607add6bdd27f683024e9854b0388
 
           <Stack.Screen
             name="addDogs"
