@@ -1,17 +1,20 @@
 // park preview
 // import * as React from "react";
 import React, { useState, useEffect, useCallback } from 'react';
-import { ActivityIndicator, StyleSheet, Text, View,} from "react-native";
+import { ActivityIndicator, StyleSheet, Text, useWindowDimensions, View,} from "react-native";
 import { Icon, Button} from "native-base";
 import Animated from "react-native-reanimated";
 import BottomSheet from "reanimated-bottom-sheet";
 import { useNavigation } from '@react-navigation/native';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { Chip } from 'react-native-paper';
+import { AntDesign } from '@expo/vector-icons'; 
 
 import * as firebase from 'firebase';
 import 'firebase/firestore';
 import 'firebase/auth';
 import { setStatusBarNetworkActivityIndicatorVisible } from 'expo-status-bar';
-import { AntDesign } from '@expo/vector-icons'; 
+
 
 const ParkPreview = React.forwardRef(({ props }, ref) => {
   const [error, setError] = useState();
@@ -20,55 +23,143 @@ const ParkPreview = React.forwardRef(({ props }, ref) => {
   const [avgStars, getAvgStars] = useState(); // get avg stars
   const [sumComments, getsumComments] = useState();
   const [allComments, getComments] = useState([]); // get comments
+  const [environments, setEnvironments] = useState([]);
 
-  const [isFetching, setIsFetching] = useState(false);
-  const [environments,setEnvironments]=useState([]);
+  const [ correctparkChips, getcorrectparkChips ] = useState([]);
 
-  // ná í comments
-  useEffect(() => {
-    if (props != undefined) {
-    const currentPark = props.ID;
-    const commenters = firebase.firestore()
-      .collection('comments')
-      .onSnapshot(querySnapshot => {
-        const all = [];
-  
-        querySnapshot.forEach(documentSnapshot => {
-            all.push({
-            ...documentSnapshot.data(),
-            key: documentSnapshot.id,
-          });
-        });
+    const RenderEnvironmet = () => {
+      if (props != undefined) {
+        const currentPark = props.Name;
+        const allparks = firebase.firestore()
+          .collection('Parks')
+          .onSnapshot(querySnapshot => {
+            const all = [];
+
+            querySnapshot.forEach(documentSnapshot => {
+              all.push({
+                ...documentSnapshot.data(),
+                key: documentSnapshot.id,
+              });
+            });
 
         const correctPark = [];
-        var countRating = 0; 
-        var avgRating = 0; 
+        // console.log(currentPark);
         for (let i = 0; i <= all.length - 1; i++) {
-            // console.log(all[i])
-            if (all[i].ParkId == currentPark) {
-                countRating += 1;
-                avgRating += all[i].Rating;
-                correctPark.push(all[i])
+          // console.log(all[i].Name)
+          if (all[i].Name == currentPark) {
+              correctPark.push(all[i]);
+              break;
             }
-        }
-        avgRating = avgRating/countRating;
-        // console.log("Samtals ratings deilt með fjölda ratings: " + avgRating.toFixed());
-        getAvgStars(avgRating.toFixed());
-        getsumComments(countRating);
-        getComments(correctPark);
-        setLoading(false);
-      });
-      
-    // Unsubscribe from events when no longer in use
-    return () => commenters();
-    }
-    
-  }, []);
-    // if (loading) {
-    //     return <ActivityIndicator />;
-    // }
+          }
+          // console.log(correctPark[0].Fence);
+          getcorrectparkChips(correctPark);
+          
+        });
+      }
+      let showEnvo = [];
+          var uniqueId = 0;
+          if (correctparkChips.isBrottganga == true) {
+              uniqueId += 1;
+              showEnvo.push(
+                  <Chip style={styles.Chip} key={uniqueId} textStyle={{ color: "white"}}>Brött Ganga</Chip>
+              )
+          }
+          if (correctparkChips.isGraslendi == true) {
+              uniqueId += 1;
+              showEnvo.push(
+                  <Chip style={styles.Chip} key={uniqueId} textStyle={{ color: "white"}}>Graslendi</Chip>
+              )
+          }
+          if (correctparkChips.isMoi == true) {
+              uniqueId += 1;
+              showEnvo.push(
+                  <Chip style={styles.Chip} key={uniqueId} textStyle={{ color: "white"}}>Mói</Chip>
+              )
+          }
+          if (correctparkChips.isMol == true) {
+              uniqueId += 1;
+              showEnvo.push(
+                  <Chip style={styles.Chip} key={uniqueId} textStyle={{ color: "white"}}>Möl</Chip>
+              )
+          }
+          if (correctparkChips.isSjor == true) {
+              uniqueId += 1;
+              showEnvo.push(
+                  <Chip style={styles.Chip} key={uniqueId} textStyle={{ color: "white"}}>Sjór</Chip>
+              )
+          }
+          if (correctparkChips.isSkogur == true) {
+              uniqueId += 1;
+              showEnvo.push(
+                  <Chip style={styles.Chip} key={uniqueId} textStyle={{ color: "white"}}>Skógur</Chip>
+              )
+          }
+          if (correctparkChips.isTraut == true) {
+              uniqueId += 1;
+              showEnvo.push(
+                  <Chip style={styles.Chip} key={uniqueId} textStyle={{ color: "white"}}>Þraut</Chip>
+              )
+          }
+          if (correctparkChips.isVatn == true) {
+              uniqueId += 1;
+              showEnvo.push(
+                  <Chip style={styles.Chip} key={uniqueId} textStyle={{ color: "white"}}>Vatn</Chip>
+              )
+          }
+          if (correctparkChips.Fence == true) {
+              uniqueId += 1;
+              showEnvo.push(
+                  <Chip style={styles.Chip} key={uniqueId} textStyle={{ color: "white"}}>Gerði</Chip>
+              )
+          }
+          if (correctparkChips.Free == true) {
+              uniqueId += 1;
+              showEnvo.push(
+                  <Chip style={styles.Chip} key={uniqueId} textStyle={{ color: "white"}}>Lausaganga</Chip>
+              )
+          }
+          return (
+            <View style={styles.umhverfiChips}>
+                {showEnvo}
+            </View>
+          )
+  }
 
     const RenderavgRating = () => {
+      if (props != undefined) {
+        const currentPark = props.ID;
+        const commenters = firebase.firestore()
+          .collection('comments')
+          .onSnapshot(querySnapshot => {
+            const all = [];
+      
+            querySnapshot.forEach(documentSnapshot => {
+                all.push({
+                ...documentSnapshot.data(),
+                key: documentSnapshot.id,
+              });
+            });
+    
+            const correctPark = [];
+            var countRating = 0; 
+            var avgRating = 0; 
+            for (let i = 0; i <= all.length - 1; i++) {
+                console.log(all[i])
+                if (all[i].ParkId == currentPark) {
+                    countRating += 1;
+                    avgRating += all[i].Rating;
+                    correctPark.push(all[i])
+                }
+            }
+            avgRating = avgRating/countRating;
+            // console.log("Samtals ratings deilt með fjölda ratings: " + avgRating.toFixed());
+            getAvgStars(avgRating.toFixed());
+            getsumComments(countRating);
+            getComments(correctPark);
+            setLoading(false);
+          });
+        }
+
       var avgRating = avgStars;
       var missingStars = 5 - avgStars;
       var uniqueId = 0;
@@ -88,9 +179,9 @@ const ParkPreview = React.forwardRef(({ props }, ref) => {
               <AntDesign key={uniqueId} name="staro" size={26} style={styles.starIcon}/>
           )
       }
-
+      
       return (
-          <View style={styles.topStar}>{stars}{noStars}<Text style={styles.modalText}></Text></View>
+          <View style={styles.topStar}>{stars}{noStars}<Text style={styles.ratingText}>{sumComments}</Text></View>
       );
     }
 
@@ -102,11 +193,13 @@ const ParkPreview = React.forwardRef(({ props }, ref) => {
       <View style={styles.panelBottom}>
         <View style={styles.panelLeft}>
           <View style={styles.iconView}>
-            <RenderavgRating/>
+            <RenderavgRating />
+            
             {/* Hérna þarf að birta actual stjörnugjöf sem svæðið hefur, þetta eru bara place-holder icons */}
             {/* <Icon style={styles.Icons} name='star'/><Icon style={styles.Icons} name='star'/><Icon style={styles.Icons} name='star'/> */}
             {/* Hérna vantar líka að birta tögg-in sem svæðið hefur :) */}
           </View>
+          {/* <RenderEnvironmet /> */}
           <Text style={styles.leftText}> </Text>
         </View>
         <View style={styles.panelRight}>
@@ -216,5 +309,20 @@ const styles = StyleSheet.create({
     padding: 1,
     color: 'orange',
     flexWrap: 'nowrap'
+  },
+  ratingText: {
+    fontSize: hp(3),
+  },
+  umhverfiChips: {
+    flexWrap: 'wrap',
+    flexDirection: "row",
+    paddingLeft: wp(3),
+    paddingRight: wp(3),
+    // alignItems: 'center',
+    // justifyContent: 'center',
+  },
+  Chip: {
+    backgroundColor: '#79BE66',
+    margin: 2,
   },
 });

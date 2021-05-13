@@ -102,6 +102,18 @@ export default function SelectedPark( props ) {
                 <Chip style={styles.Chip} key={uniqueId} textStyle={{ color: "white"}}>Vatn</Chip>
             )
         }
+        if (environments.Fence == true) {
+            uniqueId += 1;
+            showEnvo.push(
+                <Chip style={styles.Chip} key={uniqueId} textStyle={{ color: "white"}}>Gerði</Chip>
+            )
+        }
+        if (environments.Free == true) {
+            uniqueId += 1;
+            showEnvo.push(
+                <Chip style={styles.Chip} key={uniqueId} textStyle={{ color: "white"}}>Lausaganga</Chip>
+            )
+        }
 
         return (
             <View style={styles.umhverfiChips}>
@@ -303,7 +315,7 @@ export default function SelectedPark( props ) {
             }
 
             return (
-                <View style={styles.topStar}>{stars}{noStars}<Text style={styles.modalText}>({sumComments})</Text></View>
+                <View style={styles.topStar}>{stars}{noStars}<Text style={styles.ratingText}>{sumComments}</Text></View>
             );
         }
 
@@ -715,6 +727,9 @@ const styles = StyleSheet.create({
       Chip: {
         backgroundColor: '#79BE66',
         margin: 2,
+      },
+      ratingText: {
+        fontSize: hp(3),
       }
     
 })
