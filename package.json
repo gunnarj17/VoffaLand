@@ -10,13 +10,21 @@
   "dependencies": {
     "@alessiocancian/react-native-actionsheet": "^2.4.11",
     "@expo/vector-icons": "^12.0.4",
+<<<<<<< HEAD
     "@gorhom/bottom-sheet": "^2",
     "@mapbox/polyline": "^1.1.1",
+=======
+    "@mapbox/polyline": "^1.1.1",
+    "@react-native-community/datetimepicker": "3.0.4",
+>>>>>>> 817c503081a607add6bdd27f683024e9854b0388
     "@react-native-community/masked-view": "0.1.10",
+    "@react-native-firebase/firestore": "^11.4.1",
     "@react-navigation/bottom-tabs": "^5.11.9",
     "@react-navigation/material-bottom-tabs": "^5.3.14",
     "@react-navigation/native": "^5.9.3",
     "@react-navigation/stack": "^5.14.3",
+    "@unimodules/react-native-adapter": "^6.2.2",
+    "axios": "^0.21.1",
     "evil-icons": "^1.10.1",
     "expo": "^40.0.1",
     "expo-application": "^3.1.2",
@@ -39,8 +47,10 @@
     "react-native-collapsible": "^1.6.0",
     "react-native-dotenv": "^2.5.3",
     "react-native-elements": "^3.4.1",
+    "react-native-firebase": "^5.6.0",
     "react-native-gesture-handler": "~1.8.0",
     "react-native-gradient-buttons": "^2.0.2",
+    "react-native-keyboard-aware-scroll-view": "^0.9.4",
     "react-native-linear-gradient": "^2.5.6",
     "react-native-maps": "^0.27.1",
     "react-native-maps-directions": "^1.8.0",
@@ -54,7 +64,10 @@
     "react-native-safe-area-view": "^1.1.1",
     "react-native-screens": "~2.15.2",
     "react-native-vector-icons": "^7.1.0",
+<<<<<<< HEAD
     "react-native-weather": "^0.2.11",
+=======
+>>>>>>> 817c503081a607add6bdd27f683024e9854b0388
     "react-native-web": "~0.13.12",
     "reanimated-bottom-sheet": "^1.0.0-alpha.22"
   },

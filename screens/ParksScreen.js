@@ -890,7 +890,7 @@ export default class Parks extends Component {
                 this.props.navigation.navigate("SelectedPark", {
                   park: this.state.park,
                   goRoute: this.onShowRoute(),
-                })
+                });zzz
               }}
             >
               <Text style={styles.ButtonText}>Sjá nánar</Text>

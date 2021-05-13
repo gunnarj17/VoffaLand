@@ -644,6 +644,40 @@ const styles = StyleSheet.create({
     marginLeft: wp(4),
     marginBottom: hp(2),
     fontWeight: "bold",
+<<<<<<< HEAD
+  },
+  modalTextContainer: {
+    marginLeft: wp(4),
+    marginTop: hp(2),
+    borderRadius: 20,
+    backgroundColor: "#BDBDBD",
+  },
+  modalText: {
+    fontSize: hp(2.3),
+    color: "white",
+    padding: 8,
+    paddingHorizontal: 18,
+  },
+  modalButtonContainer: {
+    alignSelf: "center",
+    marginTop: hp(7),
+    borderColor: "#069380",
+    borderWidth: 1,
+    borderRadius: 20,
+  },
+  modalButton: {
+    fontSize: hp(3),
+    paddingHorizontal: 40,
+    padding: 5,
+    color: "#069380",
+  },
+  indicator: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "white",
+=======
+>>>>>>> 817c503081a607add6bdd27f683024e9854b0388
   },
   modalTextContainer: {
     marginLeft: wp(4),

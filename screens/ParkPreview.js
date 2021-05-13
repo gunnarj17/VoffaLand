@@ -9,9 +9,57 @@ import { useNavigation } from '@react-navigation/native';
 
 const ParkPreview = () => {
   const navigation = useNavigation();
+<<<<<<< HEAD
 
 }
 ;
+=======
+  const renderInner = () => (
+    <View style={styles.panel}>
+      <View style={styles.panelTop}>
+        <Text style={styles.panelTitle}>{props && props.Name ? props.Name : "Vantar nafn"}</Text>
+      </View>
+      <View style={styles.panelBottom}>
+        <View style={styles.panelLeft}>
+          <View style={styles.iconView}>
+            {/* Hérna þarf að birta actual stjörnugjöf sem svæðið hefur, þetta eru bara place-holder icons */}
+            {/* <Icon style={styles.Icons} name='star'/><Icon style={styles.Icons} name='star'/><Icon style={styles.Icons} name='star'/> */}
+            {/* Hérna vantar líka að birta tögg-in sem svæðið hefur :) */}
+          </View>
+          <Text style={styles.leftText}> </Text>
+        </View>
+        <View style={styles.panelRight}>
+          <Button
+           style={styles.SeeMoreButton}
+           onPress={() => { navigation.navigate('Selected Park',  props  ) }}>
+              <Text style={styles.ButtonText}>Sjá nánar</Text>
+          </Button>
+        </View>
+      </View>
+    </View>
+  );
+  const renderHeader = () => (
+    <View style={styles.header}>
+      <View style={styles.panelHeader}>
+        <View style={styles.panelHandle}></View>
+      </View>
+    </View>
+  );
+  const fall = new Animated.Value(1);
+
+  return (
+    <BottomSheet
+      ref={ref}
+      snapPoints={[450, 0]}
+      renderContent={renderInner}
+      renderHeader={renderHeader}
+      initialSnap={1}
+      callbackNode={fall}
+      enabledGestureInteraction={true}
+    />
+  );
+});
+>>>>>>> 817c503081a607add6bdd27f683024e9854b0388
 export default ParkPreview;
 
 const styles = StyleSheet.create({
