@@ -1,7 +1,7 @@
 // Input Box component
 import React, { useState } from "react";
-import {View, Text, StyleSheet,} from "react-native";
-import {Input, Item, Label, Icon,} from "native-base";
+import { View, Text, StyleSheet, } from "react-native";
+import { Input, Item, Label, Icon, } from "native-base";
 
 export default InputBox = ({
   icon,
@@ -31,7 +31,7 @@ export default InputBox = ({
           onChangeText={(val) => onChange(val)}
         />
       </Item>
-     <Text>{errorText}</Text>
+      <Text>{errorText}</Text>
     </View>
   );
 };

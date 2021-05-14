@@ -8,9 +8,9 @@ import PetModal from '../components/PetModal';
 
 const { height } = Dimensions.get('window');
 
-const PetComponent = ({ 
-    Name, 
-    Breed, 
+const PetComponent = ({
+    Name,
+    Breed,
     Photo,
 }) => {
     return (
@@ -38,7 +38,7 @@ const PetComponent = ({
 const styles = StyleSheet.create({
     parent: {
     },
-    container: { 
+    container: {
         flexDirection: 'row',
         marginVertical: wp(2),
         borderRadius: 15,

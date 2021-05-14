@@ -1,19 +1,15 @@
 // park preview
 // import * as React from "react";
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View,Image} from "react-native";
+import { StyleSheet, Text, View, } from "react-native";
+import { Icon, Button } from "native-base";
 import Animated from "react-native-reanimated";
 import BottomSheet from "reanimated-bottom-sheet";
 import { useNavigation } from '@react-navigation/native';
 
 
-const ParkPreview = () => {
+const ParkPreview = React.forwardRef(({ props }, ref) => {
   const navigation = useNavigation();
-<<<<<<< HEAD
-
-}
-;
-=======
   const renderInner = () => (
     <View style={styles.panel}>
       <View style={styles.panelTop}>
@@ -30,9 +26,9 @@ const ParkPreview = () => {
         </View>
         <View style={styles.panelRight}>
           <Button
-           style={styles.SeeMoreButton}
-           onPress={() => { navigation.navigate('Selected Park',  props  ) }}>
-              <Text style={styles.ButtonText}>Sjá nánar</Text>
+            style={styles.SeeMoreButton}
+            onPress={() => { navigation.navigate('Selected Park', props) }}>
+            <Text style={styles.ButtonText}>Sjá nánar</Text>
           </Button>
         </View>
       </View>
@@ -59,7 +55,6 @@ const ParkPreview = () => {
     />
   );
 });
->>>>>>> 817c503081a607add6bdd27f683024e9854b0388
 export default ParkPreview;
 
 const styles = StyleSheet.create({
@@ -84,9 +79,9 @@ const styles = StyleSheet.create({
     fontSize: 24,
   },
   panelBottom: {
-    flexDirection:'row',
-    justifyContent:'space-between',
-    marginBottom: 100 //Mjög mikil HAX leið, tökum þetta út þegar allar upplýsingarnar á þessu Bottom Sheet eru komnar inn!
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 100
   },
   panelLeft: {
     alignSelf: 'flex-start',
@@ -128,14 +123,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#00000040",
     marginBottom: 10,
   },
-  filterButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    marginLeft:10,
-},
-filterIcon: {
-    width: 40,
-    height: 40
-},
-});
+}
+
+);

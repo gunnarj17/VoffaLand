@@ -35,7 +35,7 @@ export default function AddEventScreen({ navigation }) {
     const currentDate = selectedDate || date;
     if (Platform.OS === 'android') {
       setShow(false);
-    } 
+    }
     setDate(currentDate);
   };
 
@@ -50,19 +50,19 @@ export default function AddEventScreen({ navigation }) {
 
   const optionArray = [
     <View style={styles.flexDirectionRow}>
-        <Ionicons name="ios-camera" size={hp(3)} color="gray" />
-        <Text style={{ ...styles.actionSheetOptions, marginLeft: wp(1.5) }}>Camera</Text>
+      <Ionicons name="ios-camera" size={hp(3)} color="gray" />
+      <Text style={{ ...styles.actionSheetOptions, marginLeft: wp(1.5) }}>Camera</Text>
     </View>
-    , 
+    ,
     <View style={styles.flexDirectionRow}>
-        <MaterialIcons name="perm-media" size={hp(3)} color="gray" />
-        <Text style={{ ...styles.actionSheetOptions, marginLeft: wp(1.8) }}>Gallery</Text>
-    </View>, 
+      <MaterialIcons name="perm-media" size={hp(3)} color="gray" />
+      <Text style={{ ...styles.actionSheetOptions, marginLeft: wp(1.8) }}>Gallery</Text>
+    </View>,
     'Cancel'
   ];
 
   const showActionSheet = () => {
-      actionSheet.current.show();
+    actionSheet.current.show();
   };
 
   const getData = async () => {
@@ -137,7 +137,7 @@ export default function AddEventScreen({ navigation }) {
         aspect: [4, 3],
         quality: 1
       });
-  
+
       if (!result.cancelled) {
         setPhotoURL(result.uri);
       }
@@ -160,7 +160,7 @@ export default function AddEventScreen({ navigation }) {
         aspect: [4, 3],
         quality: 1
       });
-  
+
       if (!result.cancelled) {
         setPhotoURL(result.uri);
       }
@@ -171,7 +171,7 @@ export default function AddEventScreen({ navigation }) {
 
   const onsubmit = async () => {
     if (event == null || park == null || description == '' || photoURL == null) {
-        Alert.alert('fields are empty. Fill the fields.');
+      Alert.alert('fields are empty. Fill the fields.');
     } else {
       setIsFetching(true);
       try {
@@ -192,7 +192,7 @@ export default function AddEventScreen({ navigation }) {
           Alert.alert('Events added successfully');
 
           setIsFetching(false);
-          
+
         }
 
         navigation.goBack();
@@ -214,7 +214,7 @@ export default function AddEventScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar style="dark"  backgroundColor={height > 850 ? '#D7D7D7' : '#FFFFFF'} />
+      <StatusBar style="dark" backgroundColor={height > 850 ? '#D7D7D7' : '#FFFFFF'} />
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
         <View style={styles.container}>
           <View style={{ marginTop: hp(6), flexDirection: 'row' }}>
@@ -225,16 +225,16 @@ export default function AddEventScreen({ navigation }) {
               Nýr viðburður
             </Text>
           </View>
-          { photoURL ?
+          {photoURL ?
             <View activeOpacity={0.5} style={{ width: wp(100), height: hp(25), backgroundColor: '#f2f2f2', marginTop: hp(5) }}>
-              <Image 
+              <Image
                 source={{
                   uri: photoURL
                 }}
                 style={{ flex: 1, width: null, height: null }}
               />
             </View>
-          :
+            :
             <View activeOpacity={0.5} style={{ width: wp(100), height: hp(25), backgroundColor: '#f2f2f2', justifyContent: 'center', alignItems: 'center', marginTop: hp(5) }}>
               <Entypo name="camera" size={hp(11)} color="#DBDDD8" />
               <Text style={{ fontSize: hp(2.7) }}>
@@ -285,7 +285,7 @@ export default function AddEventScreen({ navigation }) {
                 );
               }}
             />
-          </View> 
+          </View>
           <View style={{ width: wp(85), alignSelf: 'center', marginTop: hp(3) }}>
             <Text style={{ fontSize: hp(2.7) }}>
               Staðsetning
@@ -355,7 +355,7 @@ export default function AddEventScreen({ navigation }) {
             <Text style={{ fontSize: hp(2.7) }}>
               Nánari lýsing
             </Text>
-            <TextInput 
+            <TextInput
               autoCorrect={false}
               multiline={true}
               value={description}
@@ -378,56 +378,56 @@ export default function AddEventScreen({ navigation }) {
         </View>
       </ScrollView>
       <ActionSheet
-          ref={actionSheet}
-          title={<Text style={styles.actionSheetTitle}>Add Photo</Text>}
-          options={optionArray}
-          cancelButtonIndex={2}
-          destructiveButtonIndex={2}
-          onPress={(index) => {
+        ref={actionSheet}
+        title={<Text style={styles.actionSheetTitle}>Add Photo</Text>}
+        options={optionArray}
+        cancelButtonIndex={2}
+        destructiveButtonIndex={2}
+        onPress={(index) => {
           if (index == 0) {
             pickImageCamera()
           } else if (index == 1) {
             pickImageGallery()
-          } else {}
-          }}
-          styles={{ 
-            titleBox: { height: 70 }, 
-            buttonBox: { height: 55 }  
-          }}
-        />
-        {show && (
-          Platform.OS === 'android' ? 
-             <DateTimePicker
-               testID="dateTimePicker"
-               value={date}
-               mode={mode}
-               is24Hour={true}
-               display='default'
-               onChange={onChange}
-             />
+          } else { }
+        }}
+        styles={{
+          titleBox: { height: 70 },
+          buttonBox: { height: 55 }
+        }}
+      />
+      {show && (
+        Platform.OS === 'android' ?
+          <DateTimePicker
+            testID="dateTimePicker"
+            value={date}
+            mode={mode}
+            is24Hour={true}
+            display='default'
+            onChange={onChange}
+          />
           :
-            <Modal isVisible={Platform.OS == 'android' ? false : show} backdropColor="transparent" onBackdropPress={() => setShow(false)}>
-              <View style={styles.DateTimePickerView}>
-                <DateTimePicker
-                  testID="dateTimePicker"
-                  value={date}
-                  mode={mode}
-                  is24Hour={true}
-                  display='spinner'
-                  onChange={onChange}
-                />
-              </View>
-            </Modal>
-        )}
-        <Modal isVisible={isFetching}>
-          { Platform.OS === 'android' ?
-              <StatusBar backgroundColor='rgba(0,0,0,0.5)' />
-            : null
-          }
-          <View style={styles.indicator}>
-            <ActivityIndicator size='large' color='white' />
-          </View>
-        </Modal> 
+          <Modal isVisible={Platform.OS == 'android' ? false : show} backdropColor="transparent" onBackdropPress={() => setShow(false)}>
+            <View style={styles.DateTimePickerView}>
+              <DateTimePicker
+                testID="dateTimePicker"
+                value={date}
+                mode={mode}
+                is24Hour={true}
+                display='spinner'
+                onChange={onChange}
+              />
+            </View>
+          </Modal>
+      )}
+      <Modal isVisible={isFetching}>
+        {Platform.OS === 'android' ?
+          <StatusBar backgroundColor='rgba(0,0,0,0.5)' />
+          : null
+        }
+        <View style={styles.indicator}>
+          <ActivityIndicator size='large' color='white' />
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -437,23 +437,23 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white'
   },
-  actionSheetTitle: { 
-    fontSize: hp(2.6), 
-    fontWeight: 'bold', 
+  actionSheetTitle: {
+    fontSize: hp(2.6),
+    fontWeight: 'bold',
     color: '#0B666B',
   },
-  actionSheetOptions: { 
-    fontSize: hp(2.4), 
-    fontWeight: 'bold', 
+  actionSheetOptions: {
+    fontSize: hp(2.4),
+    fontWeight: 'bold',
     color: 'gray'
   },
-  flexDirectionRow: { 
+  flexDirectionRow: {
     flexDirection: 'row'
   },
-  DateTimePickerView: { 
-    backgroundColor: 'white', 
-    borderWidth: 1, 
-    borderColor: 'green' 
+  DateTimePickerView: {
+    backgroundColor: 'white',
+    borderWidth: 1,
+    borderColor: 'green'
   },
   dateText: {
     textAlign: 'center',

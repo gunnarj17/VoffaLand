@@ -67,13 +67,13 @@ const Info = () => {
       <Animatable.View
         duration={400}
         style={[styles.content, isActive ? styles.active : styles.inactive]}
-        // transition="backgroundColor"
+      // transition="backgroundColor"
       >
         <Animatable.Text
           style={[isActive ? styles.headerActive : styles.headerInactive]}
-          
-          // animation={isActive ? "bounceIn" : undefined}
-          // style={{ textAlign: "left", color: "white" }}
+
+        // animation={isActive ? "bounceIn" : undefined}
+        // style={{ textAlign: "left", color: "white" }}
         >
           {section.title}
         </Animatable.Text>
@@ -88,7 +88,7 @@ const Info = () => {
         duration={400}
         style={[styles.content, isActive ? styles.active : styles.inactive]}
         transition="backgroundColor"
-        // transition="opacity"
+      // transition="opacity"
       >
         <Animatable.Text
           // animation={isActive ? "bounceIn" : undefined}
@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: 20,
-    
+
   },
   active: {
     backgroundColor: "#034B42",
@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "bold",
     color: "white",
-    
+
   },
   headerInactive: {
     fontSize: 14,

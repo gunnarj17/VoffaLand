@@ -8,15 +8,15 @@ import Modal from 'react-native-modal';
 
 const { height } = Dimensions.get('window');
 
-const PetModal = ({ 
-    isModalVisible, 
-    toggleModal, 
+const PetModal = ({
+    isModalVisible,
+    toggleModal,
     Id,
-    Name, 
-    Breed, 
-    About, 
-    Sex, 
-    Birthday, 
+    Name,
+    Breed,
+    About,
+    Sex,
+    Birthday,
     Photo,
     lines,
     setLines,
@@ -24,78 +24,78 @@ const PetModal = ({
     deleteDog
 }) => {
 
-    function ageCalculator(dateString) {   
+    function ageCalculator(dateString) {
         if (dateString == undefined) {
             return;
         }
 
         var dob = new Date(dateString);
 
-        var dobYear = dob.getYear();  
-        var dobMonth = dob.getMonth();  
-        var dobDate = dob.getDate();  
-            
-        var now = new Date();  
+        var dobYear = dob.getYear();
+        var dobMonth = dob.getMonth();
+        var dobDate = dob.getDate();
 
-        var currentYear = now.getYear();  
-        var currentMonth = now.getMonth(); 
-        var currentDate = now.getDate();  
-          
-        var age = {};  
-        var ageString = "";  
-        
-        var yearAge = currentYear - dobYear;  
-          
-        if (currentMonth >= dobMonth)  
-          var monthAge = currentMonth - dobMonth;  
-        else {  
-          yearAge--;  
-          var monthAge = 12 + currentMonth - dobMonth;  
-        }  
-      
-        if (currentDate >= dobDate)  
-          var dateAge = currentDate - dobDate;  
-        else {  
-          monthAge--;  
-          var dateAge = 31 + currentDate - dobDate;  
-      
-          if (monthAge < 0) {  
-            monthAge = 11;  
-            yearAge--;  
-          }  
-        } 
+        var now = new Date();
 
-        age = {  
-            years: yearAge,  
-            months: monthAge,  
-            days: dateAge  
-        };  
-            
-        if ( (age.years > 1) && (age.months > 0) && (age.days > 0) )  
-           ageString = age.years + " ára, " + age.months + " mánaða og " + age.days + " daga";  
-           else if ( (age.years > 0 && age.years <= 1) && (age.months > 0) && (age.days > 0) )  
-           ageString = age.years + " árs, " + age.months + " mánaða og " + age.days + " daga";  
-        else if ( (age.years == 0) && (age.months == 0) && (age.days > 0) )  
-           ageString = "Bara " + age.days + " daga";  
-        else if ( (age.years > 0) && (age.months == 0) && (age.days == 0) )  
-           ageString = age.years +  " ár";  
-        else if ( (age.years > 0) && (age.months > 0) && (age.days == 0) )  
-           ageString = age.years + " ára og " + age.months + " mánaða";  
-        else if ( (age.years == 0) && (age.months > 0) && (age.days > 0) )  
-           ageString = age.months + " mánaða " + age.days + " daga";  
-        else if ( (age.years > 0) && (age.months == 0) && (age.days > 0) )  
-           ageString = age.years + " ára, og" + age.days + " daga";  
-        else if ( (age.years == 0) && (age.months > 0) && (age.days == 0) )  
-           ageString = age.months + " mánaða";  
-        else ageString = "Þetta er fyrsti dagurinn";   
+        var currentYear = now.getYear();
+        var currentMonth = now.getMonth();
+        var currentDate = now.getDate();
+
+        var age = {};
+        var ageString = "";
+
+        var yearAge = currentYear - dobYear;
+
+        if (currentMonth >= dobMonth)
+            var monthAge = currentMonth - dobMonth;
+        else {
+            yearAge--;
+            var monthAge = 12 + currentMonth - dobMonth;
+        }
+
+        if (currentDate >= dobDate)
+            var dateAge = currentDate - dobDate;
+        else {
+            monthAge--;
+            var dateAge = 31 + currentDate - dobDate;
+
+            if (monthAge < 0) {
+                monthAge = 11;
+                yearAge--;
+            }
+        }
+
+        age = {
+            years: yearAge,
+            months: monthAge,
+            days: dateAge
+        };
+
+        if ((age.years > 1) && (age.months > 0) && (age.days > 0))
+            ageString = age.years + " ára, " + age.months + " mánaða og " + age.days + " daga";
+        else if ((age.years > 0 && age.years <= 1) && (age.months > 0) && (age.days > 0))
+            ageString = age.years + " árs, " + age.months + " mánaða og " + age.days + " daga";
+        else if ((age.years == 0) && (age.months == 0) && (age.days > 0))
+            ageString = "Bara " + age.days + " daga";
+        else if ((age.years > 0) && (age.months == 0) && (age.days == 0))
+            ageString = age.years + " ár";
+        else if ((age.years > 0) && (age.months > 0) && (age.days == 0))
+            ageString = age.years + " ára og " + age.months + " mánaða";
+        else if ((age.years == 0) && (age.months > 0) && (age.days > 0))
+            ageString = age.months + " mánaða " + age.days + " daga";
+        else if ((age.years > 0) && (age.months == 0) && (age.days > 0))
+            ageString = age.years + " ára, og" + age.days + " daga";
+        else if ((age.years == 0) && (age.months > 0) && (age.days == 0))
+            ageString = age.months + " mánaða";
+        else ageString = "Þetta er fyrsti dagurinn";
 
         return ageString;
 
-    }  
+    }
 
     return (
-        <Modal 
-            isVisible={isModalVisible} 
+        <Modal
+            isVisible={isModalVisible}
             animationType="slide"
             coverScreen={false}
             deviceHeight={height}
@@ -103,7 +103,7 @@ const PetModal = ({
         >
             {  Platform.OS === 'android' ?
                 <StatusBar backgroundColor='rgba(0,0,0,0.5)' />
-            : null
+                : null
             }
             <View style={styles.container}>
                 <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
@@ -122,16 +122,16 @@ const PetModal = ({
                         {Name}
                     </Text>
                     <View style={styles.buttonContainer}>
-                        <TouchableOpacity 
+                        <TouchableOpacity
                             onPress={() => navigation.navigate('addDogs', {
-                                dogId: Id, 
-                                dogName: Name, 
-                                dogBreed: Breed, 
-                                dogDescription: About, 
-                                dogSex: Sex, 
-                                dogBirthday: Birthday, 
+                                dogId: Id,
+                                dogName: Name,
+                                dogBreed: Breed,
+                                dogDescription: About,
+                                dogSex: Sex,
+                                dogBirthday: Birthday,
                                 dogPhoto: Photo
-                            })} 
+                            })}
                             style={styles.editButtonContainer}
                         >
                             <AntDesign name="edit" size={hp(2.5)} color="white" />
@@ -146,7 +146,7 @@ const PetModal = ({
                             Tegund:
                         </Text>
                         <Text style={styles.descriptionText}>
-                        {Breed}
+                            {Breed}
                         </Text>
                     </View>
                     <View style={styles.detailContainer}>
@@ -154,7 +154,7 @@ const PetModal = ({
                             Kyn:
                         </Text>
                         <Text style={styles.descriptionText}>
-                        {Sex}
+                            {Sex}
                         </Text>
                     </View>
                     <View style={styles.detailContainer}>
@@ -162,7 +162,7 @@ const PetModal = ({
                             Aldur:
                         </Text>
                         <Text style={styles.descriptionText}>
-                        {ageCalculator(Birthday)}
+                            {ageCalculator(Birthday)}
                         </Text>
                     </View>
                     <View style={styles.detailContainer}>
@@ -174,7 +174,7 @@ const PetModal = ({
                         </Text>
                         <TouchableOpacity onPress={() => setLines(!lines)} style={styles.seeContainer}>
                             <Text style={styles.seemoreText}>
-                                { lines ? 'See more' : 'Hide' }
+                                {lines ? 'See more' : 'Hide'}
                             </Text>
                         </TouchableOpacity>
                     </View>
@@ -185,24 +185,24 @@ const PetModal = ({
 };
 
 const styles = StyleSheet.create({
-    container: { 
+    container: {
         height: hp(75),
         backgroundColor: '#FCFCFC',
         borderRadius: 20,
         padding: wp(1.5),
         shadowColor: '#000',
         shadowOffset: {
-          width: 0,
-          height: 2,
+            width: 0,
+            height: 2,
         },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5,
     },
-    closeIcon: { 
-        alignSelf: 'flex-end', 
-        marginRight: wp(4), 
-        marginTop: hp(2) 
+    closeIcon: {
+        alignSelf: 'flex-end',
+        marginRight: wp(4),
+        marginTop: hp(2)
     },
     img: {
         marginTop: hp(1),
@@ -211,56 +211,56 @@ const styles = StyleSheet.create({
         height: wp(40),
         borderWidth: .8
     },
-    dogNameText: { 
-        marginTop: hp(2), 
-        textAlign: 'center', 
-        fontWeight: '300', 
-        color: '#03738C', 
-        fontSize: hp(4), 
+    dogNameText: {
+        marginTop: hp(2),
+        textAlign: 'center',
+        fontWeight: '300',
+        color: '#03738C',
+        fontSize: hp(4),
     },
 
-    fontSizes: { 
+    fontSizes: {
         fontSize: hp(2.4),
         fontWeight: '500',
         color: '#03738C'
     },
 
-    detailContainer: { 
+    detailContainer: {
         marginLeft: wp(3),
-        marginTop: hp(2) 
+        marginTop: hp(2)
     },
-    descriptionText: { 
+    descriptionText: {
         fontSize: hp(2.3),
-        marginTop: hp(0.5), 
+        marginTop: hp(0.5),
         paddingRight: wp(2)
     },
-    seeContainer: { 
-        alignSelf: 'center', 
+    seeContainer: {
+        alignSelf: 'center',
         marginTop: hp(1)
     },
-    seemoreText: { 
-        textDecorationLine: 'underline' 
+    seemoreText: {
+        textDecorationLine: 'underline'
     },
-    buttonViewContainer: { 
-        flexDirection: 'row', 
-        justifyContent: 'space-evenly', 
+    buttonViewContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-evenly',
         marginTop: hp(5),
         marginBottom: hp(4)
     },
-    editButtonContainer: { 
-        flexDirection: 'row', 
-        backgroundColor: '#81A5A1', 
-        borderRadius: 50, 
-        paddingHorizontal: 15, 
+    editButtonContainer: {
+        flexDirection: 'row',
+        backgroundColor: '#81A5A1',
+        borderRadius: 50,
+        paddingHorizontal: 15,
         alignItems: 'center',
         marginRight: wp(2),
         padding: wp(3.5)
     },
-    deleteButtonContainer: { 
-        flexDirection: 'row', 
-        paddingHorizontal: 15, 
-        backgroundColor: '#F56A6D', 
-        borderRadius: 50, 
+    deleteButtonContainer: {
+        flexDirection: 'row',
+        paddingHorizontal: 15,
+        backgroundColor: '#F56A6D',
+        borderRadius: 50,
         alignItems: 'center',
         marginLeft: wp(2),
         padding: wp(3.5)
@@ -270,7 +270,7 @@ const styles = StyleSheet.create({
         padding: wp(2),
         flexDirection: 'row'
     }
-   
+
 });
 
 export default PetModal

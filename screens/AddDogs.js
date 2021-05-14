@@ -20,7 +20,7 @@ const AddDogs = ({ navigation, route }) => {
     let actionSheet = useRef();
 
     const { dogId, dogName, dogBreed, dogDescription, dogSex, dogBirthday, dogPhoto } = route.params;
-    
+
     const [name, setName] = useState(dogName === undefined ? '' : dogName);
     const [breed, setBreed] = useState(dogBreed === undefined ? '' : dogBreed);
     const [description, setDescription] = useState(dogDescription === undefined ? '' : dogDescription);
@@ -37,10 +37,10 @@ const AddDogs = ({ navigation, route }) => {
         const currentDate = selectedDate || date;
         if (Platform.OS === 'android') {
             setShow(false);
-        } 
+        }
         setDate(currentDate);
     };
-    
+
     const showMode = (currentMode) => {
         setShow(true);
         setMode(currentMode);
@@ -55,11 +55,11 @@ const AddDogs = ({ navigation, route }) => {
             <Ionicons name="ios-camera" size={hp(3)} color="gray" />
             <Text style={{ ...styles.actionSheetOptions, marginLeft: wp(1.5) }}>Myndavél</Text>
         </View>
-        , 
+        ,
         <View style={styles.flexDirectionRow}>
             <MaterialIcons name="perm-media" size={hp(3)} color="gray" />
             <Text style={{ ...styles.actionSheetOptions, marginLeft: wp(1.8) }}>Albúm</Text>
-        </View>, 
+        </View>,
         'Cancel'
     ];
 
@@ -103,7 +103,7 @@ const AddDogs = ({ navigation, route }) => {
                 aspect: [4, 3],
                 quality: 1
             });
-        
+
             if (!result.cancelled) {
                 setPhotoURL(result.uri);
             }
@@ -126,7 +126,7 @@ const AddDogs = ({ navigation, route }) => {
                 aspect: [4, 3],
                 quality: 1
             });
-        
+
             if (!result.cancelled) {
                 setPhotoURL(result.uri);
             }
@@ -137,7 +137,7 @@ const AddDogs = ({ navigation, route }) => {
 
     const submit = async () => {
         if (name == '' || breed == '' || description == '' || photoURL == null) {
-            Alert.alert('Some fields are still empty. Fill the fields.');
+            Alert.alert('Þú gleymdir að fylla út einhvern reit. Kláraðu að fylla inn svo þú getir haldið áfram.');
         } else {
             setIsFetching(true);
             try {
@@ -148,13 +148,13 @@ const AddDogs = ({ navigation, route }) => {
                     var metadata = {
                         contentType: 'image/jpeg',
                     };
-        
+
                     const blob = await new Promise((resolve, reject) => {
                         const xhr = new XMLHttpRequest();
-                        xhr.onload = function() {
+                        xhr.onload = function () {
                             resolve(xhr.response);
                         };
-                        xhr.onerror = function(e) {
+                        xhr.onerror = function (e) {
                             reject(new TypeError('Network request failed'));
                         };
                         xhr.responseType = 'blob';
@@ -165,9 +165,9 @@ const AddDogs = ({ navigation, route }) => {
                     const filename = photoURL.substring(photoURL.lastIndexOf('/') + 1);
                     const res = firebase.storage().ref(filename);
                     await res.put(blob, metadata);
-                    
+
                     blob.close();
-        
+
                     const imgUrl = await firebase.storage().ref(filename).getDownloadURL();
 
                     await firebase.firestore().collection('Dogs').add({
@@ -200,7 +200,7 @@ const AddDogs = ({ navigation, route }) => {
 
     const update = async () => {
         if (name == '' || breed == '' || description == '' || photoURL == null) {
-            Alert.alert('fields are empty. Fill the fields.');
+            Alert.alert('Það er allt tómt. kláraðu að fylla inn í alla reiti.');
         } else {
             setIsFetching(true);
             try {
@@ -226,13 +226,13 @@ const AddDogs = ({ navigation, route }) => {
                         var metadata = {
                             contentType: 'image/jpeg',
                         };
-            
+
                         const blob = await new Promise((resolve, reject) => {
                             const xhr = new XMLHttpRequest();
-                            xhr.onload = function() {
+                            xhr.onload = function () {
                                 resolve(xhr.response);
                             };
-                            xhr.onerror = function(e) {
+                            xhr.onerror = function (e) {
                                 reject(new TypeError('Network request failed'));
                             };
                             xhr.responseType = 'blob';
@@ -243,9 +243,9 @@ const AddDogs = ({ navigation, route }) => {
                         const filename = photoURL.substring(photoURL.lastIndexOf('/') + 1);
                         const res = firebase.storage().ref(filename);
                         await res.put(blob, metadata);
-                        
+
                         blob.close();
-            
+
                         const imgUrl = await firebase.storage().ref(filename).getDownloadURL();
 
                         await firebase.firestore().collection('Dogs').doc(dogId).update({
@@ -261,7 +261,7 @@ const AddDogs = ({ navigation, route }) => {
                     }
                 }
 
-                Alert.alert('Dogs updated successfully');
+                Alert.alert('Falleg mynd!'); // :D
 
                 setName('');
                 setDescription('');
@@ -279,116 +279,116 @@ const AddDogs = ({ navigation, route }) => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <StatusBar style="dark"  backgroundColor={height > 850 ? '#D7D7D7' : '#FFFFFF'} />
-               
-                   
-        <KeyboardAwareScrollView>
-            <View style={styles.container}> 
-                
-                <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backIcon}>
-                    <MaterialCommunityIcons name='keyboard-backspace' size={hp(4)} color='#445975' />
-                </TouchableOpacity>
-                <Text style={styles.headerTitle}>
-                    { dogId != undefined ? 'Uppfæra Voffa' : 'Nýr Voffi!' }
-                </Text>
-                <Avatar
-                    rounded
-                    source={{
-                        uri: photoURL ? photoURL : 'http://www.gravatar.com/avatar/4e0a22e6cc6e4fe4c4b5e8f4bee57a6a?s=200&r=pg&d=mm'
-                    }}
-                    onPress={showActionSheet}
-                    size='xlarge'
-                    containerStyle={styles.img}
-                />
-                <Input
-                    placeholder='Hvað heitir hundurinn?'
-                    autoCorrect={false}
-                    inputStyle={styles.inputStyle}
-                    inputContainerStyle={{ ...styles.inputContainerStyle, marginTop: hp(6) }}
-                    value={name}
-                    onChangeText={(e) => setName(e)}
-                />
-                <Input
-                    placeholder='Hvaða tegund er hann?'
-                    autoCorrect={false}
-                    inputStyle={styles.inputStyle}
-                    inputContainerStyle={{ ...styles.inputContainerStyle, marginTop: hp(1) }}
-                    value={breed}
-                    onChangeText={(e) => setBreed(e)}
-                />
-                <TextInput
-                    placeholder='Hvernig myndir þú lýsa hundinum þínum?'
-                    autoCorrect={false}
-                    multiline={true}
-                    maxLength={120}
-                    style={styles.descriptionInput}
-                    value={description}
-                    onBlur={Keyboard.dismiss}
-                    onChangeText={(e) => setDescription(e)}
-                />
-                <View style={{ ...styles.inputContainerStyle, marginBottom: hp(4), marginTop: hp(3) }}>
-                    <Text style={styles.mixText}>
-                        Fæðingardagur
-                    </Text>
-                    <TouchableOpacity 
-                        onPress={showDatepicker} 
-                        style={styles.dateContainer}
-                    >
-                        <Text style={styles.dateText}>
-                            {date.toDateString()}
-                        </Text>
-                        <Octicons name="calendar" size={hp(3.4)} color="black" style={{ alignSelf: 'center' }} />
+            <StatusBar style="dark" backgroundColor={height > 850 ? '#D7D7D7' : '#FFFFFF'} />
+
+
+            <KeyboardAwareScrollView>
+                <View style={styles.container}>
+
+                    <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backIcon}>
+                        <MaterialCommunityIcons name='keyboard-backspace' size={hp(4)} color='#445975' />
                     </TouchableOpacity>
-                </View>
-                <View style={{ ...styles.inputContainerStyle, flexDirection: 'row', marginBottom: hp(4), marginTop: hp(1) }}>
-                    <Text style={styles.sexText}>
-                        Kyn
+                    <Text style={styles.headerTitle}>
+                        {dogId != undefined ? 'Uppfæra Voffa' : 'Nýr Voffi!'}
                     </Text>
-                    { Platform.OS === 'android' ?
-                        <RadioButton
-                            value="Rakki"
-                            status={ checked === 'Rakki' ? 'checked' : 'unchecked' }
-                            onPress={() => setChecked('Rakki')}
-                        />
-                    :
-                        <View style={styles.radioIos}>
+                    <Avatar
+                        rounded
+                        source={{
+                            uri: photoURL ? photoURL : 'http://www.gravatar.com/avatar/4e0a22e6cc6e4fe4c4b5e8f4bee57a6a?s=200&r=pg&d=mm'
+                        }}
+                        onPress={showActionSheet}
+                        size='xlarge'
+                        containerStyle={styles.img}
+                    />
+                    <Input
+                        placeholder='Hvað heitir hundurinn?'
+                        autoCorrect={false}
+                        inputStyle={styles.inputStyle}
+                        inputContainerStyle={{ ...styles.inputContainerStyle, marginTop: hp(6) }}
+                        value={name}
+                        onChangeText={(e) => setName(e)}
+                    />
+                    <Input
+                        placeholder='Hvaða tegund er hann?'
+                        autoCorrect={false}
+                        inputStyle={styles.inputStyle}
+                        inputContainerStyle={{ ...styles.inputContainerStyle, marginTop: hp(1) }}
+                        value={breed}
+                        onChangeText={(e) => setBreed(e)}
+                    />
+                    <TextInput
+                        placeholder='Hvernig myndir þú lýsa hundinum þínum?'
+                        autoCorrect={false}
+                        multiline={true}
+                        maxLength={120}
+                        style={styles.descriptionInput}
+                        value={description}
+                        onBlur={Keyboard.dismiss}
+                        onChangeText={(e) => setDescription(e)}
+                    />
+                    <View style={{ ...styles.inputContainerStyle, marginBottom: hp(4), marginTop: hp(3) }}>
+                        <Text style={styles.mixText}>
+                            Fæðingardagur
+                    </Text>
+                        <TouchableOpacity
+                            onPress={showDatepicker}
+                            style={styles.dateContainer}
+                        >
+                            <Text style={styles.dateText}>
+                                {date.toDateString()}
+                            </Text>
+                            <Octicons name="calendar" size={hp(3.4)} color="black" style={{ alignSelf: 'center' }} />
+                        </TouchableOpacity>
+                    </View>
+                    <View style={{ ...styles.inputContainerStyle, flexDirection: 'row', marginBottom: hp(4), marginTop: hp(1) }}>
+                        <Text style={styles.sexText}>
+                            Kyn
+                    </Text>
+                        {Platform.OS === 'android' ?
                             <RadioButton
                                 value="Rakki"
-                                status={ checked === 'Rakki' ? 'checked' : 'unchecked' }
+                                status={checked === 'Rakki' ? 'checked' : 'unchecked'}
                                 onPress={() => setChecked('Rakki')}
                             />
-                        </View>
-                    }
-                    <Text style={styles.mixText}>
-                        Rakki
+                            :
+                            <View style={styles.radioIos}>
+                                <RadioButton
+                                    value="Rakki"
+                                    status={checked === 'Rakki' ? 'checked' : 'unchecked'}
+                                    onPress={() => setChecked('Rakki')}
+                                />
+                            </View>
+                        }
+                        <Text style={styles.mixText}>
+                            Rakki
                     </Text>
-                    { Platform.OS === 'android' ?
-                        <RadioButton
-                            value="Tík"
-                            status={ checked === 'Tík' ? 'checked' : 'unchecked' }
-                            onPress={() => setChecked('Tík')}
-                        />
-                    :
-                        <View style={styles.radioIos}>
+                        {Platform.OS === 'android' ?
                             <RadioButton
                                 value="Tík"
-                                status={ checked === 'Tík' ? 'checked' : 'unchecked' }
+                                status={checked === 'Tík' ? 'checked' : 'unchecked'}
                                 onPress={() => setChecked('Tík')}
                             />
-                        </View>
-                    }
-                    <Text style={styles.mixText}>
-                        Tík
+                            :
+                            <View style={styles.radioIos}>
+                                <RadioButton
+                                    value="Tík"
+                                    status={checked === 'Tík' ? 'checked' : 'unchecked'}
+                                    onPress={() => setChecked('Tík')}
+                                />
+                            </View>
+                        }
+                        <Text style={styles.mixText}>
+                            Tík
                     </Text>
+                    </View>
+                    <TouchableOpacity onPress={dogId === undefined ? submit : update} activeOpacity={0.6} style={styles.submitButtonContainer}>
+                        <Text style={styles.submitButton}>
+                            Staðfesta
+                    </Text>
+                    </TouchableOpacity>
+
                 </View>
-                <TouchableOpacity onPress={dogId === undefined ? submit : update} activeOpacity={0.6} style={styles.submitButtonContainer}>
-                    <Text style={styles.submitButton}>
-                        Staðfesta
-                    </Text>
-                </TouchableOpacity>
-                
-            </View>
-        </KeyboardAwareScrollView>
+            </KeyboardAwareScrollView>
 
             <ActionSheet
                 ref={actionSheet}
@@ -397,19 +397,19 @@ const AddDogs = ({ navigation, route }) => {
                 cancelButtonIndex={2}
                 destructiveButtonIndex={2}
                 onPress={(index) => {
-                if (index == 0) {
-                    pickImageCamera()
-                } else if (index == 1) {
-                    pickImageGallery()
-                } else {}
+                    if (index == 0) {
+                        pickImageCamera()
+                    } else if (index == 1) {
+                        pickImageGallery()
+                    } else { }
                 }}
-                styles={{ 
-                    titleBox: { height: 70 }, 
-                    buttonBox: { height: 55 }  
+                styles={{
+                    titleBox: { height: 70 },
+                    buttonBox: { height: 55 }
                 }}
             />
             {show && (
-                Platform.OS === 'android' ? 
+                Platform.OS === 'android' ?
                     <DateTimePicker
                         testID="dateTimePicker"
                         value={date}
@@ -418,7 +418,7 @@ const AddDogs = ({ navigation, route }) => {
                         display='default'
                         onChange={onChange}
                     />
-                :
+                    :
                     <Modal isVisible={Platform.OS == 'android' ? false : show} backdropColor="transparent" onBackdropPress={() => setShow(false)}>
                         <View style={styles.DateTimePickerView}>
                             <DateTimePicker
@@ -433,16 +433,16 @@ const AddDogs = ({ navigation, route }) => {
                     </Modal>
             )}
             <Modal isVisible={isFetching}>
-                {   Platform.OS === 'android' ?
-                        <StatusBar backgroundColor='rgba(0,0,0,0.5)' />
+                {Platform.OS === 'android' ?
+                    <StatusBar backgroundColor='rgba(0,0,0,0.5)' />
                     : null
                 }
                 <View style={styles.indicator}>
                     <ActivityIndicator size='large' color='white' />
                 </View>
-            </Modal> 
-         
-         </SafeAreaView>
+            </Modal>
+
+        </SafeAreaView>
     );
 };
 
@@ -469,38 +469,38 @@ const styles = StyleSheet.create({
         height: wp(40),
         borderWidth: .8
     },
-    flexDirectionRow: { 
+    flexDirectionRow: {
         flexDirection: 'row'
     },
-    actionSheetTitle: { 
-        fontSize: hp(2.6), 
-        fontWeight: '500', 
+    actionSheetTitle: {
+        fontSize: hp(2.6),
+        fontWeight: '500',
         color: '#0B666B',
     },
-    actionSheetOptions: { 
-        fontSize: hp(2.4), 
+    actionSheetOptions: {
+        fontSize: hp(2.4),
         // fontWeight: 'bold', 
         color: 'gray'
     },
-    inputStyle: { 
-        fontSize: hp(2.3), 
-        color: '#353D40', 
+    inputStyle: {
+        fontSize: hp(2.3),
+        color: '#353D40',
     },
-    inputContainerStyle: { 
-        width: wp(75), 
-        marginTop: hp(1), 
-        alignSelf: 'center' 
+    inputContainerStyle: {
+        width: wp(75),
+        marginTop: hp(1),
+        alignSelf: 'center'
     },
-    descriptionInput: { 
-        width: wp(75), 
-        alignSelf: 'center', 
-        textAlignVertical: 'top', 
-        paddingLeft: 10, 
-        paddingTop: 8, 
-        marginTop: hp(1), 
-        height: hp(15), 
-        backgroundColor: 'white', 
-        borderRadius: 10, 
+    descriptionInput: {
+        width: wp(75),
+        alignSelf: 'center',
+        textAlignVertical: 'top',
+        paddingLeft: 10,
+        paddingTop: 8,
+        marginTop: hp(1),
+        height: hp(15),
+        backgroundColor: 'white',
+        borderRadius: 10,
         elevation: 5,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 1 },
@@ -509,13 +509,13 @@ const styles = StyleSheet.create({
         fontSize: hp(2.3),
         color: '#353D40'
     },
-    dateContainer: { 
-        flexDirection: 'row', 
+    dateContainer: {
+        flexDirection: 'row',
         borderRadius: 8,
         elevation: 5,
         backgroundColor: 'white',
-        width: wp(55), 
-        padding: 8, 
+        width: wp(55),
+        padding: 8,
         paddingHorizontal: 15,
         marginTop: hp(3),
         alignSelf: 'center',
@@ -524,55 +524,55 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.3,
         shadowRadius: 2
     },
-    dateText: { 
-        fontSize: height < 600 ? hp(2.4) : hp(2.2), 
-        width: wp(40), 
+    dateText: {
+        fontSize: height < 600 ? hp(2.4) : hp(2.2),
+        width: wp(40),
         alignSelf: 'center',
         color: 'gray'
     },
-    DateTimePickerView: { 
-        backgroundColor: 'white', 
-        borderWidth: 1, 
-        borderColor: 'green' 
+    DateTimePickerView: {
+        backgroundColor: 'white',
+        borderWidth: 1,
+        borderColor: 'green'
     },
-    sexText: { 
-        fontSize: hp(2.4), 
-        color: 'gray', 
-        marginTop: hp(1), 
-        marginRight: wp(15) 
+    sexText: {
+        fontSize: hp(2.4),
+        color: 'gray',
+        marginTop: hp(1),
+        marginRight: wp(15)
     },
-    mixText: { 
-        fontSize: hp(2.4), 
-        color: 'gray', 
-        marginTop: hp(1) 
+    mixText: {
+        fontSize: hp(2.4),
+        color: 'gray',
+        marginTop: hp(1)
     },
-    submitButtonContainer: { 
-        alignSelf: 'center', 
-        marginBottom: hp(6), 
-        marginTop: hp(2), 
+    submitButtonContainer: {
+        alignSelf: 'center',
+        marginBottom: hp(6),
+        marginTop: hp(2),
         elevation: 5,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 0.3,
         shadowRadius: 2,
-        borderRadius: 20, 
-        backgroundColor: 'white' 
+        borderRadius: 20,
+        backgroundColor: 'white'
     },
-    radioIos: { 
-        borderWidth: 1.3, 
-        width: 38, 
-        height: 38, 
-        marginTop: hp(.5), 
-        padding: 0, 
-        marginHorizontal: wp(2), 
-        alignItems: 'center', 
-        justifyContent: 'center' 
+    radioIos: {
+        borderWidth: 1.3,
+        width: 38,
+        height: 38,
+        marginTop: hp(.5),
+        padding: 0,
+        marginHorizontal: wp(2),
+        alignItems: 'center',
+        justifyContent: 'center'
     },
-    submitButton: { 
-        fontSize: hp(2.8), 
-        padding: 12, 
-        paddingHorizontal: 20, 
-        color: '#63AAB5' 
+    submitButton: {
+        fontSize: hp(2.8),
+        padding: 12,
+        paddingHorizontal: 20,
+        color: '#63AAB5'
     },
     indicator: {
         flex: 1,
@@ -584,7 +584,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         marginTop: 22,
-      },
+    },
 });
 
 export default AddDogs

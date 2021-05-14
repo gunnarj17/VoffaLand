@@ -47,7 +47,7 @@ export default function ViewEventScreen({ navigation, route }) {
 
       const snapshot = await firebase.firestore().collection('UserEvents').doc(id).get();
 
-      const { 
+      const {
         users
       } = snapshot.data();
 
@@ -68,7 +68,7 @@ export default function ViewEventScreen({ navigation, route }) {
   if (isFetching) {
     return (
       <View style={styles.indicator}>
-        <StatusBar style="dark"  backgroundColor={height > 850 ? '#80A5A0' : '#80A5A0'} />
+        <StatusBar style="dark" backgroundColor={height > 850 ? '#80A5A0' : '#80A5A0'} />
         <ActivityIndicator size='large' color='green' />
       </View>
     )
@@ -103,7 +103,7 @@ export default function ViewEventScreen({ navigation, route }) {
             About
           });
 
-          transformArray.sort((a,b) => b.id > a.id);
+          transformArray.sort((a, b) => b.id > a.id);
 
         });
 
@@ -120,7 +120,7 @@ export default function ViewEventScreen({ navigation, route }) {
 
         const res = await firebase.firestore().collection('UserEvents').doc(id).get();
 
-        const { 
+        const {
           users
         } = res.data();
 
@@ -157,7 +157,7 @@ export default function ViewEventScreen({ navigation, route }) {
 
         const res = await firebase.firestore().collection('UserEvents').doc(id).get();
 
-        const { 
+        const {
           users
         } = res.data();
 
@@ -181,74 +181,74 @@ export default function ViewEventScreen({ navigation, route }) {
     setUserItems({})
   };
 
-  function ageCalculator(dateString) {   
+  function ageCalculator(dateString) {
     if (dateString == undefined) {
-        return;
+      return;
     }
 
     var dob = new Date(dateString);
 
-    var dobYear = dob.getYear();  
-    var dobMonth = dob.getMonth();  
-    var dobDate = dob.getDate();  
-        
-    var now = new Date();  
+    var dobYear = dob.getYear();
+    var dobMonth = dob.getMonth();
+    var dobDate = dob.getDate();
 
-    var currentYear = now.getYear();  
-    var currentMonth = now.getMonth(); 
-    var currentDate = now.getDate();  
-      
-    var age = {};  
-    var ageString = "";  
-    
-    var yearAge = currentYear - dobYear;  
-      
-    if (currentMonth >= dobMonth)  
-      var monthAge = currentMonth - dobMonth;  
-    else {  
-      yearAge--;  
-      var monthAge = 12 + currentMonth - dobMonth;  
-    }  
-  
-    if (currentDate >= dobDate)  
-      var dateAge = currentDate - dobDate;  
-    else {  
-      monthAge--;  
-      var dateAge = 31 + currentDate - dobDate;  
-  
-      if (monthAge < 0) {  
-        monthAge = 11;  
-        yearAge--;  
-      }  
-    } 
+    var now = new Date();
 
-    age = {  
-        years: yearAge,  
-        months: monthAge,  
-        days: dateAge  
-    };  
-        
-    if ( (age.years > 1) && (age.months > 0) && (age.days > 0) )  
-       ageString = age.years + " ára, " + age.months + " mánaða, og " + age.days + " daga";  
-       else if ( (age.years > 0 && age.years <= 1) && (age.months > 0) && (age.days > 0) )  
-       ageString = age.years + " árs, " + age.months + " mánaða, og " + age.days + " daga";  
-    else if ( (age.years == 0) && (age.months == 0) && (age.days > 0) )  
-       ageString = "Bara " + age.days + " daga";  
-    else if ( (age.years > 0) && (age.months == 0) && (age.days == 0) )  
-       ageString = age.years +  " ár";  
-    else if ( (age.years > 0) && (age.months > 0) && (age.days == 0) )  
-       ageString = age.years + " ára og " + age.months + " mánaða";  
-    else if ( (age.years == 0) && (age.months > 0) && (age.days > 0) )  
-       ageString = age.months + " mánaða " + age.days + " daga";  
-    else if ( (age.years > 0) && (age.months == 0) && (age.days > 0) )  
-       ageString = age.years + " ára, og" + age.days + " daga";  
-    else if ( (age.years == 0) && (age.months > 0) && (age.days == 0) )  
-       ageString = age.months + " mánaða";  
-    else ageString = "Þetta er fyrsti dagurinn";   
+    var currentYear = now.getYear();
+    var currentMonth = now.getMonth();
+    var currentDate = now.getDate();
+
+    var age = {};
+    var ageString = "";
+
+    var yearAge = currentYear - dobYear;
+
+    if (currentMonth >= dobMonth)
+      var monthAge = currentMonth - dobMonth;
+    else {
+      yearAge--;
+      var monthAge = 12 + currentMonth - dobMonth;
+    }
+
+    if (currentDate >= dobDate)
+      var dateAge = currentDate - dobDate;
+    else {
+      monthAge--;
+      var dateAge = 31 + currentDate - dobDate;
+
+      if (monthAge < 0) {
+        monthAge = 11;
+        yearAge--;
+      }
+    }
+
+    age = {
+      years: yearAge,
+      months: monthAge,
+      days: dateAge
+    };
+
+    if ((age.years > 1) && (age.months > 0) && (age.days > 0))
+      ageString = age.years + " ára, " + age.months + " mánaða, og " + age.days + " daga";
+    else if ((age.years > 0 && age.years <= 1) && (age.months > 0) && (age.days > 0))
+      ageString = age.years + " árs, " + age.months + " mánaða, og " + age.days + " daga";
+    else if ((age.years == 0) && (age.months == 0) && (age.days > 0))
+      ageString = "Bara " + age.days + " daga";
+    else if ((age.years > 0) && (age.months == 0) && (age.days == 0))
+      ageString = age.years + " ár";
+    else if ((age.years > 0) && (age.months > 0) && (age.days == 0))
+      ageString = age.years + " ára og " + age.months + " mánaða";
+    else if ((age.years == 0) && (age.months > 0) && (age.days > 0))
+      ageString = age.months + " mánaða " + age.days + " daga";
+    else if ((age.years > 0) && (age.months == 0) && (age.days > 0))
+      ageString = age.years + " ára, og" + age.days + " daga";
+    else if ((age.years == 0) && (age.months > 0) && (age.days == 0))
+      ageString = age.months + " mánaða";
+    else ageString = "Þetta er fyrsti dagurinn";
 
     return ageString;
 
-  }  
+  }
 
 
   const getDogsData = async (userid) => {
@@ -268,16 +268,16 @@ export default function ViewEventScreen({ navigation, route }) {
 
         transformArray.push({
           id: res.id,
-          Name, 
-          Breed, 
-          About, 
-          Sex, 
-          User, 
-          Birthday, 
+          Name,
+          Breed,
+          About,
+          Sex,
+          User,
+          Birthday,
           Photo
         });
 
-        transformArray.sort((a,b) => b.id > a.id);
+        transformArray.sort((a, b) => b.id > a.id);
 
       });
 
@@ -301,13 +301,13 @@ export default function ViewEventScreen({ navigation, route }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar style="dark"  backgroundColor={height > 850 ? '#80A5A0' : '#80A5A0'} />
+      <StatusBar style="dark" backgroundColor={height > 850 ? '#80A5A0' : '#80A5A0'} />
       <FlatList
         keyExtractor={item => item.id}
         data={getUsers}
         style={styles.flatList}
         showsVerticalScrollIndicator={false}
-        ListHeaderComponent={() =>  {
+        ListHeaderComponent={() => {
           return (
             <View style={styles.container}>
               <View style={styles.header}>
@@ -319,12 +319,12 @@ export default function ViewEventScreen({ navigation, route }) {
                 <Image source={{ uri: photo }} style={styles.image} />
               </View>
               <View style={styles.textContainer}>
-                  <Text numberOfLines={1} style={styles.text1}>
-                    {event}
-                  </Text>
-                  <Text style={styles.text2}>
-                    {date.toDate().getDate()}.{date.toDate().getMonth() + 1}.{date.toDate().getFullYear().toString().substr(-2)} kl.{date.toDate().toLocaleTimeString().substring(0, 5)}
-                  </Text>
+                <Text numberOfLines={1} style={styles.text1}>
+                  {event}
+                </Text>
+                <Text style={styles.text2}>
+                  {date.toDate().getDate()}.{date.toDate().getMonth() + 1}.{date.toDate().getFullYear().toString().substr(-2)} kl.{date.toDate().toLocaleTimeString().substring(0, 5)}
+                </Text>
               </View>
               <Text style={styles.text3}>
                 {park}
@@ -338,9 +338,9 @@ export default function ViewEventScreen({ navigation, route }) {
                   {description}
                 </Text>
               </View>
-              <TouchableOpacity onPress={getUsers != undefined && getUsers.find(e => e.id === loggedUser.uid)  ? onChangeSubmit : onsubmit} activeOpacity={0.4} style={styles.buttonContainer}>
+              <TouchableOpacity onPress={getUsers != undefined && getUsers.find(e => e.id === loggedUser.uid) ? onChangeSubmit : onsubmit} activeOpacity={0.4} style={styles.buttonContainer}>
                 <Text style={styles.buttonText}>
-                 {getUsers != undefined && getUsers.find(e => e.id === loggedUser.uid)  ? 'ég er ekki að koma' : 'Ég mæti!' } 
+                  {getUsers != undefined && getUsers.find(e => e.id === loggedUser.uid) ? 'ég er ekki að koma' : 'Ég mæti!'}
                 </Text>
               </TouchableOpacity>
               <Text style={styles.text4}>
@@ -353,112 +353,112 @@ export default function ViewEventScreen({ navigation, route }) {
           return (
             <TouchableOpacity onPress={() => openModal(item)} activeOpacity={0.7} style={styles.userCardContainer}>
               <Avatar
-                  rounded
-                  source={{
-                    uri: item.userphoto
-                  }}
-                  size='large'
-                  containerStyle={styles.userimage}
+                rounded
+                source={{
+                  uri: item.userphoto
+                }}
+                size='large'
+                containerStyle={styles.userimage}
               />
               <View style={styles.userCardSubContainer}>
                 <Text style={styles.userText}>
                   {item.username}
                 </Text>
-                { item.dogs.map(item => {
+                {item.dogs.map(item => {
                   return (
                     <Text key={item.id} style={styles.userText}>
                       {item.Name}
                     </Text>
                   )
-                }) }
+                })}
               </View>
             </TouchableOpacity>
           )
         }}
       />
       <Modal isVisible={isJoining}>
-        { Platform.OS === 'android' ?
-            <StatusBar backgroundColor='rgba(0,0,0,0.5)' />
+        {Platform.OS === 'android' ?
+          <StatusBar backgroundColor='rgba(0,0,0,0.5)' />
           : null
         }
         <View style={styles.indicator}>
           <ActivityIndicator size='large' color='white' />
         </View>
-      </Modal> 
-      <Modal 
-        isVisible={isModalVisible} 
+      </Modal>
+      <Modal
+        isVisible={isModalVisible}
         hasBackdrop={false}
       >
-        {  Platform.OS === 'android' ?
-            <StatusBar backgroundColor='rgba(0,0,0,0.5)' />
-          : 
-            null
+        {Platform.OS === 'android' ?
+          <StatusBar backgroundColor='rgba(0,0,0,0.5)' />
+          :
+          null
         }
         <View style={styles.modalContainer}>
-            { isDogs ?
-                 <View style={styles.modalContainer}>
-                <ActivityIndicator size='large' color='white' style={{ marginTop: hp(2), alignSelf: 'center' }} />
-                </View>
-              :
-                <FlatList
-                  keyExtractor={item => item.id}
-                  data={dogs}
-                  style={styles.modalContainer}
-                  showsVerticalScrollIndicator={false}
-                  ListHeaderComponent={() =>  {
-                    return (
-                      <>
-                        <TouchableOpacity onPress={toggleModal} style={styles.closeIcon}>
-                            <AntDesign name="closecircleo" size={24} color="black" />
-                        </TouchableOpacity>
-                        <Avatar
-                            rounded
-                            source={{
-                                uri: userItems.userphoto
-                            }}
-                            size='xlarge'
-                            containerStyle={styles.modalImage}
-                        />
-                        <Text style={styles.modalUserName}>
-                            {userItems.username}
+          {isDogs ?
+            <View style={styles.modalContainer}>
+              <ActivityIndicator size='large' color='white' style={{ marginTop: hp(2), alignSelf: 'center' }} />
+            </View>
+            :
+            <FlatList
+              keyExtractor={item => item.id}
+              data={dogs}
+              style={styles.modalContainer}
+              showsVerticalScrollIndicator={false}
+              ListHeaderComponent={() => {
+                return (
+                  <>
+                    <TouchableOpacity onPress={toggleModal} style={styles.closeIcon}>
+                      <AntDesign name="closecircleo" size={24} color="black" />
+                    </TouchableOpacity>
+                    <Avatar
+                      rounded
+                      source={{
+                        uri: userItems.userphoto
+                      }}
+                      size='xlarge'
+                      containerStyle={styles.modalImage}
+                    />
+                    <Text style={styles.modalUserName}>
+                      {userItems.username}
+                    </Text>
+                  </>
+                )
+              }}
+              renderItem={({ item }) => {
+                return (
+                  <View activeOpacity={0.7} style={styles.dogModalCardContainer}>
+                    <Avatar
+                      rounded
+                      source={{
+                        uri: item.Photo
+                      }}
+                      size='large'
+                      containerStyle={styles.dogImage}
+                    />
+                    <View style={styles.dogModalCardSubContainer}>
+                      <Text style={{ ...styles.dogText, fontWeight: 'bold' }}>
+                        {item.Name}
+                      </Text>
+                      <Text style={styles.dogText}>
+                        {item.Breed}
+                      </Text>
+                      <Text style={styles.dogText}>
+                        {ageCalculator(item.Birthday)}
+                      </Text>
+                      <TouchableOpacity onPress={() => setLines(!lines)}>
+                        <Text numberOfLines={lines ? 2 : null} style={styles.dogText}>
+                          {item.About}
                         </Text>
-                      </>
-                    )
-                  }}
-                  renderItem={({ item }) => {
-                    return (
-                      <View activeOpacity={0.7} style={styles.dogModalCardContainer}>
-                        <Avatar
-                            rounded
-                            source={{
-                              uri:  item.Photo
-                            }}
-                            size='large'
-                            containerStyle={styles.dogImage}
-                        />
-                        <View style={styles.dogModalCardSubContainer}>
-                          <Text style={{...styles.dogText, fontWeight: 'bold'}}>
-                            {item.Name}
-                          </Text>
-                          <Text style={styles.dogText}>
-                            {item.Breed}
-                          </Text>
-                          <Text style={styles.dogText}>
-                            {ageCalculator(item.Birthday)}
-                          </Text>
-                          <TouchableOpacity onPress={() => setLines(!lines)}>
-                            <Text numberOfLines={lines ? 2 : null} style={styles.dogText}>
-                              {item.About}
-                            </Text>
-                          </TouchableOpacity>
-                        </View>
-                      </View>
-                    )
-                  }}
-              />
-            }
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                )
+              }}
+            />
+          }
         </View>
-      </Modal> 
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -468,99 +468,99 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white'
   },
-  header: { 
-    height: hp(8), 
-    backgroundColor: '#80A5A0', 
-    marginTop: hp(4.4) 
+  header: {
+    height: hp(8),
+    backgroundColor: '#80A5A0',
+    marginTop: hp(4.4)
   },
-  headerIconContainer: { 
-    marginTop: hp(1.4), 
-    marginLeft: wp(8) 
+  headerIconContainer: {
+    marginTop: hp(1.4),
+    marginLeft: wp(8)
   },
-  closeIcon: { 
-    alignSelf: 'flex-end', 
-    marginRight: wp(4), 
-    marginTop: hp(2) 
+  closeIcon: {
+    alignSelf: 'flex-end',
+    marginRight: wp(4),
+    marginTop: hp(2)
   },
-  imageContainer: { 
-    width: wp(100), 
-    height: hp(25) 
+  imageContainer: {
+    width: wp(100),
+    height: hp(25)
   },
-  image: { 
-    flex: 1, 
-    width: null, 
-    height: null 
+  image: {
+    flex: 1,
+    width: null,
+    height: null
   },
-  textContainer: { 
-    flexDirection: 'row', 
-    marginTop: hp(2.5) 
+  textContainer: {
+    flexDirection: 'row',
+    marginTop: hp(2.5)
   },
-  text1: { 
-    fontSize: hp(2.5), 
-    width: wp(52), 
-    fontWeight: 'bold', 
-    paddingLeft: wp(5) 
+  text1: {
+    fontSize: hp(2.5),
+    width: wp(52),
+    fontWeight: 'bold',
+    paddingLeft: wp(5)
   },
-  text2: { 
-    fontSize: hp(2.1), 
-    paddingTop: hp(.4) 
+  text2: {
+    fontSize: hp(2.1),
+    paddingTop: hp(.4)
   },
-  text3: { 
-    fontSize: hp(2.5), 
-    marginTop: hp(.5), 
-    paddingLeft: wp(5) 
+  text3: {
+    fontSize: hp(2.5),
+    marginTop: hp(.5),
+    paddingLeft: wp(5)
   },
-  bottomLine: { 
-    borderWidth: .6, 
-    marginTop: hp(3)  
+  bottomLine: {
+    borderWidth: .6,
+    marginTop: hp(3)
   },
-  aboutContainer: { 
-    marginTop: hp(3), 
-    marginLeft: wp(5) 
+  aboutContainer: {
+    marginTop: hp(3),
+    marginLeft: wp(5)
   },
-  aboutText1: { 
-    fontSize: hp(2.5), 
-    fontWeight: 'bold' 
+  aboutText1: {
+    fontSize: hp(2.5),
+    fontWeight: 'bold'
   },
-  aboutText2: { 
-    fontSize: hp(2.3), 
-    width: wp(90), 
-    marginTop: hp(1.5) 
+  aboutText2: {
+    fontSize: hp(2.3),
+    width: wp(90),
+    marginTop: hp(1.5)
   },
-  buttonContainer: { 
-    backgroundColor: '#81A5A0', 
-    alignSelf: 'center', 
-    marginTop: hp(4), 
-    borderRadius: 20  
+  buttonContainer: {
+    backgroundColor: '#81A5A0',
+    alignSelf: 'center',
+    marginTop: hp(4),
+    borderRadius: 20
   },
-  buttonText: { 
-    fontSize: hp(2.6), 
-    color: '#fff', 
-    paddingHorizontal: 15, 
-    padding: 10 
+  buttonText: {
+    fontSize: hp(2.6),
+    color: '#fff',
+    paddingHorizontal: 15,
+    padding: 10
   },
-  text4: { 
-    fontSize: hp(2.4), 
-    textAlign: 'center', 
-    marginTop: hp(2.4), 
-    marginBottom: hp(3) 
+  text4: {
+    fontSize: hp(2.4),
+    textAlign: 'center',
+    marginTop: hp(2.4),
+    marginBottom: hp(3)
   },
-  userCardContainer: { 
-    flexDirection: 'row', 
-    backgroundColor: '#80A5A0', 
-    width: wp(96), 
-    alignSelf: 'center', 
-    marginBottom: hp(3), 
-    borderRadius: 10 
+  userCardContainer: {
+    flexDirection: 'row',
+    backgroundColor: '#80A5A0',
+    width: wp(96),
+    alignSelf: 'center',
+    marginBottom: hp(3),
+    borderRadius: 10
   },
-  userCardSubContainer: { 
-    marginLeft: hp(3), 
-    marginTop: hp(2), 
-    marginBottom: hp(2) 
+  userCardSubContainer: {
+    marginLeft: hp(3),
+    marginTop: hp(2),
+    marginBottom: hp(2)
   },
-  userText: { 
-    fontSize: hp(2.4), 
-    color: 'white' 
+  userText: {
+    fontSize: hp(2.4),
+    color: 'white'
   },
   userimage: {
     marginLeft: hp(3),
@@ -581,24 +581,24 @@ const styles = StyleSheet.create({
     height: wp(28),
     borderWidth: .8
   },
-  modalUserName: { 
-    marginTop: hp(3), 
-    marginBottom: hp(4), 
-    textAlign: 'center', 
-    fontWeight: 'bold', 
-    color: 'black', 
+  modalUserName: {
+    marginTop: hp(3),
+    marginBottom: hp(4),
+    textAlign: 'center',
+    fontWeight: 'bold',
+    color: 'black',
     fontSize: hp(2.8)
   },
   dogModalCardContainer: {
-    flexDirection: 'row', 
-    width: wp(80), 
-    alignSelf: 'center', 
-    borderRadius: 10 
+    flexDirection: 'row',
+    width: wp(80),
+    alignSelf: 'center',
+    borderRadius: 10
   },
   dogModalCardSubContainer: {
-    marginLeft: hp(3), 
-    marginTop: hp(3), 
-    marginBottom: hp(2) 
+    marginLeft: hp(3),
+    marginTop: hp(3),
+    marginBottom: hp(2)
   },
   dogImage: {
     marginLeft: hp(3),
@@ -607,7 +607,7 @@ const styles = StyleSheet.create({
     borderWidth: .8
   },
   dogText: {
-    fontSize: hp(2.4), 
+    fontSize: hp(2.4),
     color: 'black'
   },
   indicator: {

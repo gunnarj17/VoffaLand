@@ -27,11 +27,11 @@ const ProfileHeader = ({ username, userphoto, navigation, logout }) => {
             <Ionicons name="ios-camera" size={hp(3)} color="gray" />
             <Text style={{ ...styles.actionSheetOptions, marginLeft: wp(1.5) }}>Myndvél</Text>
         </View>
-        , 
+        ,
         <View style={styles.flexDirectionRow}>
             <MaterialIcons name="perm-media" size={hp(3)} color="gray" />
             <Text style={{ ...styles.actionSheetOptions, marginLeft: wp(1.8) }}>Albúm</Text>
-        </View>, 
+        </View>,
         'Cancel'
     ];
 
@@ -75,7 +75,7 @@ const ProfileHeader = ({ username, userphoto, navigation, logout }) => {
                 aspect: [4, 3],
                 quality: 1
             });
-        
+
             if (!result.cancelled) {
                 setPhotoURL(result.uri);
                 await uploadUserImage(result.uri);
@@ -99,7 +99,7 @@ const ProfileHeader = ({ username, userphoto, navigation, logout }) => {
                 aspect: [4, 3],
                 quality: 1
             });
-        
+
             if (!result.cancelled) {
                 setPhotoURL(result.uri);
                 await uploadUserImage(result.uri);
@@ -121,10 +121,10 @@ const ProfileHeader = ({ username, userphoto, navigation, logout }) => {
 
             const blob = await new Promise((resolve, reject) => {
                 const xhr = new XMLHttpRequest();
-                xhr.onload = function() {
+                xhr.onload = function () {
                     resolve(xhr.response);
                 };
-                xhr.onerror = function(e) {
+                xhr.onerror = function (e) {
                     reject(new TypeError('Network request failed'));
                 };
                 xhr.responseType = 'blob';
@@ -139,7 +139,7 @@ const ProfileHeader = ({ username, userphoto, navigation, logout }) => {
             var progress = (uploadTask.bytesTransferred / uploadTask.totalBytes) * 100;
 
             setTranferred(progress);
-            
+
             blob.close();
 
             const imgUrl = await firebase.storage().ref(filename).getDownloadURL();
@@ -197,7 +197,7 @@ const ProfileHeader = ({ username, userphoto, navigation, logout }) => {
                     <AntDesign name='logout' size={hp(3)} color='red' />
                 </TouchableOpacity>
             </View>
-            
+
             <Avatar
                 rounded
                 source={{
@@ -222,31 +222,31 @@ const ProfileHeader = ({ username, userphoto, navigation, logout }) => {
                 onChangeText={(text) => setName(text)}
             />
 
-            { !nameDisabled && 
+            { !nameDisabled &&
                 <TouchableOpacity onPress={updateUserName} style={styles.saveButtonContainer}>
                     <Text style={styles.viewText}>
                         Vista
                     </Text>
                 </TouchableOpacity>
             }
-         
-            <TouchableOpacity 
+
+            <TouchableOpacity
                 onPress={() => navigation.navigate('addDogs', {
-                    dogId: undefined, 
-                    dogName: undefined, 
-                    dogBreed: undefined, 
-                    dogDescription: undefined, 
-                    dogSex: undefined, 
-                    dogBirthday: undefined, 
+                    dogId: undefined,
+                    dogName: undefined,
+                    dogBreed: undefined,
+                    dogDescription: undefined,
+                    dogSex: undefined,
+                    dogBirthday: undefined,
                     dogPhoto: undefined
-                })} style={{...styles.headingView, marginTop: hp(4), borderRadius: 20, backgroundColor: '#034B42' }}>
-                <Text style={{ ...styles.viewText,color: 'white' }}>
+                })} style={{ ...styles.headingView, marginTop: hp(4), borderRadius: 20, backgroundColor: '#034B42' }}>
+                <Text style={{ ...styles.viewText, color: 'white' }}>
                     Bæta við hundi
                 </Text>
             </TouchableOpacity>
 
             <View style={styles.headingView2}>
-                <Text style={{ ...styles.viewText,color: '#295E73', fontSize: hp(3), fontWeight: '300' }}>
+                <Text style={{ ...styles.viewText, color: '#295E73', fontSize: hp(3), fontWeight: '300' }}>
                     Hundarnir Mínir
                 </Text>
             </View>
@@ -258,20 +258,20 @@ const ProfileHeader = ({ username, userphoto, navigation, logout }) => {
                 cancelButtonIndex={2}
                 destructiveButtonIndex={2}
                 onPress={(index) => {
-                if (index == 0) {
-                    pickImageCamera()
-                } else if (index == 1) {
-                    pickImageGallery()
-                } else {}
+                    if (index == 0) {
+                        pickImageCamera()
+                    } else if (index == 1) {
+                        pickImageGallery()
+                    } else { }
                 }}
-                styles={{ 
-                    titleBox: { height: 70 }, 
-                    buttonBox: { height: 55 }  
+                styles={{
+                    titleBox: { height: 70 },
+                    buttonBox: { height: 55 }
                 }}
-                
+
             />
         </>
-        
+
     )
 };
 
@@ -294,7 +294,7 @@ const styles = StyleSheet.create({
         height: wp(40),
         borderWidth: .8,
     },
-    flexDirectionRow: { 
+    flexDirectionRow: {
         flexDirection: 'row'
     },
     progress: {
@@ -302,45 +302,45 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         marginTop: hp(3)
     },
-    actionSheetTitle: { 
-        fontSize: hp(2.6), 
-        fontWeight: '500', 
+    actionSheetTitle: {
+        fontSize: hp(2.6),
+        fontWeight: '500',
         color: '#0B666B',
     },
-    actionSheetOptions: { 
-        fontSize: hp(2.4), 
+    actionSheetOptions: {
+        fontSize: hp(2.4),
         color: 'gray'
     },
-    inputStyle: { 
-        fontSize: hp(2.8), 
-        color: '#353D40', 
+    inputStyle: {
+        fontSize: hp(2.8),
+        color: '#353D40',
     },
-    inputContainerStyle: { 
+    inputContainerStyle: {
         marginTop: hp(4),
-        width: wp(70), 
+        width: wp(70),
         height: hp(5.8),
-        alignSelf: 'center', 
+        alignSelf: 'center',
         paddingLeft: 3
     },
-    saveButtonContainer: { 
-        borderWidth: 1.1, 
-        width: wp(30), 
-        marginBottom: hp(2), 
-        borderRadius: 15, 
-        alignSelf: 'center' 
+    saveButtonContainer: {
+        borderWidth: 1.1,
+        width: wp(30),
+        marginBottom: hp(2),
+        borderRadius: 15,
+        alignSelf: 'center'
     },
-    viewText: { 
-        textAlign: 'center', 
-        fontSize: hp(2.4), 
-        padding: 8 
+    viewText: {
+        textAlign: 'center',
+        fontSize: hp(2.4),
+        padding: 8
     },
-    headingView: { 
-        borderRadius: 30,  
-        alignSelf: 'center', 
+    headingView: {
+        borderRadius: 30,
+        alignSelf: 'center',
         width: wp(60),
         padding: hp(0.5),
     },
-    headingView2: { 
+    headingView2: {
         marginTop: hp(5),
         alignSelf: 'flex-start',
     }

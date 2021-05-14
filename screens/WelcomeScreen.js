@@ -41,15 +41,9 @@ export default function WelcomeScreen({ navigation }) {
 const styles = StyleSheet.create({
   ParentContainer: {
     flex: 1,
-<<<<<<< HEAD
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "white",
-=======
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'white',
->>>>>>> 817c503081a607add6bdd27f683024e9854b0388
   },
   logo: {
     width: 250,
@@ -61,13 +55,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     width: 270,
     height: 200,
-<<<<<<< HEAD
-    backgroundColor: "white",
-    marginBottom: 30,
-=======
     backgroundColor: 'white',
     marginBottom: 30
->>>>>>> 817c503081a607add6bdd27f683024e9854b0388
   },
 
   Buttons: {
@@ -90,11 +79,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 10,
     height: 60,
-<<<<<<< HEAD
-    backgroundColor: "white",
-=======
     backgroundColor: 'white',
->>>>>>> 817c503081a607add6bdd27f683024e9854b0388
     borderRadius: 16,
     borderWidth: 2.5,
     borderColor: "#069380",

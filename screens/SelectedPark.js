@@ -1,52 +1,20 @@
-<<<<<<< HEAD
-import React,{useState,useEffect, useCallback} from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, Alert, Modal, TextInput, Keyboard, KeyboardAvoidingView, FlatList, ActivityIndicator, SafeAreaView} from "react-native";
-=======
 import React, { useState, useEffect, useCallback } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, Alert, Modal, TextInput, Keyboard, KeyboardAvoidingView, FlatList, ActivityIndicator, SafeAreaView } from "react-native";
->>>>>>> 817c503081a607add6bdd27f683024e9854b0388
+import { ScrollView, StyleSheet, Text, View, Image, TouchableOpacity, Alert, Modal, TextInput, Keyboard, KeyboardAvoidingView, FlatList, ActivityIndicator, SafeAreaView } from "react-native";
 import park_img from '../assets/place_holder.png';
 import star_outline from '../assets/star_outline.png';
 import star_filled from '../assets/star_filled.png';
 import { FontAwesome5 } from '@expo/vector-icons';
-<<<<<<< HEAD
-import { AntDesign } from '@expo/vector-icons'; 
-=======
 import { AntDesign } from '@expo/vector-icons';
 import { Chip } from 'react-native-paper';
->>>>>>> 817c503081a607add6bdd27f683024e9854b0388
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import * as firebase from 'firebase';
 import 'firebase/firestore';
 import 'firebase/auth';
 
 
-<<<<<<< HEAD
 // import Weather from '../components/GetWeather'
 import API_KEY from '../API/Weather'
-import { ScrollView } from 'react-native-gesture-handler';
-
-export default function SelectedPark( props ) {
-    const [comments, setComments] = useState([]); // set/add comments
-
-    const [loading, setLoading] = useState(true); 
-    const [allComments, getComments] = useState([]); // get comments
-
-    const [avgStars, getAvgStars] = useState(); // get avg stars
-    const [sumComments, getsumComments] = useState();
-
-    const [actionTriggered, setActionTriggered] = useState('');
-    const [modalVisible, setModalVisible] = useState(false);
-    const [defaultRating, setdefaultRating] = useState(2);
-    const [maxRating, setmaxRating] = useState([1,2,3,4,5]);
-    const [userComment, setuserComment] = useState(null);
-    // const [parkId, setparkId] = useState([''])
-    
-=======
-
-// import Weather from '../components/GetWeather'
-import API_KEY from '../API/Weather'
-import { ScrollView } from 'react-native-gesture-handler';
+// import { ScrollView } from 'react-native-gesture-handler';
 import { color } from 'react-native-elements/dist/helpers';
 
 export default function SelectedPark(props) {
@@ -65,24 +33,21 @@ export default function SelectedPark(props) {
     const [userComment, setuserComment] = useState(null);
     // const [parkId, setparkId] = useState([''])
 
->>>>>>> 817c503081a607add6bdd27f683024e9854b0388
     const [getUser, setGetUser] = useState({});
     const [error, setError] = useState();
     const [isFetching, setIsFetching] = useState(false);
 
-<<<<<<< HEAD
-=======
     const [environments, setEnvironments] = useState([]);
-    
+
     const fetchEnvironments = async () => {
-        const currentPark = props.route.params.ID;
-        const response = firebase.firestore().collection('Parks').doc(currentPark);
+        // const currentPark = props.route.params.ID;
+        const response = firebase.firestore().collection('Parks').where("Name", "==", props.route.params.Name);
         const data = await response.get();
         const userdata = data.data();
         setEnvironments(userdata);
-        // console.log(environments.isMol);
     }
     useEffect(() => {
+        console.log("propsss", props.route.params.Lat, props.route.params.Long);
         fetchEnvironments();
     }, [])
 
@@ -137,6 +102,18 @@ export default function SelectedPark(props) {
                 <Chip style={styles.Chip} key={uniqueId} textStyle={{ color: "white" }}>Vatn</Chip>
             )
         }
+        if (environments.Fence == true) {
+            uniqueId += 1;
+            showEnvo.push(
+                <Chip style={styles.Chip} key={uniqueId} textStyle={{ color: "white" }}>Gerði</Chip>
+            )
+        }
+        if (environments.Free == true) {
+            uniqueId += 1;
+            showEnvo.push(
+                <Chip style={styles.Chip} key={uniqueId} textStyle={{ color: "white" }}>Lausaganga</Chip>
+            )
+        }
 
         return (
             <View style={styles.umhverfiChips}>
@@ -145,7 +122,6 @@ export default function SelectedPark(props) {
         )
     }
 
->>>>>>> 817c503081a607add6bdd27f683024e9854b0388
     // Veðrið
     const [Latitude, setLatitude] = useState(props.route.params.Lat);
     const [Longitude, setLongitude] = useState(props.route.params.Long);
@@ -154,28 +130,6 @@ export default function SelectedPark(props) {
     // console.log(Latitude);
     // console.log(Longitude);
 
-<<<<<<< HEAD
-    const [info,setInfo] = useState ({
-        name:"Villa!",
-        temp:"Villa!",
-        icon:"Villa!",
-    })
-    useEffect(()=>{
-        getWeather()
-    },[])
-    const getWeather = (Latitude, Longitude) => {
-        // console.log(url)
-        fetch(url)
-        .then(data=>data.json())
-        .then(results=>{
-            // console.log(results)
-            setInfo({
-                temp:results.main.temp,
-                icon:results.weather[0].icon
-            })
-            // console.log(info.icon)
-        })
-=======
     const [info, setInfo] = useState({
         name: "Villa!",
         temp: "Villa!",
@@ -196,7 +150,6 @@ export default function SelectedPark(props) {
                 })
                 // console.log(info.icon)
             })
->>>>>>> 817c503081a607add6bdd27f683024e9854b0388
     }
     // ----- Endir á Veður kóðanum
 
@@ -204,37 +157,6 @@ export default function SelectedPark(props) {
     const getName = useCallback(async () => {
         setError(null);
         try {
-<<<<<<< HEAD
-    
-          const user = await firebase.auth().currentUser;
-        //   console.log(user.uid);
-    
-          if (user) {
-            const userSnapshot = await firebase
-              .firestore()
-              .collection("users")
-              .doc(user.uid)
-              .get();
-    
-            const userdata = userSnapshot.data();
-            // console.log(userdata.name);
-            setGetUser({
-              username: userdata.name,
-              userId: user.uid,
-            });
-          }
-        } catch (err) {
-          setError(true);
-        }
-      }, [setError]);
-      
-      useEffect(() => {
-        setIsFetching(true);
-        getName().then(() => {
-          setIsFetching(false);
-        });
-      }, [getName, setIsFetching]);
-=======
 
             const user = await firebase.auth().currentUser;
             //   console.log(user.uid);
@@ -264,7 +186,6 @@ export default function SelectedPark(props) {
             setIsFetching(false);
         });
     }, [getName, setIsFetching]);
->>>>>>> 817c503081a607add6bdd27f683024e9854b0388
 
     //   console.log(getUser.username);
     //   console.log(getUser);
@@ -277,33 +198,6 @@ export default function SelectedPark(props) {
     let autoId = ''
 
     const submitComment = async () => {
-<<<<<<< HEAD
-    for (let i = 0; i < 20; i++) {
-        autoId += CHARS.charAt(
-        Math.floor(Math.random() * CHARS.length)
-        )
-    }
-
-        firebase.
-        firestore()
-        .collection('comments')
-        .add({
-            key: autoId,
-            UserId: getUser.userId,
-            UserName: getUser.username,
-            Comment: userComment,
-            Rating: defaultRating,
-            ParkId: props.route.params.ID,
-            date: firebase.firestore.Timestamp.fromDate(new Date()),
-        })
-        .then(() => {
-            console.log("Það virkaði að setja inn comment");
-        })
-        .catch((error) => {
-            console.log("Eitthvað fór úrskeiðis við að gefa endurgjöf", error);
-        });
-      }
-=======
         for (let i = 0; i < 20; i++) {
             autoId += CHARS.charAt(
                 Math.floor(Math.random() * CHARS.length)
@@ -329,7 +223,6 @@ export default function SelectedPark(props) {
                 console.log("Eitthvað fór úrskeiðis við að gefa endurgjöf", error);
             });
     }
->>>>>>> 817c503081a607add6bdd27f683024e9854b0388
 
 
     // Þetta er stjörnugjafar gæjinn
@@ -357,103 +250,12 @@ export default function SelectedPark(props) {
         )
     }
 
-<<<<<<< HEAD
-    
-=======
 
->>>>>>> 817c503081a607add6bdd27f683024e9854b0388
 
     // ná í comments
     useEffect(() => {
         const currentPark = props.route.params.ID;
         const commenters = firebase.firestore()
-<<<<<<< HEAD
-          .collection('comments')
-          .onSnapshot(querySnapshot => {
-            const all = [];
-      
-            querySnapshot.forEach(documentSnapshot => {
-                all.push({
-                ...documentSnapshot.data(),
-                key: documentSnapshot.id,
-              });
-            });
-
-            const correctPark = [];
-            var countRating = 0; 
-            var avgRating = 0; 
-            for (let i = 0; i <= all.length - 1; i++) {
-                // console.log(all[i])
-                if (all[i].ParkId == currentPark) {
-                    countRating += 1;
-                    avgRating += all[i].Rating;
-                    correctPark.push(all[i])
-                }
-            }
-            avgRating = avgRating/countRating;
-            // console.log("Samtals ratings deilt með fjölda ratings: " + avgRating.toFixed());
-            getAvgStars(avgRating.toFixed());
-            getsumComments(countRating);
-            getComments(correctPark);
-            setLoading(false);
-          });
-          
-        // Unsubscribe from events when no longer in use
-        return () => commenters();
-      }, []);
-        if (loading) {
-            return <ActivityIndicator />;
-        }
-        
-        const RenderavgRating = () => {
-            var avgRating = avgStars;
-            var missingStars = 5 - avgStars;
-            var uniqueId = 0;
-            let stars = [];
-            let noStars = [];
-
-            for (let i = 1; i <= avgRating; i++) {
-                uniqueId += 1;
-                stars.push(
-                    <AntDesign key={uniqueId} name="star" size={26} style={styles.starIcon}/>
-                )
-            }
-
-            for (let i = 1; i <= missingStars; i++) {
-                uniqueId += 1;
-                noStars.push(
-                    <AntDesign key={uniqueId} name="staro" size={26} style={styles.starIcon}/>
-                )
-            }
-
-            return (
-                <View style={styles.topStar}>{stars}{noStars}<Text style={styles.modalText}>({sumComments})</Text></View>
-            );
-        }
-
-    return (
-        <SafeAreaView style={{flex: 1}}>
-        <View style={styles.parentContainer}>
-            {/* Hér er einkunnar módalinn */}
-            <Modal
-            animationType="slide"
-            transparent={true}
-            visible={modalVisible}
-            onRequestClose={() => {Alert.alert('Modal has been closed. ');}} //OnRequest close is called when the user taps the hardware back button on Android. Required for Android users
-            > 
-            {/* ACTION_1 er aðal módalinn, þegar smellt er á 'Staðfesta' opnast nýr módall sem segir "umsögn þín hefur verið skráð" */}
-            {actionTriggered === 'ACTION_1' ?
-                <KeyboardAvoidingView 
-                    style ={styles.centeredView}  
-                    behavior="padding">
-                        {/* Til að loka modal-num án þess að senda gögn áfram (x takkinn í efra horni) */}
-                        <View style={styles.modalView}>
-                            <View style={styles.closeModalView}> 
-                                <TouchableOpacity  onPress={() => {setModalVisible(!modalVisible)}}>
-                                    <AntDesign name="closecircleo" size={26} style={styles.closeIcon} />
-                                </TouchableOpacity>
-                            </View>
-=======
             .collection('comments')
             .onSnapshot(querySnapshot => {
                 const all = [];
@@ -513,7 +315,33 @@ export default function SelectedPark(props) {
         }
 
         return (
-            <View style={styles.topStar}>{stars}{noStars}<Text style={styles.modalText}>({sumComments})</Text></View>
+            <View style={styles.topStar}>{stars}{noStars}<Text style={styles.ratingText}>{sumComments}</Text></View>
+        );
+    }
+
+    const RenderRating = (rating) => {
+        var theRating = rating;
+        var missingStars = 5 - theRating;
+        var uniqueId = 0;
+        let stars = [];
+        let noStars = [];
+        // console.log(rating);
+        for (let i = 1; i <= rating; i++) {
+            uniqueId += 1;
+            stars.push(
+                <AntDesign key={uniqueId} name="star" size={12} style={styles.starIcon} />
+            )
+        }
+
+        for (let i = 1; i <= missingStars; i++) {
+            uniqueId += 1;
+            noStars.push(
+                <AntDesign key={uniqueId} name="staro" size={12} style={styles.starIcon} />
+            )
+        }
+
+        return (
+            <View style={styles.topStar}>{stars}{noStars}</View>
         );
     }
 
@@ -539,7 +367,6 @@ export default function SelectedPark(props) {
                                         <AntDesign name="closecircleo" size={26} style={styles.closeIcon} />
                                     </TouchableOpacity>
                                 </View>
->>>>>>> 817c503081a607add6bdd27f683024e9854b0388
 
                                 <View style={styles.modalViewHeader}>
                                     <Text style={styles.modalTextHeader}>Endurgjöf fyrir</Text>
@@ -552,20 +379,6 @@ export default function SelectedPark(props) {
                                     <CustomRatingBar />
                                 </View>
 
-<<<<<<< HEAD
-                        {/* Comment text box-ið */}
-                            <View>
-                                <Text style={styles.modalText}>Hvaða ummælum viltu koma á framfæri?</Text>
-                                <TextInput
-                                style={styles.inputBox}
-                                placeholder="Hámark 120 stafir"
-                                maxLength={120}
-                                onChangeText = {(content) => setuserComment(content)} //update-ar comment state með því sem er skrifað í comment textaboxið
-                                multiline={true} //þetta þarf að vera true svo að línurnar wrap-ist
-                                numberOfLines={4} //held að þetta geri ekkert, en virkar kannski betur i android
-                                onBlur={Keyboard.dismiss}/>
-                            </View>
-=======
                                 {/* Comment text box-ið */}
                                 <View>
                                     <Text style={styles.modalText}>Hvaða ummælum viltu koma á framfæri?</Text>
@@ -578,7 +391,6 @@ export default function SelectedPark(props) {
                                         numberOfLines={4} //held að þetta geri ekkert, en virkar kannski betur i android
                                         onBlur={Keyboard.dismiss} />
                                 </View>
->>>>>>> 817c503081a607add6bdd27f683024e9854b0388
 
                                 {/* Hér þarf að senda gögnin í Firebase. 
                         - setActionTrigger opnar hinn modalinn sem sést fyrir neðan
@@ -623,88 +435,13 @@ export default function SelectedPark(props) {
                         <View style={styles.titleDir}>
                             <Text style={styles.panelTitle}>{props.route.params && props.route.params.Name ? props.route.params.Name : "Vantar nafn"}</Text>
                             <TouchableOpacity
-<<<<<<< HEAD
-                            style={styles.closeModalButton}
-                            onPress={() => { submitComment(); setActionTriggered('ACTION_2');}}>
-                                <Text style={styles.textStyle}>Staðfesta</Text>
-=======
                                 style={styles.iconButton}
                                 onPress={() => console.log("Vantar virkni")}
                             >
                                 <FontAwesome5 name="directions" size={26} color="white" />
->>>>>>> 817c503081a607add6bdd27f683024e9854b0388
                             </TouchableOpacity>
                         </View>
 
-<<<<<<< HEAD
-            {/* Hér er það sem er á skjánum, sem er ekki einkunnargjöf modal-inn */}
-            
-            <View style={styles.imgContainer}>
-                <Image source={park_img}  style={styles.imgStyle}/>
-            </View>
-
-            {/* Parturinn af skjánum sem inniheldur nafn, lýsingu og directions takka, veðurspá */}
-            <View style={styles.middleContainer}>
-                <View style={styles.starReview}>
-                    <RenderavgRating/>
-                </View>
-                <View style={styles.middleContainerHeader}>
-                    <View style={styles.titleDir}>
-                        <Text style={styles.panelTitle}>{props.route.params && props.route.params.Name ? props.route.params.Name : "Vantar nafn"}</Text>
-                        <TouchableOpacity 
-                            style={styles.iconButton}
-                            onPress={() => console.log("Vantar virkni")}
-                        >
-                            <FontAwesome5 name="directions" size={26} color="white" />
-                        </TouchableOpacity>
-                    </View>
-                    {/* Hérna kemur veðurspáin*/}
-                    <View style={styles.weather}>
-                        <Image style={styles.weatherimage}
-                        source={{uri:"http://openweathermap.org/img/wn/"+info.icon+"@2x.png"}}
-                        />
-                        <Text style={styles.weatherText}>Hiti: {info.temp}°</Text>
-                    </View>
-                    
-                </View>
-                <View style={styles.aboutParkContainer}>
-                    
-                    <Text style={styles.aboutPark}>{props.route.params.Information}</Text>
-                    {/* Hérna þarf líka að birta tögg-in sem svæðið hefur :) */}
-                </View>
-
-                {/* Parturinn af skjánum fyrir comment og stjörnugjafir. Hér vantar virkni til að birta ummæli */}
-                <View style={styles.reviewComponent}>
-                <View style={styles.reviewComponentHeader}>
-                    <View style={styles.leftReviewComponent}>
-                        <Text style={styles.commentTitle}>Ummæli</Text>
-                        <View style={styles.borderLine}/>
-                    </View>
-                    <View style={styles.rightReviewComponent}>
-                        {/* Takki sem er fimm gular stjörnur. Opnar review modal-inn */}
-                        <TouchableOpacity 
-                        style={styles.reviewButton}
-                        onPress={() => { setModalVisible(true); setActionTriggered('ACTION_1');}}>
-                            <Text style={styles.buttonText}>Skrifa ummæli</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-                <View style={styles.commentSection}>
-                
-                        <FlatList
-                        contentContainerStyle={{ paddingBottom: 150 }}
-                            data={allComments}
-                            renderItem={({ item }) => (
-                            <View style={styles.commentBox}>
-                                <Text style={{fontSize: hp(2.6)}}>{item.UserName}</Text>
-                                <Text>Rating: {item.Rating}</Text>
-                                <Text style={{fontSize: hp(2)}}>{item.Comment}</Text>
-                            </View>
-                            )}
-                        />
-                    
-                </View>
-=======
                         {/* Hérna kemur veðurspáin*/}
                         <View style={styles.weather}>
                             <Image style={styles.weatherimage}
@@ -715,20 +452,19 @@ export default function SelectedPark(props) {
 
                     </View>
                     <RenderEnvironmet />
-                    <View style={styles.aboutParkContainer}>
+                    <View style={styles.aboutParkContainer} >
 
                         <Text style={styles.aboutPark}>{props.route.params.Information}</Text>
-                        {/* <RenderEnvironmet/> */}
-                        {/* <RenderEnvironmet/> */}
                     </View>
 
                     {/* Parturinn af skjánum fyrir comment og stjörnugjafir. Hér vantar virkni til að birta ummæli */}
-                    <View style={styles.reviewComponent}>
-                        <View style={styles.reviewComponentHeader}>
+                    <View style={styles.reviewComponent} >
+                        <View style={styles.reviewComponentHeader} >
                             <View style={styles.leftReviewComponent}>
                                 <Text style={styles.commentTitle}>Ummæli</Text>
                                 <View style={styles.borderLine} />
                             </View>
+
                             <View style={styles.rightReviewComponent}>
                                 {/* Takki sem er fimm gular stjörnur. Opnar review modal-inn */}
                                 <TouchableOpacity
@@ -738,41 +474,30 @@ export default function SelectedPark(props) {
                                 </TouchableOpacity>
                             </View>
                         </View>
-                        <View style={styles.commentSection}>
-
+                        <View style={styles.commentSection} >
                             <FlatList
-                                contentContainerStyle={{ paddingBottom: 150 }}
+                                // contentContainerStyle={{ paddingBottom: 150 }}
                                 data={allComments}
                                 renderItem={({ item }) => (
                                     <View style={styles.commentBox}>
                                         <Text style={{ fontSize: hp(2.6) }}>{item.UserName}</Text>
-                                        <Text>Einkunn: {item.Rating}</Text>
+                                        <Text>{RenderRating(item.Rating)}</Text>
                                         <Text style={{ fontSize: hp(2) }}>{item.Comment}</Text>
                                     </View>
                                 )}
                             />
-
                         </View>
                     </View>
->>>>>>> 817c503081a607add6bdd27f683024e9854b0388
                 </View>
-
             </View>
-<<<<<<< HEAD
-            
-        </View>
-        </SafeAreaView>
-      );
-=======
         </SafeAreaView>
     );
->>>>>>> 817c503081a607add6bdd27f683024e9854b0388
 }
 
 const styles = StyleSheet.create({
     parentContainer: {
-        flex: 1,
-        backgroundColor: "#F7F5F4"
+        flexGrow: 1,
+        backgroundColor: "#F7F5F4",
     },
     iconStyle: {
         color: 'white',
@@ -808,11 +533,7 @@ const styles = StyleSheet.create({
         flex: 2,
         paddingTop: hp(2),
     },
-<<<<<<< HEAD
-    middleContainerHeader:{
-=======
     middleContainerHeader: {
->>>>>>> 817c503081a607add6bdd27f683024e9854b0388
         flexDirection: 'row',
         justifyContent: 'space-between',
         flexWrap: 'wrap',
@@ -833,17 +554,10 @@ const styles = StyleSheet.create({
         paddingRight: wp(2),
         paddingTop: hp(2),
         paddingBottom: hp(2)
-<<<<<<< HEAD
     },
     aboutPark: {
         fontSize: hp(2.2),
     },
-=======
-    },
-    aboutPark: {
-        fontSize: hp(2.2),
-    },
->>>>>>> 817c503081a607add6bdd27f683024e9854b0388
 
     reviewComponent: {
         paddingTop: hp(1),
@@ -887,36 +601,18 @@ const styles = StyleSheet.create({
         color: 'orange',
         flexWrap: 'nowrap'
     },
-<<<<<<< HEAD
-    weather:{
-=======
     weather: {
->>>>>>> 817c503081a607add6bdd27f683024e9854b0388
         width: wp(20),
         height: hp(8),
         borderRadius: 20,
         backgroundColor: '#B9E2F5',
         alignItems: 'center',
         justifyContent: 'center',
-<<<<<<< HEAD
-    },
-    weatherimage:{
-        width: 100,
-        height: 100,
-    },
-    weatherText:{
-        color: 'black',
-    },
-    commentSection: {
-        paddingLeft: wp(5),
-        paddingRight: wp(10),
-        paddingBottom: hp(10)
-    },
-=======
     },
     weatherimage: {
         width: 100,
         height: 100,
+
     },
     weatherText: {
         color: 'black',
@@ -926,7 +622,6 @@ const styles = StyleSheet.create({
         paddingRight: wp(10),
         paddingBottom: hp(10)
     },
->>>>>>> 817c503081a607add6bdd27f683024e9854b0388
     commentBox: {
         borderBottomColor: 'grey',
         borderBottomWidth: 1,
@@ -981,13 +676,8 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontWeight: 'bold',
         fontSize: hp(2.8)
-<<<<<<< HEAD
-      },
-      modalTextName: {
-=======
     },
     modalTextName: {
->>>>>>> 817c503081a607add6bdd27f683024e9854b0388
         textAlign: 'center',
         fontWeight: 'bold',
         fontSize: hp(2.8),
@@ -1003,21 +693,6 @@ const styles = StyleSheet.create({
         fontSize: hp(2),
         fontWeight: 'bold',
         marginBottom: hp(4)
-<<<<<<< HEAD
-      },
-      customRatingBarStyle: {
-          justifyContent: 'center',
-          flexDirection: 'row',
-         
-      },
-      starImg: {
-          width: 30,
-          height: 30,
-          resizeMode: 'cover',
-          marginBottom: 15
-      },
-      inputBox:{
-=======
     },
     customRatingBarStyle: {
         justifyContent: 'center',
@@ -1031,7 +706,6 @@ const styles = StyleSheet.create({
         marginBottom: 15
     },
     inputBox: {
->>>>>>> 817c503081a607add6bdd27f683024e9854b0388
         borderColor: '#CCCCCC',
         borderWidth: 1,
         borderRadius: 5,
@@ -1041,28 +715,21 @@ const styles = StyleSheet.create({
         height: hp(8),
         width: wp(65),
         marginBottom: hp(4)
-<<<<<<< HEAD
-      },
-     
-    
-=======
     },
     umhverfiChips: {
-        flex:1,
-        marginBottom: 10,
-        // marginLeft: 10,
-        // marginRight: 100,
         flexWrap: 'wrap',
-        alignItems: 'center',
-        justifyContent: 'center',
-
+        flexDirection: "row",
+        paddingLeft: wp(3),
+        paddingRight: wp(3),
+        // alignItems: 'center',
+        // justifyContent: 'center',
     },
     Chip: {
         backgroundColor: '#79BE66',
         margin: 2,
-        height: 35,
-
+    },
+    ratingText: {
+        fontSize: hp(3),
     }
 
->>>>>>> 817c503081a607add6bdd27f683024e9854b0388
 })

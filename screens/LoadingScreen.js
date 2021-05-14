@@ -23,22 +23,11 @@ export default function LoadingScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-<<<<<<< HEAD
-  container: {
-    height: "100%",
-    width: "100%",
-    backgroundColor: "white",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
-=======
     container: {
-      height: '100%',
-      width: '100%',
-      backgroundColor: 'white',
-      alignItems: 'center',
-      justifyContent: 'center',
+        height: '100%',
+        width: '100%',
+        backgroundColor: 'white',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
-  });
->>>>>>> 817c503081a607add6bdd27f683024e9854b0388
+});

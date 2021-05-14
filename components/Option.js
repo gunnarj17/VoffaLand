@@ -1,8 +1,8 @@
 import React from 'react';
-import { 
+import {
 	StyleSheet,
-	View, 
-	Text 
+	View,
+	Text
 } from 'react-native';
 import {
 	Button,
@@ -10,12 +10,12 @@ import {
 } from 'native-base';
 
 const Option = (props) => {
-	const _style = props.isSelected ? Styles.ActiveStyle : Styles.InActiveStyle; 
+	const _style = props.isSelected ? Styles.ActiveStyle : Styles.InActiveStyle;
 	const text = props.text ? props.text : ""
 	return <Button style={_style} onPress={props.onPress}><Text style={Styles.text}>{text}</Text></Button>
 }
 
-const Styles = StyleSheet.create({ 
+const Styles = StyleSheet.create({
 	InActiveStyle: {
 		backgroundColor: '#DCDCDC',
 		marginLeft: 5,

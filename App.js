@@ -14,6 +14,7 @@ import {
 } from "react-native-safe-area-context";
 
 import { View } from "react-native";
+
 // stack screens
 import WelcomeScreen from "./screens/WelcomeScreen";
 import SignUp from "./screens/SignUp";
@@ -22,12 +23,13 @@ import LoadingScreen from "./screens/LoadingScreen";
 import SelectedPark from "./screens/SelectedPark";
 
 // Tab Screens
-import Info from './screens/InfoScreen';
-import Profile from './screens/ProfileScreen';
-import AddDogs from './screens/AddDogs';
-import Parks from './screens/ParksScreen';
-import Events from './screens/EventsScreen';
+import Info from "./screens/InfoScreen";
+import Profile from "./screens/ProfileScreen";
+import Parks from "./screens/ParksScreen";
+import Events from "./screens/EventsScreen";
+import AddEventScreen from "./screens/AddEventScreen";
 import ViewEventScreen from "./screens/ViewEventScreen";
+import AddDogs from "./screens/AddDogs";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -42,32 +44,31 @@ export default function App() {
     <SafeAreaProvider>
       <NavigationContainer>
         <Stack.Navigator>
-          <Stack.Screen name={'Loading'} component={LoadingScreen} options={{ headerShown: false }} />
-          <Stack.Screen name='Home' component={WelcomeScreen} options={{ headerShown: false }} />
-          <Stack.Screen name='Sign Up' component={SignUp} options={{ headerShown: false }} />
-          <Stack.Screen name='Sign In' component={SignIn} options={{ headerShown: false }} />
-          <Stack.Screen name='Selected Park' component={SelectedPark} options={{ headerShown: false }} />
-          <Stack.Screen name='ViewEventScreen' component={ViewEventScreen} options={{ headerShown: false }} />
-          <Stack.Screen name='addDogs' component={AddDogs} options={{ headerShown: false }} />
-          <Stack.Screen name={'Parks'} options={{ headerShown: false }} >{() => (
-            <Tab.Navigator
-              tabBarOptions={{
-                showLabel: false,
-                // activeBackgroundColor: '#069380',
-                tabStyle: {
-                  // hægt að setja inn meiri styles
-                  height: 40,
-                },
-                style: {
-                  position: 'absolute',
-                  backgroundColor: '#034B42',
-                  borderRadius: 20,
-                  left: "25%",
-                  width: "50%",
-                  height: 40,
-                  bottom: 15
-                },
-              }}>
+          <Stack.Screen
+            name={"Loading"}
+            component={LoadingScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Home"
+            component={WelcomeScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Sign Up"
+            component={SignUp}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="SignIn"
+            component={SignIn}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="SelectedPark"
+            component={SelectedPark}
+            options={{ headerShown: false }}
+          />
 
           <Stack.Screen
             name="addDogs"

@@ -4,6 +4,7 @@ import React, {
   useRef,
   useCallback,
   useMemo,
+  useState,
 } from "react";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import Polyline from "@mapbox/polyline";
@@ -32,11 +33,90 @@ import apiKeys from "../config/keys";
 import { getDistance, getPreciseDistance } from "geolib";
 import Animated from "react-native-reanimated";
 import BottomSheet from "reanimated-bottom-sheet";
+import { AntDesign } from '@expo/vector-icons';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+
+
+const RenderavgRating = ({ Name }) => {
+
+  const [avgStars, setAvgStars] = useState([])
+  const [sumComments, setSumComments] = useState()
+  const [comments, setComments] = useState()
+  const [loading, setLoading] = useState(false)
+
+  let stars = [];
+  let noStars = [];
+
+  useEffect(() => {
+
+    if (Name != undefined) {
+
+      const currentPark = Name;
+
+      const commenters = firebase.firestore()
+        .collection('comments')
+        .onSnapshot(querySnapshot => {
+          const all = [];
+
+          querySnapshot.forEach(documentSnapshot => {
+            all.push({
+              ...documentSnapshot.data(),
+              key: documentSnapshot.id,
+            });
+          });
+
+          const correctPark = [];
+          var countRating = 0;
+          var avgRating = 0;
+          for (let i = 0; i <= all.length - 1; i++) {
+            console.log(all[i])
+            if (all[i].ParkId == currentPark) {
+              countRating += 1;
+              avgRating += all[i].Rating;
+              correctPark.push(all[i])
+            }
+          }
+          avgRating = avgRating / countRating;
+          console.log("rating", countRating);
+          // console.log("Samtals ratings deilt með fjölda ratings: " + avgRating.toFixed());
+          setAvgStars(avgRating.toFixed());
+          setSumComments(countRating);
+          setComments(correctPark);
+          setLoading(false);
+        });
+    }
+
+    var avgRating = avgStars;
+    var missingStars = 5 - avgStars;
+    var uniqueId = 0;
+
+
+    for (let i = 1; i <= avgRating; i++) {
+      uniqueId += 1;
+      stars.push(
+        <AntDesign key={uniqueId} name="star" size={26} style={styles.starIcon} />
+      )
+    }
+
+    for (let i = 1; i <= missingStars; i++) {
+      uniqueId += 1;
+      noStars.push(
+        <AntDesign key={uniqueId} name="staro" size={26} style={styles.starIcon} />
+      )
+    }
+
+  }, [])
+
+  return (
+    <View style={styles.topStar}>{stars}{noStars}<Text style={styles.ratingText}>{sumComments}</Text></View>
+  );
+}
 
 export default class Parks extends Component {
   constructor(props) {
     super(props);
     this.state = {
+
       data: [],
       region: null,
       park: {},
@@ -78,6 +158,7 @@ export default class Parks extends Component {
 
     this.onChangeUserLocation = this.onChangeUserLocation.bind(this);
   }
+
 
   onChangeUserLocation = (newLocation, setCamera, updateDirection = false) => {
     let currentUserPosition = {
@@ -256,6 +337,7 @@ export default class Parks extends Component {
     let parkList = [];
     documentSnapshot.forEach(async (res) => {
       const { GPS, Name } = res.data();
+
       let parkObj = res.data();
       let townRef = parkObj.Town;
       let townName = "";
@@ -860,46 +942,69 @@ export default class Parks extends Component {
 
   bs = React.createRef();
 
-  renderInner = (item) => {
-    return (
-      <View style={styles.panel}>
-        <View style={styles.panelTop}>
-          <Text style={styles.panelTitle}>
-            {this.state.park && this.state.park.Name
-              ? this.state.park.Name
-              : "Vantar nafn"}
-          </Text>
-        </View>
-        <View style={styles.panelBottom}>
-          <View style={styles.panelLeft}>
-            <View style={styles.iconView}>
-              {/* Hérna þarf að birta actual stjörnugjöf sem svæðið hefur, þetta eru bara place-holder icons */}
-              <Icon style={styles.Icons} name="star" />
-              <Icon style={styles.Icons} name="star" />
-              <Icon style={styles.Icons} name="star" />
-              <Icon style={styles.Icons} name="star" />
-              <Icon style={styles.Icons} name="star" />
-              {/* Hérna vantar líka að birta tögg-in sem svæðið hefur :) */}
+  renderRouteInfo = () => {
+    const { destination } = this.state;
+    if (destination.distance) {
+      return (
+        <View style={styles.pathInfoBar}>
+          <View style={styles.infoWrapper}>
+            <View>
+              <Text style={styles.infoText}>{destination.duration}</Text>
+              <Text style={styles.infoText}>{destination.distance}</Text>
             </View>
-            <Text style={styles.leftText}> </Text>
+
+            <View>
+              <Button style={styles.routeExitBtn} onPress={this.exitRoute}>
+                <Text style={styles.exitText}>Exit</Text>
+              </Button>
+            </View>
           </View>
-          <View style={styles.panelRight}>
-            <Button
-              style={styles.SeeMoreButton}
-              onPress={() => {
-                this.props.navigation.navigate("SelectedPark", {
-                  park: this.state.park,
-                  goRoute: this.onShowRoute(),
-                });zzz
-              }}
-            >
-              <Text style={styles.ButtonText}>Sjá nánar</Text>
-            </Button>
+          <View
+            style={{
+              backgroundColor: "#034B42",
+              zIndex: 0,
+              position: "absolute",
+            }}
+          />
+        </View>
+      );
+    } else return null;
+  };
+
+  bs = React.createRef();
+
+
+
+  renderInner = () => (
+    <View style={styles.panel}>
+      <View style={styles.panelTop}>
+        <Text style={styles.panelTitle}>{this.state.park && this.state.park.Name ? this.state.park.Name : "Vantar nafn"}</Text>
+      </View>
+      <View style={styles.panelBottom}>
+        <View style={styles.panelLeft}>
+          <View style={styles.iconView}>
+            <RenderavgRating Name={this.state.park.ID} />
+
+            {/* Hérna þarf að birta actual stjörnugjöf sem svæðið hefur, þetta eru bara place-holder icons */}
+            {/* <Icon style={styles.Icons} name='star'/><Icon style={styles.Icons} name='star'/><Icon style={styles.Icons} name='star'/> */}
+            {/* Hérna vantar líka að birta tögg-in sem svæðið hefur :) */}
           </View>
+          {/* <RenderEnvironmet /> */}
+          <Text style={styles.leftText}> </Text>
+        </View>
+        <View style={styles.panelRight}>
+          <Button
+            style={styles.SeeMoreButton}
+            onPress={() => {
+              console.log("props", this.props);
+              this.props.navigation.navigate('SelectedPark', this.state.park)
+            }}>
+            <Text style={styles.ButtonText}>Sjá nánar</Text>
+          </Button>
         </View>
       </View>
-    );
-  };
+    </View>
+  );
 
   renderHeader = () => (
     <View style={styles.header}>
@@ -960,15 +1065,7 @@ export default class Parks extends Component {
             this.mapRef = ref;
           }}
           onPanDrag={() => this.setState({ following: false })}
-          /*onUserLocationChange={destination.GPS ?
-                      l => this.onChangeUserLocation(
-                          {coords:
-                                {latitude:
-                                  l.nativeEvent.coordinate.latitude,
-                                  longitude: l.nativeEvent.coordinate.longitude
-                                }})
-                  :
-                      l => console.log(l.nativeEvent.coordinate)}*/
+
         >
           {data.map((m) => {
             return (
@@ -980,7 +1077,11 @@ export default class Parks extends Component {
                 }}
                 title={m.ID}
                 // þarf að breyta þessu í styttri lýsingu á svæði eða taka út.
-                onPress={() => openBottomSheet(m.park)}
+
+                onPress={() => {
+
+                  openBottomSheet({ ...m.park, ID: m.ID, Long: m.Long, Lat: m.Lat })
+                }}
               >
                 <Image
                   key={m.ID}
@@ -990,17 +1091,9 @@ export default class Parks extends Component {
               </Marker>
             );
           })}
-          {/*{
-            currentUserPosition &&
-              <Marker
-                coordinate={currentUserPosition}
-                description="User Position"
-              ><Image
-                  style={{ width: 25, height: 25 }}
-                  source={require("../assets/google_marker.png")}
-                />
-              </Marker>
-          }*/}
+          {
+
+          }
 
           {(currentUserPosition || startLocation) && (
             <Marker
@@ -1015,25 +1108,9 @@ export default class Parks extends Component {
               />
             </Marker>
           )}
-          {/*{
-              destination.GPS &&
-              <MapViewDirections
-                  origin={currentUserPosition}
-                  destination={destination.GPS}
-                  waypoints={waypoints}
-                  apikey={apiKeys.extra.googleMapApiKey}
-                  strokeWidth={5}
-                  strokeColor="#02907b"
-                  mode="DRIVING"
-                  optimizeWaypoints={true}
-                  onError={(errorMessage) => {
-                    console.log('errorMessage: ', errorMessage)
-                  }}
-                  onReady={result => {
-                    this.setDestination(result)
-                  }}
-              />
-            }*/}
+          {
+
+          }
 
           {destination.GPS && waypoints && (
             <MapView.Polyline
@@ -1274,7 +1351,7 @@ const styles = StyleSheet.create({
   panelBottom: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 100, //Mjög mikil HAX leið, tökum þetta út þegar allar upplýsingarnar á þessu Bottom Sheet eru komnar inn!
+    marginBottom: 100,
   },
   panelLeft: {
     alignSelf: "flex-start",
@@ -1325,5 +1402,94 @@ const styles = StyleSheet.create({
   filterIcon: {
     width: 40,
     height: 40,
+  },
+  SeeMoreButton: {
+    backgroundColor: "#069380",
+    padding: 20,
+    borderRadius: 20
+  },
+  ButtonText: {
+    color: 'white',
+    fontSize: 18
+  },
+  panel: {
+    padding: 20,
+    backgroundColor: "#FFFFFF",
+    paddingTop: 20,
+    backgroundColor: "white",
+  },
+  panelTop: {
+  },
+  panelTitle: {
+    fontSize: 24,
+  },
+  panelBottom: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 100
+  },
+  panelLeft: {
+    alignSelf: 'flex-start',
+    padding: 10
+  },
+  iconView: {
+    flexDirection: 'row'
+  },
+  Icons: {
+    color: '#C4C4C4'
+  },
+  leftText: {
+    fontSize: 18
+  },
+  rightText: {
+    fontSize: 18,
+  },
+  panelRight: {
+    alignSelf: 'flex-end',
+    padding: 10
+  },
+  header: {
+    backgroundColor: "#FFFFFF",
+    shadowColor: "#969696",
+    shadowOffset: { width: 0, height: -3 },
+    shadowOpacity: 0.3,
+    shadowRadius: 1,
+    paddingTop: 20,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+  },
+  panelHeader: {
+    alignItems: "center",
+  },
+  panelHandle: {
+    width: 80,
+    height: 6,
+    borderRadius: 4,
+    backgroundColor: "#00000040",
+    marginBottom: 10,
+  },
+  topStar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  starIcon: {
+    padding: 1,
+    color: 'orange',
+    flexWrap: 'nowrap'
+  },
+  ratingText: {
+    fontSize: hp(3),
+  },
+  umhverfiChips: {
+    flexWrap: 'wrap',
+    flexDirection: "row",
+    paddingLeft: wp(3),
+    paddingRight: wp(3),
+    // alignItems: 'center',
+    // justifyContent: 'center',
+  },
+  Chip: {
+    backgroundColor: '#79BE66',
+    margin: 2,
   },
 });
