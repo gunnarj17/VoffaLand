@@ -34,6 +34,8 @@ const AddDogs = ({ navigation, route }) => {
     const [isFetching, setIsFetching] = useState(false);
 
     const onChange = (event, selectedDate) => {
+        console.log("Date", selectedDate);
+
         const currentDate = selectedDate || date;
         if (Platform.OS === 'android') {
             setShow(false);
@@ -64,7 +66,10 @@ const AddDogs = ({ navigation, route }) => {
     ];
 
     const showActionSheet = () => {
-        actionSheet.current.show();
+        setTimeout(() => {
+
+            actionSheet.current.show();
+        }, 500);
     };
 
     const galleryPermissions = async () => {
@@ -128,8 +133,11 @@ const AddDogs = ({ navigation, route }) => {
             });
 
             if (!result.cancelled) {
+
                 setPhotoURL(result.uri);
             }
+
+
         } catch (err) {
             Alert.alert(err.message);
         }
@@ -337,10 +345,11 @@ const AddDogs = ({ navigation, route }) => {
                             <Text style={styles.dateText}>
                                 {date.toDateString()}
                             </Text>
-                            <Octicons name="calendar" size={hp(3.4)} color="black" style={{ alignSelf: 'center' }} />
+                            <Octicons name="calendar" size={hp(3.4)} color="#81A5A1" style={{ alignSelf: 'center' }} />
                         </TouchableOpacity>
                     </View>
                     <View style={{ ...styles.inputContainerStyle, flexDirection: 'row', marginBottom: hp(4), marginTop: hp(1) }}>
+
                         <Text style={styles.sexText}>
                             Kyn
                     </Text>
@@ -388,6 +397,7 @@ const AddDogs = ({ navigation, route }) => {
                     </TouchableOpacity>
 
                 </View>
+                
             </KeyboardAwareScrollView>
 
             <ActionSheet
@@ -414,9 +424,11 @@ const AddDogs = ({ navigation, route }) => {
                         testID="dateTimePicker"
                         value={date}
                         mode={mode}
+
                         is24Hour={true}
                         display='default'
                         onChange={onChange}
+
                     />
                     :
                     <Modal isVisible={Platform.OS == 'android' ? false : show} backdropColor="transparent" onBackdropPress={() => setShow(false)}>
